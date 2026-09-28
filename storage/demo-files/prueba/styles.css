@@ -1,0 +1,16 @@
+:root {
+  --primary: #fc779b;
+  --surface: #151018;
+}
+
+body {
+  margin: 0;
+  background: var(--surface);
+  color: white;
+}
+
+.card {
+  border: 1px solid color-mix(in srgb, var(--primary) 35%, transparent);
+  border-radius: 12px;
+  padding: 1rem;
+}

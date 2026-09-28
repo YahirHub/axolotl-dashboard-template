@@ -13,6 +13,8 @@ storage/framework/*
 !storage/framework/.gitkeep
 storage/demo-files/*
 !storage/demo-files/.gitkeep
+!storage/demo-files/prueba/
+!storage/demo-files/prueba/**
 
 # Build
 /bin/

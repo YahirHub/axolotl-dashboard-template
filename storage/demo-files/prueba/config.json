@@ -1,0 +1,12 @@
+{
+  "app": "Axolotl",
+  "environment": "demo",
+  "enabled": true,
+  "port": 3000,
+  "languages": [
+    "Go",
+    "PHP",
+    "JavaScript",
+    "Python"
+  ]
+}
