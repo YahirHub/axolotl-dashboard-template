@@ -1,0 +1,32 @@
+# Entorno
+.env
+.env.*
+!.env.example
+
+# Datos locales
+storage/*.db
+storage/*.sqlite
+storage/*.sqlite3
+storage/logs/*
+!storage/logs/.gitkeep
+
+# Build
+/bin/
+/dist/
+*.exe
+*.test
+*.out
+
+# Go
+coverage.out
+vendor/
+
+# Herramientas
+.air.toml.tmp
+tmp/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
