@@ -1546,3 +1546,42 @@ Al añadir un módulo:
 7. actualizar `contexto/` y `tareas/`;
 8. validar `go test ./...` y `go vet ./...`.
 
+## 32. Branding oficial Axolotl
+
+La marca oficial vive en:
+
+```text
+public/brand/axolotl.svg
+public/brand/axolotl.png
+```
+
+Rutas públicas:
+
+```text
+/assets/brand/axolotl.svg
+/assets/brand/axolotl.png
+```
+
+### Reglas de uso
+
+- `axolotl.svg` es la marca principal para interfaz, sidebar y componentes escalables.
+- `axolotl.png` es el fallback raster para favicon/plataforma y usos donde SVG no sea apropiado.
+- El botón principal del sidebar usa el SVG como logotipo y conserva su comportamiento de collapse/expand al hacer hover/click.
+- No sustituir la marca principal por iconos genéricos de Font Awesome.
+- No alterar los colores internos del SVG con filtros agresivos; el archivo ya contiene la paleta oficial.
+- Mantener `object-fit: contain` y preservar proporciones.
+- No deformar ancho/alto de manera independiente.
+- Para nuevos favicons o metadata, reutilizar estos assets antes de crear duplicados.
+
+### Head recomendado
+
+```html
+<link rel="icon" type="image/svg+xml" href="/assets/brand/axolotl.svg">
+<link rel="icon" type="image/png" href="/assets/brand/axolotl.png">
+<link rel="apple-touch-icon" href="/assets/brand/axolotl.png">
+```
+
+### Sidebar
+
+El logo del sidebar debe seguir siendo también el control de expandir/colapsar. En desktop, hover revela el icono de acción; en touch/mobile, el estado del drawer controla qué icono se muestra.
+

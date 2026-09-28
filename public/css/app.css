@@ -227,7 +227,13 @@ button:focus-visible,.nav-item:focus-visible,.market-row:focus-visible,.asset:fo
 }
 .panel-toggle .panel-logo{opacity:1;transform:scale(1)}
 .panel-toggle .panel-action{opacity:0;transform:scale(.72)}
-.panel-toggle .panel-logo i{font-size:17px}
+.panel-brand-image{
+  display:block;
+  width:34px;
+  height:28px;
+  object-fit:contain;
+  filter:drop-shadow(0 0 8px rgba(var(--primary-rgb),.24));
+}
 .panel-toggle .panel-action i{font-size:14px;transition:transform .2s ease}
 .app.sidebar-collapsed .panel-toggle .panel-action i{transform:rotate(180deg)}
 
@@ -365,6 +371,14 @@ button:focus-visible,.nav-item:focus-visible,.market-row:focus-visible,.asset:fo
   border:1px solid rgba(var(--primary-rgb),.25);
   background:rgba(255,255,255,.02);
   flex:0 0 auto;
+  overflow:hidden;
+}
+.ai-brand-image{
+  display:block;
+  width:44px;
+  height:34px;
+  object-fit:contain;
+  filter:drop-shadow(0 0 9px rgba(var(--primary-rgb),.22));
 }
 .ai-box strong{
   display:block;

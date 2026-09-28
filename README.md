@@ -94,6 +94,9 @@ config/
 database/
 ├── migrations/
 public/
+├── brand/
+│   ├── axolotl.svg
+│   └── axolotl.png
 ├── css/app.css
 └── js/app.js
 resources/

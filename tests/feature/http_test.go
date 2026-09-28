@@ -24,6 +24,8 @@ func TestDashboardRoute(t *testing.T) {
 			"Laboratorio UI",
 			"/assets/css/app.css",
 			"/assets/js/app.js",
+			"/assets/brand/axolotl.svg",
+			"/assets/brand/axolotl.png",
 		})
 }
 

@@ -5,6 +5,8 @@
 *.tmpl text eol=lf
 *.css text eol=lf
 *.js text eol=lf
+*.svg text eol=lf
+*.png binary
 *.yml text eol=lf
 *.yaml text eol=lf
 Dockerfile text eol=lf
