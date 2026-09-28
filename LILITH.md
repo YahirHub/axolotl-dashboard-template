@@ -15,6 +15,9 @@
 - El registro público solo crea rol `user`; nunca confiar en un rol enviado por el cliente.
 - Mantener CSRF en mutaciones web y rate limiting en setup/login/registro.
 - Todas las áreas privadas deben usar `RequireAuth` o un middleware de autorización más específico.
+- El explorador de archivos solo puede operar dentro de `FILES_ROOT`; nunca exponer acceso arbitrario al filesystem del host.
+- Mantener protección contra path traversal y symlinks en cualquier nueva operación de archivos.
+- Create/save/delete del explorador requieren sesión y CSRF; no relajar estas protecciones para simplificar la UI.
 
 ## Investigación y documentación
 - NO usar Context7/ctx7 mientras existan herramientas de búsqueda web, documentación oficial, repositorios oficiales, Knowledge local u otras fuentes disponibles.

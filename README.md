@@ -98,6 +98,9 @@ SESSION_LIFETIME=120
 SESSION_SECURE=false
 
 AUTH_ALLOW_REGISTRATION=true
+
+FILES_ROOT=storage/demo-files
+FILES_MAX_EDIT_BYTES=2097152
 ```
 
 `DB_DATABASE` acepta una ruta relativa al proyecto o una ruta absoluta.
@@ -109,10 +112,14 @@ La plantilla incluye únicamente SQLite para mantener el starter pequeño. Para 
 ```text
 app/
 ├── facades/
+├── files/
+│   ├── configured.go
+│   └── workspace.go
 ├── http/
 │   ├── controllers/
 │   │   ├── auth_controller.go
 │   │   ├── dashboard_controller.go
+│   │   ├── file_controller.go
 │   │   ├── page_controller.go
 │   │   └── health_controller.go
 │   └── middleware/
@@ -138,10 +145,12 @@ public/
 │   └── axolotl.png
 ├── css/
 │   ├── app.css
-│   └── auth.css
+│   ├── auth.css
+│   └── files.css
 └── js/
     ├── app.js
-    └── auth.js
+    ├── auth.js
+    └── files.js
 resources/
 └── views/
     ├── auth.tmpl
@@ -149,6 +158,7 @@ resources/
     ├── account.tmpl
     ├── server.tmpl
     ├── components.tmpl
+    ├── files.tmpl
     └── partials/
         ├── head.tmpl
         ├── scripts.tmpl
@@ -158,6 +168,7 @@ resources/
         ├── stats.tmpl
         ├── dashboard-grid.tmpl
         ├── workspace-grid.tmpl
+        ├── files-main.tmpl
         ├── server-metrics.tmpl
         ├── code-lab.tmpl
         └── overlays.tmpl
@@ -183,7 +194,7 @@ Goravel integra `html/template`. Axolotl usa templates nombrados y partials:
 
 No se agregó otro motor de plantillas: el objetivo es conservar una solución nativa, rápida y con pocas dependencias.
 
-La aplicación es multipágina. `/dashboard` concentra el overview de negocio; `/cuenta`, `/servidor` y `/componentes` separan configuración, observabilidad y catálogo UI. El `DashboardController` entrega datos demostrativos para KPIs, proyectos, tareas, actividad, equipo, agenda e integraciones; esos datos pueden reemplazarse después por ORM, APIs o servicios sin reconstruir el layout.
+La aplicación es multipágina. `/dashboard` concentra el overview de negocio; `/cuenta`, `/servidor`, `/componentes` y `/archivos` separan configuración, observabilidad, catálogo UI y workspace de archivos. El `DashboardController` entrega datos demostrativos para KPIs, proyectos, tareas, actividad, equipo, agenda e integraciones; esos datos pueden reemplazarse después por ORM, APIs o servicios sin reconstruir el layout.
 
 La fuente de verdad visual y las reglas para crear nuevos componentes están en:
 
@@ -213,6 +224,13 @@ GET  /dashboard     overview general [auth]
 GET  /cuenta        perfil, preferencias y seguridad [auth]
 GET  /servidor      métricas técnicas [auth]
 GET  /componentes   laboratorio UI y catálogo de componentes [auth]
+GET  /archivos      explorador del workspace demo [auth]
+
+GET  /api/files         lista una carpeta del workspace [auth]
+GET  /api/files/read    abre un archivo de texto/código [auth]
+POST /api/files/create  crea archivo o carpeta [auth + CSRF]
+POST /api/files/save    guarda contenido de archivo [auth + CSRF]
+POST /api/files/delete  elimina archivo o carpeta [auth + CSRF]
 
 GET  /health        healthcheck con prueba de SQLite
 /assets/*           archivos estáticos
@@ -244,6 +262,8 @@ La migración de ejemplo `app_settings` y el modelo `AppSetting` siguen disponib
 
 Los archivos SQLite locales se guardan en `storage/` y están ignorados por Git.
 
+El explorador usa por defecto `storage/demo-files`. Al iniciar por primera vez, el backend agrega archivos de ejemplo si la carpeta está vacía. El contenido mutable de ese workspace también está ignorado por Git.
+
 ## Pruebas y validación
 
 ```bash
@@ -264,7 +284,10 @@ Las pruebas actuales verifican:
 - registro de usuarios estándar;
 - que un cliente no puede autoasignarse rol `admin` desde `/register`;
 - protección de las páginas privadas;
-- render de dashboard, cuenta, servidor y componentes;
+- render de dashboard, cuenta, servidor, componentes y archivos;
+- CRUD del workspace demo mediante backend Go;
+- rechazo de path traversal, symlinks y archivos no editables;
+- límites de tamaño para edición;
 - healthcheck y headers globales de seguridad.
 
 ## Docker
@@ -292,7 +315,11 @@ La autenticación incluye:
 - PIN guardado solo en memoria;
 - rol `admin` asignable únicamente durante el setup inicial;
 - registro público configurable con `AUTH_ALLOW_REGISTRATION`;
-- rutas privadas protegidas por `RequireAuth`.
+- rutas privadas protegidas por `RequireAuth`;
+- explorador confinado a `FILES_ROOT`, sin acceso arbitrario al filesystem del host;
+- rechazo de traversal (`../`) y symlinks;
+- edición limitada a texto UTF-8 y al tamaño `FILES_MAX_EDIT_BYTES`;
+- mutaciones de archivos protegidas con sesión y CSRF.
 
 En producción configura HTTPS y cambia:
 

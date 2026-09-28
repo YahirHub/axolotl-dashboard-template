@@ -1,0 +1,117 @@
+{{ define "partials/files-main" }}
+<main class="main" id="files-page">
+  <div class="content-wrap">
+    {{ template "partials/topbar" . }}
+
+    <section class="file-explorer card"
+      id="fileExplorer"
+      data-root-label="{{ .RootLabel }}"
+      data-max-edit-bytes="{{ .MaxEditBytes }}">
+
+      <div class="file-toolbar">
+        <div class="file-toolbar-nav">
+          <button class="file-tool-btn" id="fileBackBtn" type="button" title="Atrás" disabled>
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <button class="file-tool-btn" id="fileUpBtn" type="button" title="Subir" disabled>
+            <i class="fa-solid fa-arrow-up"></i>
+          </button>
+          <button class="file-tool-btn" id="fileRefreshBtn" type="button" title="Actualizar">
+            <i class="fa-solid fa-rotate-right"></i>
+          </button>
+        </div>
+
+        <nav class="file-breadcrumbs" id="fileBreadcrumbs" aria-label="Ruta de archivos"></nav>
+
+        <div class="file-toolbar-actions">
+          <button class="btn-ui btn-outline-primary" id="newFolderBtn" type="button">
+            <i class="fa-regular fa-folder"></i> Nueva carpeta
+          </button>
+          <button class="btn-ui btn-primary" id="newFileBtn" type="button">
+            <i class="fa-regular fa-file"></i> Nuevo archivo
+          </button>
+          <button class="btn-ui btn-danger" id="deleteFileBtn" type="button" disabled>
+            <i class="fa-regular fa-trash-can"></i> Eliminar
+          </button>
+        </div>
+      </div>
+
+      <div class="file-explorer-body">
+        <aside class="file-nav-pane">
+          <div class="file-nav-title">Acceso rápido</div>
+          <button class="file-nav-item active" type="button" data-file-root>
+            <i class="fa-regular fa-folder-open"></i>
+            <span>{{ .RootLabel }}</span>
+          </button>
+          <div class="file-nav-sep"></div>
+          <div class="file-nav-title">Carpetas</div>
+          <div id="fileQuickFolders" class="file-quick-folders"></div>
+          <div class="file-security-note">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>El backend limita todas las operaciones a esta carpeta demo.</span>
+          </div>
+        </aside>
+
+        <section class="file-main-pane">
+          <div class="file-list-view" id="fileListView">
+            <div class="file-list-head">
+              <span>Nombre</span>
+              <span>Tipo</span>
+              <span>Tamaño</span>
+              <span>Modificado</span>
+            </div>
+            <div class="file-list" id="fileList" role="listbox" aria-label="Contenido de la carpeta"></div>
+            <div class="file-empty hidden" id="fileEmpty">
+              <i class="fa-regular fa-folder-open"></i>
+              <strong>Esta carpeta está vacía</strong>
+              <span>Crea un archivo o una carpeta desde la barra superior.</span>
+            </div>
+          </div>
+
+          <div class="file-editor-view hidden" id="fileEditorView">
+            <div class="file-editor-tabbar">
+              <div class="file-editor-tab active">
+                <i class="fa-regular fa-file-code"></i>
+                <span id="editorFileName">archivo.txt</span>
+                <span class="editor-dirty-dot" id="editorDirtyDot" aria-label="Cambios sin guardar"></span>
+                <button id="editorCloseBtn" type="button" aria-label="Cerrar editor"><i class="fa-solid fa-xmark"></i></button>
+              </div>
+              <div class="file-editor-actions">
+                <span class="editor-language" id="editorLanguage">plaintext</span>
+                <button class="btn-ui btn-primary" id="editorSaveBtn" type="button" disabled>
+                  <i class="fa-regular fa-floppy-disk"></i> Guardar
+                </button>
+              </div>
+            </div>
+
+            <div class="file-editor-shell">
+              <div class="editor-line-numbers" id="editorLineNumbers" aria-hidden="true">1</div>
+              <div class="editor-code-wrap">
+                <pre class="editor-highlight" id="editorHighlight" aria-hidden="true"><code id="editorHighlightCode"></code></pre>
+                <textarea
+                  class="editor-input"
+                  id="editorInput"
+                  spellcheck="false"
+                  autocomplete="off"
+                  autocapitalize="off"
+                  wrap="off"
+                  aria-label="Editor de código"></textarea>
+              </div>
+            </div>
+
+            <div class="file-editor-status">
+              <span id="editorPath">Demo</span>
+              <span id="editorStatus">UTF-8 · Listo</span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <footer class="file-statusbar">
+        <span id="fileStatusCount">0 elementos</span>
+        <span id="fileStatusSelected">Ningún elemento seleccionado</span>
+      </footer>
+    </section>
+  </div>
+</main>
+{{ end }}

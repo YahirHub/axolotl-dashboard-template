@@ -5,6 +5,7 @@
   <meta name="theme-color" content="#09070B">
   <meta name="application-name" content="Axolotl">
   <meta name="apple-mobile-web-app-title" content="Axolotl">
+  {{ if .CSRFToken }}<meta name="csrf-token" content="{{ .CSRFToken }}">{{ end }}
   <title>{{ .Title }}</title>
 
   <link rel="icon" type="image/svg+xml" href="/assets/brand/axolotl.svg">
@@ -15,5 +16,6 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/atom-one-dark.min.css">
   <link rel="stylesheet" href="/assets/css/app.css">
+  {{ if eq .ActiveRoute "files" }}<link rel="stylesheet" href="/assets/css/files.css?v=20260928-1">{{ end }}
 </head>
 {{ end }}

@@ -46,6 +46,10 @@
         </div>
       </div>
 
+      <a class="nav-item {{ if eq .ActiveRoute "files" }}active{{ end }}" href="/archivos" data-route="files" {{ if eq .ActiveRoute "files" }}aria-current="page"{{ end }}>
+        <i class="fa-regular fa-folder-open"></i><span>Archivos</span>
+      </a>
+
       <a class="nav-item {{ if eq .ActiveRoute "server" }}active{{ end }}" href="/servidor" data-route="server" {{ if eq .ActiveRoute "server" }}aria-current="page"{{ end }}>
         <i class="fa-solid fa-server"></i><span>Servidor</span>
       </a>

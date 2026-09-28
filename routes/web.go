@@ -12,6 +12,7 @@ func Web() {
 	authController := controllers.NewAuthController()
 	dashboardController := controllers.NewDashboardController()
 	pageController := controllers.NewPageController()
+	fileController := controllers.NewFileController()
 	healthController := controllers.NewHealthController()
 	requireAuth := appmiddleware.NewRequireAuth()
 
@@ -35,6 +36,12 @@ func Web() {
 	facades.Route().Middleware(requireAuth).Get("/cuenta", pageController.Account).Name("account")
 	facades.Route().Middleware(requireAuth).Get("/servidor", pageController.Server).Name("server")
 	facades.Route().Middleware(requireAuth).Get("/componentes", pageController.Components).Name("components")
+	facades.Route().Middleware(requireAuth).Get("/archivos", fileController.Index).Name("files")
+	facades.Route().Middleware(requireAuth).Get("/api/files", fileController.List).Name("files.list")
+	facades.Route().Middleware(requireAuth).Get("/api/files/read", fileController.Read).Name("files.read")
+	facades.Route().Middleware(requireAuth).Post("/api/files/create", fileController.Create).Name("files.create")
+	facades.Route().Middleware(requireAuth).Post("/api/files/save", fileController.Save).Name("files.save")
+	facades.Route().Middleware(requireAuth).Post("/api/files/delete", fileController.Delete).Name("files.delete")
 
 	facades.Route().Get("/health", healthController.Show).Name("health")
 	facades.Route().Static("assets", "./public")

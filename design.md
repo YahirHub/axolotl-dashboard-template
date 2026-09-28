@@ -1134,9 +1134,9 @@ En dispositivos touch se oculta por completo porque no existe un hover persisten
 
 ## 29. Métricas del servidor
 
-La plantilla incluye `#server-metrics-section` dentro de la misma pantalla principal.
+La plantilla incluye `#server-metrics-section` dentro de la página dedicada `/servidor`.
 
-No es una página separada.
+Las métricas técnicas no deben volver a mezclarse con el overview principal de `/dashboard`.
 
 Componentes:
 
@@ -1559,6 +1559,7 @@ Las áreas técnicas y de configuración viven en rutas dedicadas:
 /servidor    → métricas técnicas
 /cuenta      → perfil, preferencias y seguridad
 /componentes → laboratorio UI
+/archivos    → explorador backend del workspace demo
 ```
 
 Los datos repetibles del demo salen de `DashboardController` y se renderizan con `html/template`. Un proyecto consumidor puede sustituirlos por ORM, APIs o servicios manteniendo los mismos partials.
@@ -1608,6 +1609,7 @@ Axolotl incluye un flujo de acceso reutilizable para proyectos multipropósito.
 /cuenta
 /servidor
 /componentes
+/archivos
 ```
 
 Todas las páginas privadas usan `RequireAuth`.
@@ -1685,4 +1687,113 @@ Rutas públicas:
 ### Sidebar
 
 El logo del sidebar debe seguir siendo también el control de expandir/colapsar. En desktop, hover revela el icono de acción; en touch/mobile, el estado del drawer controla qué icono se muestra.
+
+## 34. Explorador de archivos
+
+Axolotl incluye una página independiente:
+
+```text
+/archivos
+```
+
+Su objetivo es demostrar un módulo full-stack reusable para trabajar con archivos desde Go sin exponer libremente el filesystem del servidor.
+
+### Backend
+
+La raíz se configura mediante:
+
+```dotenv
+FILES_ROOT=storage/demo-files
+FILES_MAX_EDIT_BYTES=2097152
+```
+
+El backend vive en:
+
+```text
+app/files/workspace.go
+app/files/configured.go
+app/http/controllers/file_controller.go
+```
+
+API protegida:
+
+```text
+GET  /api/files
+GET  /api/files/read
+POST /api/files/create
+POST /api/files/save
+POST /api/files/delete
+```
+
+### Reglas de seguridad
+
+- todas las operaciones deben permanecer dentro de `FILES_ROOT`;
+- nunca aceptar rutas absolutas del cliente;
+- bloquear `../` y cualquier path traversal equivalente;
+- no seguir ni permitir symlinks;
+- no devolver rutas físicas absolutas del host;
+- el root nunca puede eliminarse;
+- nombres nuevos deben validarse en backend;
+- la edición se limita a texto UTF-8;
+- archivos binarios no se abren en el editor;
+- respetar `FILES_MAX_EDIT_BYTES`;
+- create/save/delete requieren sesión y CSRF;
+- un error interno no debe revelar paths del sistema operativo.
+
+### UI tipo explorador
+
+La página usa:
+
+- toolbar de Atrás / Subir / Actualizar;
+- breadcrumbs;
+- acceso rápido a carpetas raíz;
+- vista de detalles con nombre, tipo, tamaño y fecha;
+- selección visual;
+- doble clic para abrir carpeta o archivo;
+- creación de archivos y carpetas;
+- eliminación con modal de confirmación.
+
+El item `Archivos` del sidebar usa `data-route="files"` y debe quedar activo en `/archivos`.
+
+### Editor tipo VS Code
+
+Los archivos editables se abren dentro de la misma página.
+
+Componentes:
+
+- pestaña con nombre;
+- indicador de cambios sin guardar;
+- números de línea;
+- textarea transparente superpuesta al bloque resaltado;
+- Highlight.js mediante el CDN ya utilizado por Axolotl;
+- detección de lenguaje según extensión;
+- botón Guardar;
+- atajo `Ctrl/Cmd + S`;
+- Tab inserta dos espacios;
+- barra inferior con ruta y estado.
+
+### Cierre con cambios sin guardar
+
+Cerrar o navegar fuera del archivo modificado debe preguntar antes de descartar cambios.
+
+Dentro de la aplicación se reutiliza `openUiModal()` con tres opciones:
+
+```text
+Cancelar
+Cerrar sin guardar
+Guardar y cerrar
+```
+
+Además se mantiene `beforeunload` como protección del navegador cuando el usuario abandona la página completa.
+
+### Assets
+
+```text
+resources/views/files.tmpl
+resources/views/partials/files-main.tmpl
+public/css/files.css
+public/js/files.js
+```
+
+Los estilos y JavaScript del explorador se cargan únicamente cuando `ActiveRoute == "files"`.
 

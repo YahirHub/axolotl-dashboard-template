@@ -1,0 +1,15 @@
+{{ define "files.tmpl" }}
+<!doctype html>
+<html lang="es">
+{{ template "partials/head" . }}
+<body>
+  <div class="app" id="app">
+    {{ template "partials/sidebar" . }}
+    {{ template "partials/files-main" . }}
+  </div>
+
+  {{ template "partials/overlays" . }}
+  {{ template "partials/scripts" . }}
+</body>
+</html>
+{{ end }}

@@ -98,6 +98,7 @@ func TestAuthenticatedPages(t *testing.T) {
 		{"/cuenta", "account", []string{"Cuenta", "Perfil", "Preferencias", "Seguridad"}},
 		{"/servidor", "server", []string{"Servidor", "Métricas del servidor", "CPU", "RAM", "Red", "Almacenamiento"}},
 		{"/componentes", "components", []string{"Componentes UI", "Design system reutilizable", "Laboratorio UI"}},
+		{"/archivos", "files", []string{"Explorador de archivos", "Nueva carpeta", "Nuevo archivo", "Acceso rápido"}},
 	} {
 		response, err := testCase.Http(t).WithSession(session).Get(item.path)
 		require.NoError(t, err)

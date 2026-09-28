@@ -11,6 +11,8 @@ storage/logs/*
 !storage/logs/.gitkeep
 storage/framework/*
 !storage/framework/.gitkeep
+storage/demo-files/*
+!storage/demo-files/.gitkeep
 
 # Build
 /bin/

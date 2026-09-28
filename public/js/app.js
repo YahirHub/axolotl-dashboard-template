@@ -1072,6 +1072,7 @@ const searchIndex=[
   {type:'section',title:'Integraciones',desc:'Ver servicios conectables.',icon:'fa-plug',action:()=>openDashboardSection('integrations-section')},
   {type:'section',title:'Servidor',desc:'CPU, RAM, red y almacenamiento.',icon:'fa-server',action:()=>openRoute('/servidor')},
   {type:'section',title:'Componentes UI',desc:'Probar componentes y copiar ejemplos de código.',icon:'fa-code',action:()=>openRoute('/componentes')},
+  {type:'section',title:'Archivos',desc:'Abrir el explorador backend del workspace demo.',icon:'fa-folder-open',action:()=>openRoute('/archivos')},
 
   {type:'action',title:'Crear alerta',desc:'Configurar una regla de monitoreo.',icon:'fa-bell',action:createAlertModal},
   {type:'action',title:'Abrir notificaciones',desc:'Ver el centro de notificaciones.',icon:'fa-inbox',action:openDrawer},
