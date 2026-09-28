@@ -10,7 +10,11 @@ func main() {
 	app := bootstrap.Boot()
 
 	if _, err := security.InitializeAdminPIN(); err != nil {
-		facades.Log().Errorf("no se pudo inicializar el setup de administrador: %v", err)
+		facades.Log().Errorf(
+			"no se pudo inicializar el setup de administrador: %v. Si la base es nueva ejecuta: go run . artisan migrate",
+			err,
+		)
+		return
 	}
 
 	app.Start()

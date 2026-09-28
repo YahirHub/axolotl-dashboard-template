@@ -33,6 +33,11 @@ func InitializeAdminPIN() (string, error) {
 	setupState.Lock()
 	defer setupState.Unlock()
 
+	if !facades.Schema().HasTable("users") {
+		setupState.pin = ""
+		return "", fmt.Errorf("tabla users no disponible; ejecuta migraciones")
+	}
+
 	if AdminExists() {
 		setupState.pin = ""
 		return "", nil

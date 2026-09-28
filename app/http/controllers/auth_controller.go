@@ -106,6 +106,8 @@ func (r *AuthController) StoreSetup(ctx http.Context) http.Response {
 		return facades.Orm().Query().Create(&user)
 	})
 	if err != nil {
+		facades.Log().Channel("security").Errorf("setup inicial falló: %v", err)
+
 		message := "No fue posible completar el setup."
 		if strings.Contains(err.Error(), "pin") {
 			message = "PIN temporal incorrecto."
