@@ -1586,7 +1586,68 @@ Al añadir un módulo:
 7. actualizar `contexto/` y `tareas/`;
 8. validar `go test ./...` y `go vet ./...`.
 
-## 32. Branding oficial Axolotl
+## 32. Autenticación y primer setup
+
+Axolotl incluye un flujo de acceso reutilizable para proyectos multipropósito.
+
+### Rutas públicas
+
+```text
+/           decide setup, login o dashboard
+/setup      primer administrador
+/login      inicio de sesión
+/register   registro estándar
+/health     healthcheck
+/assets/*   archivos públicos
+```
+
+### Rutas privadas
+
+```text
+/dashboard
+/cuenta
+/servidor
+/componentes
+```
+
+Todas las páginas privadas usan `RequireAuth`.
+
+### Primer administrador
+
+- Al arrancar, si no existe un usuario activo con rol `admin`, se genera un PIN de 6 dígitos con `crypto/rand`.
+- El PIN vive solo en memoria.
+- Se escribe mediante el canal de log `setup`, que imprime a consola y guarda `storage/logs/setup.log`.
+- `/setup` nunca recibe el PIN desde el backend; el usuario debe consultarlo en el entorno del servidor.
+- El frontend usa seis inputs OTP independientes.
+- El backend concatena y valida los seis dígitos.
+- La comparación del PIN usa `subtle.ConstantTimeCompare`.
+- Al crear correctamente el administrador, el PIN se invalida.
+- Si ya existe administrador, `/setup` no permite crear otro.
+
+### Login y registro
+
+- Contraseñas con Argon2id.
+- Sesiones de Goravel; el login regenera el ID de sesión.
+- Formularios POST protegidos con CSRF.
+- Setup, login y registro tienen rate limit por IP.
+- `/register` solo puede crear `role=user`; el servidor ignora cualquier rol enviado por el navegador.
+- El registro se puede desactivar con `AUTH_ALLOW_REGISTRATION=false`.
+- Logout es POST con CSRF.
+- En producción se debe usar HTTPS y `SESSION_SECURE=true`.
+
+### UI de autenticación
+
+Los estilos de setup/login/registro viven separados del dashboard:
+
+```text
+resources/views/auth.tmpl
+public/css/auth.css
+public/js/auth.js
+```
+
+El diseño mantiene la marca Axolotl, pero evita cargar Chart.js, AOS, Lenis y el resto del dashboard antes de autenticar.
+
+## 33. Branding oficial Axolotl
 
 La marca oficial vive en:
 

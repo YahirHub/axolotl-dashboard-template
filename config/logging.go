@@ -40,6 +40,13 @@ func init() {
 				"print":     false,
 				"formatter": "text",
 			},
+			"setup": map[string]any{
+				"driver":    "single",
+				"path":      "storage/logs/setup.log",
+				"level":     "warning",
+				"print":     true,
+				"formatter": "text",
+			},
 			"otel": map[string]any{
 				"driver":          "otel",
 				"instrument_name": config.GetString("APP_NAME", "github.com/YahirHub/axolotl-dashboard-template/log"),

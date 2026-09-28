@@ -12,34 +12,28 @@
           </div>
         </div>
 
-        <form id="accountProfileForm">
-          <div class="modal-grid">
-            <div class="field">
-              <label>Nombre</label>
-              <input id="accountName" value="Usuario Axolotl">
-            </div>
-            <div class="field">
-              <label>Correo</label>
-              <input id="accountEmail" type="email" value="usuario@axolotl.demo">
-            </div>
-            <div class="field">
-              <label>Alias</label>
-              <input id="accountAlias" maxlength="3" value="AX">
-            </div>
-            <div class="field">
-              <label>Rol</label>
-              <select id="accountRole">
-                <option>Administrador</option>
-                <option>Editor</option>
-                <option>Analista</option>
-                <option>Usuario</option>
-              </select>
-            </div>
+        <div class="modal-grid">
+          <div class="field">
+            <label>Nombre</label>
+            <input value="{{ .CurrentUser.Name }}" readonly>
           </div>
-          <div class="page-actions">
-            <button class="btn-ui btn-primary" type="submit"><i class="fa-solid fa-check"></i> Guardar perfil</button>
+          <div class="field">
+            <label>Correo</label>
+            <input type="email" value="{{ .CurrentUser.Email }}" readonly>
           </div>
-        </form>
+          <div class="field">
+            <label>Alias</label>
+            <input value="{{ .CurrentUser.Alias }}" readonly>
+          </div>
+          <div class="field">
+            <label>Rol</label>
+            <input value="{{ .CurrentUser.Role }}" readonly>
+          </div>
+        </div>
+        <div class="workspace-note">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>La identidad ya proviene de la sesión y de la tabla <strong>users</strong>. Los cambios de perfil pueden añadirse después como una ruta de actualización según las reglas del proyecto consumidor.</span>
+        </div>
       </article>
 
       <article class="card section page-card" id="preferencias">
@@ -76,7 +70,7 @@
         <div class="card-head">
           <div>
             <div class="card-title"><i class="fa-solid fa-shield-halved"></i> Seguridad</div>
-            <div class="section-subtitle">Controles de ejemplo para una futura capa de autenticación.</div>
+            <div class="section-subtitle">La sesión y las contraseñas ya están protegidas por el backend; estos controles son extensiones opcionales.</div>
           </div>
         </div>
 
@@ -109,8 +103,8 @@
           </div>
         </div>
         <div class="account-info-grid">
-          <div><span>Sesión</span><strong>Preparada para middleware</strong></div>
-          <div><span>Roles</span><strong>UI demostrativa</strong></div>
+          <div><span>Sesión</span><strong>Goravel · file session</strong></div>
+          <div><span>Rol actual</span><strong>{{ .CurrentUser.Role }}</strong></div>
           <div><span>Persistencia</span><strong>SQLite / GORM</strong></div>
           <div><span>Configuración</span><strong>.env + Goravel</strong></div>
         </div>

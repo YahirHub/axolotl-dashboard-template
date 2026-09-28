@@ -9,7 +9,7 @@
     </div>
 
     <nav class="nav" aria-label="Navegación principal">
-      <a class="nav-item {{ if eq .ActiveRoute "dashboard" }}active{{ end }}" href="/dashboard">
+      <a class="nav-item {{ if eq .ActiveRoute "dashboard" }}active{{ end }}" href="/dashboard" data-route="dashboard" {{ if eq .ActiveRoute "dashboard" }}aria-current="page"{{ end }}>
         <i class="fa-solid fa-house"></i><span>Dashboard</span>
       </a>
 
@@ -46,15 +46,15 @@
         </div>
       </div>
 
-      <a class="nav-item {{ if eq .ActiveRoute "server" }}active{{ end }}" href="/servidor">
+      <a class="nav-item {{ if eq .ActiveRoute "server" }}active{{ end }}" href="/servidor" data-route="server" {{ if eq .ActiveRoute "server" }}aria-current="page"{{ end }}>
         <i class="fa-solid fa-server"></i><span>Servidor</span>
       </a>
 
-      <a class="nav-item {{ if eq .ActiveRoute "account" }}active{{ end }}" href="/cuenta">
+      <a class="nav-item {{ if eq .ActiveRoute "account" }}active{{ end }}" href="/cuenta" data-route="account" {{ if eq .ActiveRoute "account" }}aria-current="page"{{ end }}>
         <i class="fa-regular fa-user"></i><span>Cuenta</span>
       </a>
 
-      <a class="nav-item {{ if eq .ActiveRoute "components" }}active{{ end }}" href="/componentes">
+      <a class="nav-item {{ if eq .ActiveRoute "components" }}active{{ end }}" href="/componentes" data-route="components" {{ if eq .ActiveRoute "components" }}aria-current="page"{{ end }}>
         <i class="fa-solid fa-code"></i><span>Componentes</span>
       </a>
 

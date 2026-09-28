@@ -29,7 +29,7 @@ func init() {
 		// Supported drivers: "jwt", "session"
 		"guards": map[string]any{
 			"user": map[string]any{
-				"driver":   "jwt",
+				"driver":   "session",
 				"provider": "user",
 			},
 		},
@@ -39,6 +39,9 @@ func init() {
 			"user": map[string]any{
 				"driver": "orm",
 			},
+		},
+		"registration": map[string]any{
+			"enabled": config.Env("AUTH_ALLOW_REGISTRATION", true),
 		},
 	})
 }

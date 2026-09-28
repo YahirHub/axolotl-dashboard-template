@@ -1,0 +1,136 @@
+{{ define "auth.tmpl" }}
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#09070B">
+  <title>{{ .Title }}</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/brand/axolotl.svg">
+  <link rel="icon" type="image/png" href="/assets/brand/axolotl.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="/assets/css/auth.css?v=20260928-1">
+</head>
+<body>
+  <main class="auth-shell">
+    <section class="auth-card">
+      <a class="auth-brand" href="/">
+        <img src="/assets/brand/axolotl.svg" alt="Axolotl">
+        <span>Axolotl</span>
+      </a>
+
+      <div class="auth-copy">
+        <span class="auth-kicker">{{ if eq .Mode "setup" }}Primera configuración{{ else if eq .Mode "register" }}Registro{{ else }}Acceso seguro{{ end }}</span>
+        <h1>{{ .Heading }}</h1>
+        <p>{{ .Subtitle }}</p>
+      </div>
+
+      {{ if .Error }}
+      <div class="auth-alert" role="alert"><i class="fa-solid fa-circle-exclamation"></i><span>{{ .Error }}</span></div>
+      {{ end }}
+
+      {{ if eq .Mode "login" }}
+      <form class="auth-form" action="/login" method="POST" autocomplete="on">
+        <input type="hidden" name="_token" value="{{ .CSRFToken }}">
+        <label>Correo
+          <input name="email" type="email" value="{{ .OldEmail }}" autocomplete="email" required autofocus>
+        </label>
+        <label>Contraseña
+          <span class="password-wrap">
+            <input id="authPassword" name="password" type="password" autocomplete="current-password" required>
+            <button class="password-toggle" type="button" data-password-toggle="authPassword" aria-label="Mostrar contraseña"><i class="fa-regular fa-eye"></i></button>
+          </span>
+        </label>
+        <button class="auth-submit" type="submit">Iniciar sesión <i class="fa-solid fa-arrow-right"></i></button>
+      </form>
+      {{ if .RegistrationEnabled }}
+      <p class="auth-switch">¿No tienes cuenta? <a href="/register">Crear cuenta</a></p>
+      {{ end }}
+      {{ end }}
+
+      {{ if eq .Mode "register" }}
+      <form class="auth-form" action="/register" method="POST" autocomplete="on">
+        <input type="hidden" name="_token" value="{{ .CSRFToken }}">
+        <div class="auth-grid">
+          <label>Nombre
+            <input name="name" value="{{ .OldName }}" maxlength="100" autocomplete="name" required autofocus>
+          </label>
+          <label>Alias
+            <input name="alias" value="{{ .OldAlias }}" maxlength="3" placeholder="AX" required>
+          </label>
+        </div>
+        <label>Correo
+          <input name="email" type="email" value="{{ .OldEmail }}" maxlength="190" autocomplete="email" required>
+        </label>
+        <div class="auth-grid">
+          <label>Contraseña
+            <span class="password-wrap">
+              <input id="registerPassword" name="password" type="password" minlength="10" maxlength="128" autocomplete="new-password" required>
+              <button class="password-toggle" type="button" data-password-toggle="registerPassword" aria-label="Mostrar contraseña"><i class="fa-regular fa-eye"></i></button>
+            </span>
+          </label>
+          <label>Confirmar
+            <input name="password_confirmation" type="password" minlength="10" maxlength="128" autocomplete="new-password" required>
+          </label>
+        </div>
+        <div class="auth-note"><i class="fa-solid fa-user"></i><span>Las cuentas creadas desde registro reciben rol <strong>Usuario</strong>. El rol administrador solo se crea durante el setup inicial.</span></div>
+        <button class="auth-submit" type="submit">Crear cuenta <i class="fa-solid fa-user-plus"></i></button>
+      </form>
+      <p class="auth-switch">¿Ya tienes cuenta? <a href="/login">Iniciar sesión</a></p>
+      {{ end }}
+
+      {{ if eq .Mode "setup" }}
+      <form class="auth-form" action="/setup" method="POST" autocomplete="off">
+        <input type="hidden" name="_token" value="{{ .CSRFToken }}">
+        <div class="auth-grid">
+          <label>Nombre del administrador
+            <input name="name" value="{{ .OldName }}" maxlength="100" autocomplete="name" required autofocus>
+          </label>
+          <label>Alias
+            <input name="alias" value="{{ .OldAlias }}" maxlength="3" placeholder="AD" required>
+          </label>
+        </div>
+        <label>Correo
+          <input name="email" type="email" value="{{ .OldEmail }}" maxlength="190" autocomplete="email" required>
+        </label>
+        <div class="auth-grid">
+          <label>Contraseña
+            <span class="password-wrap">
+              <input id="setupPassword" name="password" type="password" minlength="10" maxlength="128" autocomplete="new-password" required>
+              <button class="password-toggle" type="button" data-password-toggle="setupPassword" aria-label="Mostrar contraseña"><i class="fa-regular fa-eye"></i></button>
+            </span>
+          </label>
+          <label>Confirmar
+            <input name="password_confirmation" type="password" minlength="10" maxlength="128" autocomplete="new-password" required>
+          </label>
+        </div>
+
+        <div class="setup-pin-block">
+          <div class="setup-pin-head">
+            <div><strong>PIN temporal</strong><small>Consulta el log del servidor. Son 6 dígitos y cambia al reiniciar hasta completar el setup.</small></div>
+            <i class="fa-solid fa-terminal"></i>
+          </div>
+          <div class="otp-group" data-otp>
+            <input name="pin_1" inputmode="numeric" pattern="[0-9]" maxlength="1" aria-label="Dígito 1" required>
+            <input name="pin_2" inputmode="numeric" pattern="[0-9]" maxlength="1" aria-label="Dígito 2" required>
+            <input name="pin_3" inputmode="numeric" pattern="[0-9]" maxlength="1" aria-label="Dígito 3" required>
+            <input name="pin_4" inputmode="numeric" pattern="[0-9]" maxlength="1" aria-label="Dígito 4" required>
+            <input name="pin_5" inputmode="numeric" pattern="[0-9]" maxlength="1" aria-label="Dígito 5" required>
+            <input name="pin_6" inputmode="numeric" pattern="[0-9]" maxlength="1" aria-label="Dígito 6" required>
+          </div>
+        </div>
+
+        <button class="auth-submit" type="submit">Crear administrador e iniciar <i class="fa-solid fa-shield-halved"></i></button>
+      </form>
+      {{ end }}
+
+      <div class="auth-footer">
+        <span><i class="fa-solid fa-lock"></i> Sesión segura</span>
+        <span>Goravel · SQLite · Argon2id</span>
+      </div>
+    </section>
+  </main>
+  <script src="/assets/js/auth.js?v=20260928-1"></script>
+</body>
+</html>
+{{ end }}

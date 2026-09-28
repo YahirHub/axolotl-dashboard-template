@@ -9,6 +9,12 @@
 - Base de datos por defecto: SQLite embebido.
 - La conexión de base de datos se selecciona con variables `.env` estilo Laravel, especialmente `DB_CONNECTION` y `DB_DATABASE`.
 - Mantener capacidad futura de cambiar de driver mediante configuración, sin acoplar dominio a SQLite.
+- Autenticación base: guard de sesión de Goravel + tabla `users`.
+- Contraseñas: Argon2id; nunca guardar ni registrar contraseñas en texto plano.
+- El primer rol `admin` solo puede crearse mediante `/setup` con el PIN temporal del arranque.
+- El registro público solo crea rol `user`; nunca confiar en un rol enviado por el cliente.
+- Mantener CSRF en mutaciones web y rate limiting en setup/login/registro.
+- Todas las áreas privadas deben usar `RequireAuth` o un middleware de autorización más específico.
 
 ## Investigación y documentación
 - NO usar Context7/ctx7 mientras existan herramientas de búsqueda web, documentación oficial, repositorios oficiales, Knowledge local u otras fuentes disponibles.

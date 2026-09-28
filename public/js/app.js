@@ -70,17 +70,19 @@ function loadAccountState(){
   try{
     const saved=JSON.parse(localStorage.getItem(accountStorageKey)||'null');
     if(!saved)return;
-    if(saved.user && typeof saved.user==='object'){
-      state.user={
-        name:String(saved.user.name||state.user.name),
-        email:String(saved.user.email||state.user.email),
-        role:String(saved.user.role||state.user.role),
-        alias:String(saved.user.alias||state.user.alias).slice(0,3).toUpperCase()
-      };
-    }
     if(typeof saved.compact==='boolean')state.compact=saved.compact;
     if(typeof saved.animations==='boolean')state.animations=saved.animations;
   }catch(_){}
+}
+
+function hydrateServerUser(){
+  const chip=$('#userBtn');
+  if(!chip)return;
+  const name=chip.dataset.serverName?.trim();
+  if(!name)return;
+  state.user.name=name;
+  state.user.alias=(chip.dataset.serverAlias||'AX').slice(0,3).toUpperCase();
+  state.user.role=chip.dataset.serverRole||'Usuario';
 }
 
 const assets={
@@ -2076,26 +2078,10 @@ function runTemplateAction(action){
 }
 
 function initAccountPage(){
-  const form=$('#accountProfileForm');
-  if(!form)return;
+  if(!$('#account-page'))return;
 
-  $('#accountName').value=state.user.name;
-  $('#accountEmail').value=state.user.email;
-  $('#accountAlias').value=state.user.alias;
-  $('#accountRole').value=state.user.role;
   $('#accountCompact').checked=state.compact;
   $('#accountAnimations').checked=state.animations;
-
-  form.addEventListener('submit',e=>{
-    e.preventDefault();
-    state.user.name=$('#accountName').value.trim()||'Usuario Axolotl';
-    state.user.email=$('#accountEmail').value.trim()||'usuario@axolotl.demo';
-    state.user.alias=($('#accountAlias').value.trim()||'AX').slice(0,3).toUpperCase();
-    state.user.role=$('#accountRole').value;
-    saveAccountState();
-    syncUserUI();
-    toast('Perfil guardado','Los datos se conservarán en este navegador.');
-  });
 
   $('#accountPreferencesSave')?.addEventListener('click',()=>{
     state.compact=$('#accountCompact').checked;
@@ -2219,20 +2205,63 @@ function runSidebarAction(action){
 }
 
 function activateSidebarTarget(targetId){
-  $$('.nav-item,.nav-subitem').forEach(x=>x.classList.remove('active'));
+  $$('.nav-item,.nav-subitem').forEach(x=>{
+    x.classList.remove('active');
+    x.removeAttribute('aria-current');
+  });
 
+  const dashboardLink=$('.nav-item[data-route="dashboard"]');
   const direct=$(`.nav-item[data-target="${targetId}"]`);
-  if(direct){direct.classList.add('active');return}
+  if(direct){
+    direct.classList.add('active');
+    direct.setAttribute('aria-current','page');
+    return;
+  }
 
-  const child=$(`.nav-subitem[data-target="${targetId}"]`);
+  const child=
+    $(`.nav-subitem[data-target="${targetId}"]`) ||
+    $(`.nav-subitem[href="/dashboard#${targetId}"]`);
+
   if(child){
     child.classList.add('active');
+    child.setAttribute('aria-current','location');
     const group=child.closest('.nav-group');
     if(group){
       const parent=$('.nav-group-toggle',group);
       if(parent) parent.classList.add('active');
       setNavGroup(group,true);
     }
+    return;
+  }
+
+  if(dashboardLink){
+    dashboardLink.classList.add('active');
+    dashboardLink.setAttribute('aria-current','page');
+  }
+}
+
+function syncActiveRoute(){
+  const path=window.location.pathname.replace(/\/+$/,'') || '/';
+  const routeByPath={
+    '/':'dashboard',
+    '/dashboard':'dashboard',
+    '/servidor':'server',
+    '/cuenta':'account',
+    '/componentes':'components',
+    '/archivos':'files'
+  };
+  const route=routeByPath[path];
+  if(!route)return;
+
+  $$('.nav-item[data-route]').forEach(link=>{
+    const active=link.dataset.route===route;
+    link.classList.toggle('active',active);
+    if(active)link.setAttribute('aria-current','page');
+    else link.removeAttribute('aria-current');
+  });
+
+  if(route==='dashboard' && window.location.hash){
+    activateSidebarTarget(window.location.hash.slice(1));
   }
 }
 
@@ -2355,6 +2384,9 @@ scrollTopBtn.addEventListener('click',()=>{
 });
 
 loadAccountState();
+syncActiveRoute();
+window.addEventListener('hashchange',syncActiveRoute);
+hydrateServerUser();
 document.body.classList.toggle('compact',state.compact);
 Chart.defaults.animation=state.animations?{duration:500}:false;
 loadTheme();

@@ -21,11 +21,12 @@
           <button class="top-btn icon" id="notificationBtn" type="button" aria-label="Notificaciones">
             <i class="fa-regular fa-bell"></i><span class="badge" id="notifBadge">3</span>
           </button>
-          <button class="user-chip" id="userBtn" type="button" aria-label="Menú de usuario" aria-expanded="false">
-            <span class="user-avatar-mini" id="headerUserAvatar">AX</span>
+          <button class="user-chip" id="userBtn" type="button" aria-label="Menú de usuario" aria-expanded="false"
+            data-server-name="{{ .CurrentUser.Name }}" data-server-alias="{{ .CurrentUser.Alias }}" data-server-role="{{ .CurrentUser.Role }}">
+            <span class="user-avatar-mini" id="headerUserAvatar">{{ .CurrentUser.Alias }}</span>
             <span class="user-chip-copy">
-              <strong id="headerUserName">Usuario Axolotl</strong>
-              <small id="headerUserRole">Administrador</small>
+              <strong id="headerUserName">{{ .CurrentUser.Name }}</strong>
+              <small id="headerUserRole">{{ .CurrentUser.Role }}</small>
             </span>
             <i class="fa-solid fa-angle-down"></i>
           </button>
@@ -44,7 +45,10 @@
             <a class="drop-item" href="/componentes"><i class="fa-solid fa-layer-group"></i><span>Componentes UI</span></a>
             <a class="drop-item" href="/cuenta#seguridad"><i class="fa-solid fa-shield-halved"></i><span>Seguridad</span></a>
             <div class="drop-sep"></div>
-            <button class="drop-item" data-user-action="logout"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Cerrar sesión</span></button>
+            <form action="/logout" method="POST">
+              <input type="hidden" name="_token" value="{{ .CSRFToken }}">
+              <button class="drop-item" type="submit"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Cerrar sesión</span></button>
+            </form>
           </div>
         </div>
       </header>

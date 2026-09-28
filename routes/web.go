@@ -1,20 +1,41 @@
 package routes
 
 import (
+	httpmiddleware "github.com/goravel/framework/http/middleware"
+
 	"github.com/YahirHub/axolotl-dashboard-template/app/facades"
 	"github.com/YahirHub/axolotl-dashboard-template/app/http/controllers"
+	appmiddleware "github.com/YahirHub/axolotl-dashboard-template/app/http/middleware"
 )
 
 func Web() {
+	authController := controllers.NewAuthController()
 	dashboardController := controllers.NewDashboardController()
 	pageController := controllers.NewPageController()
 	healthController := controllers.NewHealthController()
+	requireAuth := appmiddleware.NewRequireAuth()
 
-	facades.Route().Get("/", dashboardController.Index).Name("home")
-	facades.Route().Get("/dashboard", dashboardController.Index).Name("dashboard")
-	facades.Route().Get("/cuenta", pageController.Account).Name("account")
-	facades.Route().Get("/servidor", pageController.Server).Name("server")
-	facades.Route().Get("/componentes", pageController.Components).Name("components")
+	facades.Route().Get("/", authController.Home).Name("home")
+
+	facades.Route().Get("/setup", authController.Setup).Name("setup")
+	facades.Route().Middleware(httpmiddleware.Throttle("auth-setup")).
+		Post("/setup", authController.StoreSetup).Name("setup.store")
+
+	facades.Route().Get("/login", authController.Login).Name("login")
+	facades.Route().Middleware(httpmiddleware.Throttle("auth-login")).
+		Post("/login", authController.StoreLogin).Name("login.store")
+
+	facades.Route().Get("/register", authController.Register).Name("register")
+	facades.Route().Middleware(httpmiddleware.Throttle("auth-register")).
+		Post("/register", authController.StoreRegister).Name("register.store")
+
+	facades.Route().Middleware(requireAuth).Post("/logout", authController.Logout).Name("logout")
+
+	facades.Route().Middleware(requireAuth).Get("/dashboard", dashboardController.Index).Name("dashboard")
+	facades.Route().Middleware(requireAuth).Get("/cuenta", pageController.Account).Name("account")
+	facades.Route().Middleware(requireAuth).Get("/servidor", pageController.Server).Name("server")
+	facades.Route().Middleware(requireAuth).Get("/componentes", pageController.Components).Name("components")
+
 	facades.Route().Get("/health", healthController.Show).Name("health")
 	facades.Route().Static("assets", "./public")
 }

@@ -46,6 +46,33 @@ Abrir:
 http://127.0.0.1:3000
 ```
 
+### 3. Primer inicio
+
+Si todavía no existe un usuario activo con rol `admin`, el arranque genera un **PIN temporal de 6 dígitos** usando `crypto/rand`.
+
+El PIN se muestra únicamente en el log/terminal del servidor y también queda en:
+
+```text
+storage/logs/setup.log
+```
+
+Ejemplo:
+
+```text
+AXOLOTL SETUP PIN: 123456
+No existe un administrador. Abre /setup para crear la cuenta inicial.
+```
+
+Al abrir `/`:
+
+1. si no existe administrador, redirige a `/setup`;
+2. `/setup` solicita nombre, correo, alias, contraseña y los 6 dígitos del PIN;
+3. el rol `admin` se asigna exclusivamente desde el backend;
+4. al terminar, Axolotl crea la cuenta e inicia la sesión automáticamente;
+5. el PIN queda invalidado y `/setup` deja de permitir otra creación administrativa.
+
+El PIN no se guarda en SQLite: vive únicamente en memoria y cambia al reiniciar mientras el setup siga pendiente.
+
 Healthcheck:
 
 ```text
@@ -65,6 +92,12 @@ APP_PORT=3000
 
 DB_CONNECTION=sqlite
 DB_DATABASE=storage/axolotl.sqlite
+
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
+SESSION_SECURE=false
+
+AUTH_ALLOW_REGISTRATION=true
 ```
 
 `DB_DATABASE` acepta una ruta relativa al proyecto o una ruta absoluta.
@@ -78,12 +111,18 @@ app/
 ├── facades/
 ├── http/
 │   ├── controllers/
+│   │   ├── auth_controller.go
 │   │   ├── dashboard_controller.go
+│   │   ├── page_controller.go
 │   │   └── health_controller.go
 │   └── middleware/
+│       ├── require_auth.go
 │       └── security_headers.go
-└── models/
-    └── app_setting.go
+├── models/
+│   ├── app_setting.go
+│   └── user.go
+└── security/
+    └── setup.go
 
 bootstrap/
 ├── app.go
@@ -97,10 +136,15 @@ public/
 ├── brand/
 │   ├── axolotl.svg
 │   └── axolotl.png
-├── css/app.css
-└── js/app.js
+├── css/
+│   ├── app.css
+│   └── auth.css
+└── js/
+    ├── app.js
+    └── auth.js
 resources/
 └── views/
+    ├── auth.tmpl
     ├── dashboard.tmpl
     ├── account.tmpl
     ├── server.tmpl
@@ -156,13 +200,22 @@ docs/reference/index-original.html
 ## Rutas
 
 ```text
-GET /              dashboard de entrada
-GET /dashboard     overview general
-GET /cuenta        perfil, preferencias y seguridad
-GET /servidor      métricas técnicas
-GET /componentes   laboratorio UI y catálogo de componentes
-GET /health        healthcheck con prueba de SQLite
-/assets/*          archivos estáticos
+GET  /              decide setup, login o dashboard
+GET  /setup         setup del primer administrador
+POST /setup         crea el primer administrador con PIN temporal
+GET  /login         inicio de sesión
+POST /login         autentica usuario
+GET  /register      registro de usuario estándar
+POST /register      crea usuario con rol user
+POST /logout        cierra sesión
+
+GET  /dashboard     overview general [auth]
+GET  /cuenta        perfil, preferencias y seguridad [auth]
+GET  /servidor      métricas técnicas [auth]
+GET  /componentes   laboratorio UI y catálogo de componentes [auth]
+
+GET  /health        healthcheck con prueba de SQLite
+/assets/*           archivos estáticos
 ```
 
 Consultar las rutas registradas:
@@ -185,7 +238,9 @@ Ver estado:
 go run . artisan migrate:status
 ```
 
-La migración de ejemplo `app_settings` y el modelo `AppSetting` validan la integración de Goravel ORM con SQLite.
+La migración `users` almacena las cuentas con correo único, contraseña hasheada, rol y estado activo. El modelo `User` define los roles base `admin` y `user`.
+
+La migración de ejemplo `app_settings` y el modelo `AppSetting` siguen disponibles como ejemplo de persistencia general.
 
 Los archivos SQLite locales se guardan en `storage/` y están ignorados por Git.
 
@@ -201,10 +256,16 @@ go build ./...
 Las pruebas actuales verifican:
 
 - round-trip ORM sobre SQLite;
-- render del dashboard;
-- referencias a CSS/JS;
-- healthcheck;
-- headers globales de seguridad.
+- redirección del primer inicio hacia `/setup`;
+- rechazo de PIN de setup incorrecto;
+- creación del primer administrador con PIN correcto;
+- inicio automático de sesión después del setup;
+- login y logout con sesión;
+- registro de usuarios estándar;
+- que un cliente no puede autoasignarse rol `admin` desde `/register`;
+- protección de las páginas privadas;
+- render de dashboard, cuenta, servidor y componentes;
+- healthcheck y headers globales de seguridad.
 
 ## Docker
 
@@ -219,6 +280,25 @@ Docker fuerza `APP_HOST=0.0.0.0` dentro del contenedor y monta `./storage` para 
 La imagen **no incluye** el archivo `.env`; las variables se cargan en runtime.
 
 ## Seguridad base
+
+La autenticación incluye:
+
+- guard de sesión de Goravel;
+- regeneración de sesión al iniciar y cerrar sesión;
+- contraseñas con **Argon2id**;
+- CSRF global para formularios POST;
+- rate limit por IP para setup, login y registro;
+- PIN inicial generado con `crypto/rand` y comparación constant-time;
+- PIN guardado solo en memoria;
+- rol `admin` asignable únicamente durante el setup inicial;
+- registro público configurable con `AUTH_ALLOW_REGISTRATION`;
+- rutas privadas protegidas por `RequireAuth`.
+
+En producción configura HTTPS y cambia:
+
+```dotenv
+SESSION_SECURE=true
+```
 
 El middleware global agrega:
 
