@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	stdhttp "net/http"
 
 	"github.com/goravel/framework/contracts/http"
@@ -34,6 +35,18 @@ func (r *RequireAuth) Handle(ctx http.Context) {
 
 	var user models.User
 	if err := facades.Auth(ctx).User(&user); err != nil || !user.Active {
+		_ = facades.Auth(ctx).Logout()
+		_ = ctx.Response().Redirect(stdhttp.StatusSeeOther, "/login").Abort()
+		return
+	}
+
+	sessionVersion := fmt.Sprint(ctx.Request().Session().Get("auth_version", ""))
+	if user.AuthVersion == 0 || sessionVersion != fmt.Sprint(user.AuthVersion) {
+		facades.Log().Channel("security").Warningf(
+			"sesión invalidada por versión ip=%s user_id=%d",
+			security.ClientAddress(ctx),
+			user.ID,
+		)
 		_ = facades.Auth(ctx).Logout()
 		_ = ctx.Response().Redirect(stdhttp.StatusSeeOther, "/login").Abort()
 		return

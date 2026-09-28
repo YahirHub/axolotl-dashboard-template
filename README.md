@@ -87,6 +87,7 @@ La configuración sigue el enfoque de Laravel mediante variables de entorno.
 APP_NAME=Axolotl
 APP_ENV=local
 APP_DEBUG=true
+APP_URL=http://localhost:3000
 APP_HOST=127.0.0.1
 APP_PORT=3000
 
@@ -101,7 +102,18 @@ AUTH_ALLOW_REGISTRATION=true
 
 FILES_ROOT=storage/demo-files
 FILES_MAX_EDIT_BYTES=2097152
+
+MAIL_HOST=
+MAIL_PORT=1025
+MAIL_USERNAME=
+MAIL_PASSWORD=
+MAIL_ENCRYPTION=auto
+MAIL_FROM_ADDRESS=
+MAIL_FROM_NAME=Axolotl
+PASSWORD_RESET_TTL=30
 ```
+
+La recuperación de contraseña aparece únicamente cuando SMTP está configurado. En producción, `APP_URL` debe usar HTTPS. `MAIL_ENCRYPTION=auto` usa TLS directo en 465 o STARTTLS cuando el servidor lo ofrece; un SMTP remoto sin cifrado se rechaza. `MAIL_ENCRYPTION=none` solo se admite para servidores loopback de desarrollo.
 
 `DB_DATABASE` acepta una ruta relativa al proyecto o una ruta absoluta.
 
@@ -127,8 +139,12 @@ app/
 │       └── security_headers.go
 ├── models/
 │   ├── app_setting.go
+│   ├── password_reset_token.go
 │   └── user.go
 └── security/
+    ├── auth_limiter.go
+    ├── password_reset.go
+    ├── password_reset_mail.go
     └── setup.go
 
 bootstrap/
@@ -216,9 +232,13 @@ GET  /setup         setup del primer administrador
 POST /setup         crea el primer administrador con PIN temporal
 GET  /login         inicio de sesión
 POST /login         autentica usuario
-GET  /register      registro de usuario estándar
-POST /register      crea usuario con rol user
-POST /logout        cierra sesión
+GET  /register          registro de usuario estándar
+POST /register          crea usuario con rol user
+GET  /forgot-password   solicita recuperación, solo si SMTP está configurado
+POST /forgot-password   genera y envía enlace temporal
+GET  /reset-password    formulario de nueva contraseña
+POST /reset-password    consume token de un solo uso
+POST /logout            cierra sesión
 
 GET  /dashboard     overview general [auth]
 GET  /cuenta        perfil, preferencias y seguridad [auth]
@@ -257,7 +277,9 @@ Ver estado:
 go run . artisan migrate:status
 ```
 
-La migración `users` almacena las cuentas con correo único, contraseña hasheada, rol y estado activo. El modelo `User` define los roles base `admin` y `user`.
+La migración `users` almacena las cuentas con correo único, contraseña hasheada, rol, estado activo y `auth_version`. El modelo `User` define los roles base `admin` y `user`. La versión de autenticación permite invalidar sesiones antiguas cuando se restablece la contraseña.
+
+`password_reset_tokens` almacena únicamente el hash SHA-256 del token, su expiración y estado de uso. El token en claro solo existe en el enlace enviado al usuario y se entrega en el fragmento `#token=...`, de modo que no se envía en la URL HTTP ni aparece en el access log del servidor.
 
 La migración de ejemplo `app_settings` y el modelo `AppSetting` siguen disponibles como ejemplo de persistencia general.
 
@@ -282,6 +304,9 @@ Las pruebas actuales verifican:
 - creación del primer administrador con PIN correcto;
 - inicio automático de sesión después del setup;
 - login y logout con sesión;
+- bloqueos progresivos tras intentos fallidos;
+- recuperación por correo con token temporal de un solo uso;
+- invalidación de sesiones previas al cambiar contraseña;
 - registro de usuarios estándar;
 - que un cliente no puede autoasignarse rol `admin` desde `/register`;
 - protección de las páginas privadas;
@@ -311,16 +336,25 @@ La autenticación incluye:
 - regeneración de sesión al iniciar y cerrar sesión;
 - contraseñas con **Argon2id**;
 - CSRF global para formularios POST;
-- rate limit por IP para setup, login y registro;
+- throttling para setup, registro y recuperación;
+- rate limit adaptativo de login por IP real, identidad e IP+identidad, con bloqueos temporales progresivos;
+- la IP de seguridad se toma de la conexión TCP y no de cabeceras reenviadas no confiables;
 - PIN inicial generado con `crypto/rand` y comparación constant-time;
 - PIN guardado solo en memoria;
 - rol `admin` asignable únicamente durante el setup inicial;
 - registro público configurable con `AUTH_ALLOW_REGISTRATION`;
 - rutas privadas protegidas por `RequireAuth`;
 - explorador confinado a `FILES_ROOT`, sin acceso arbitrario al filesystem del host;
-- rechazo de traversal (`../`) y symlinks;
+- rechazo de traversal, rutas ambiguas, nombres reservados, symlinks, junctions y reparse points;
+- límites de longitud/profundidad y rechazo de controles invisibles/bidi en nombres;
 - edición limitada a texto UTF-8 y al tamaño `FILES_MAX_EDIT_BYTES`;
-- mutaciones de archivos protegidas con sesión y CSRF.
+- mutaciones de archivos protegidas con sesión y CSRF;
+- recuperación de contraseña opcional por SMTP, con respuesta anti-enumeración y cooldown por identidad;
+- tokens de recuperación aleatorios de 256 bits, almacenados solo como hash, con expiración y uso único;
+- el token de recovery viaja en fragmento URL para no aparecer en access logs HTTP;
+- reset de contraseña incrementa `auth_version` e invalida sesiones anteriores;
+- vistas de autenticación usan `Cache-Control: no-store` y `Referrer-Policy: no-referrer`;
+- canal separado `storage/logs/security.log` para eventos de seguridad.
 
 En producción configura HTTPS y cambia:
 
@@ -333,9 +367,13 @@ El middleware global agrega:
 - `X-Content-Type-Options: nosniff`;
 - `X-Frame-Options: SAMEORIGIN`;
 - `Referrer-Policy: strict-origin-when-cross-origin`;
-- `Permissions-Policy` deshabilitando cámara, micrófono y geolocalización por defecto.
+- `Permissions-Policy` deshabilitando cámara, micrófono, geolocalización, pagos y USB por defecto;
+- `Content-Security-Policy` limitada al propio origen y a los CDN explícitos de la demo;
+- `X-Permitted-Cross-Domain-Policies: none`;
+- `Origin-Agent-Cluster: ?1`;
+- HSTS cuando la petición llega por TLS.
 
-No se aplica una CSP estricta todavía porque la demo usa recursos CDN. Si los assets externos se migran a local, `Content-Security-Policy` debe añadirse como siguiente endurecimiento.
+La CSP todavía permite `style-src 'unsafe-inline'` porque la plantilla contiene estilos inline heredados. El siguiente endurecimiento opcional es localizarlos y eliminar esa excepción.
 
 ## Desarrollo del proyecto
 

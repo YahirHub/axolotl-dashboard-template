@@ -15,7 +15,10 @@ func TestFileExplorerAPI(t *testing.T) {
 	resetUsers(t)
 	admin := createAdmin(t)
 	var testCase tests.TestCase
-	session := map[string]any{"auth_user_id": fmt.Sprint(admin.ID)}
+	session := map[string]any{
+		"auth_user_id": fmt.Sprint(admin.ID),
+		"auth_version": fmt.Sprint(admin.AuthVersion),
+	}
 
 	page, err := testCase.Http(t).WithSession(session).Get("/archivos")
 	require.NoError(t, err)

@@ -1597,9 +1597,11 @@ Axolotl incluye un flujo de acceso reutilizable para proyectos multipropósito.
 /           decide setup, login o dashboard
 /setup      primer administrador
 /login      inicio de sesión
-/register   registro estándar
-/health     healthcheck
-/assets/*   archivos públicos
+/register          registro estándar
+/forgot-password   recuperación opcional por correo
+/reset-password    nueva contraseña con token temporal
+/health            healthcheck
+/assets/*          archivos públicos
 ```
 
 ### Rutas privadas
@@ -1631,11 +1633,37 @@ Todas las páginas privadas usan `RequireAuth`.
 - Contraseñas con Argon2id.
 - Sesiones de Goravel; el login regenera el ID de sesión.
 - Formularios POST protegidos con CSRF.
-- Setup, login y registro tienen rate limit por IP.
+- Setup, registro y recuperación tienen throttling por conexión.
+- Login añade bloqueo progresivo por IP, identidad e IP+identidad. Los bloqueos crecen de segundos a minutos cuando continúan los fallos.
+- Para evitar spoofing, los límites de seguridad usan la dirección de la conexión TCP, no `X-Forwarded-For` recibido de un cliente no confiable.
 - `/register` solo puede crear `role=user`; el servidor ignora cualquier rol enviado por el navegador.
 - El registro se puede desactivar con `AUTH_ALLOW_REGISTRATION=false`.
 - Logout es POST con CSRF.
+- Las vistas auth responden con `Cache-Control: no-store` y `Referrer-Policy: no-referrer`.
 - En producción se debe usar HTTPS y `SESSION_SECURE=true`.
+
+### Recuperación de contraseña
+
+La recuperación se habilita únicamente cuando SMTP tiene host, puerto, remitente válido y `APP_URL` utilizable. En `production`, `APP_URL` debe ser HTTPS.
+
+Reglas:
+
+- la respuesta de `POST /forgot-password` es genérica para no revelar si un correo existe;
+- hay cooldown por identidad además del throttle por IP;
+- cada solicitud válida invalida tokens anteriores de esa cuenta;
+- el token contiene 256 bits aleatorios generados con `crypto/rand`;
+- SQLite guarda únicamente SHA-256 del token;
+- el token expira, solo puede usarse una vez y no se reutiliza;
+- el enlace usa `/reset-password#token=...`: el fragmento no se envía al servidor ni aparece en access logs HTTP;
+- `auth.js` extrae el fragmento, lo coloca en el formulario y limpia la URL con `history.replaceState`;
+- al completar el reset aumenta `auth_version`, por lo que `RequireAuth` invalida sesiones anteriores de esa cuenta;
+- eventos de bloqueos, resets y accesos privados sin sesión se escriben en el canal `security`.
+
+SMTP:
+
+- `MAIL_ENCRYPTION=auto`: TLS directo en 465 o STARTTLS si está disponible;
+- servidores SMTP remotos sin cifrado se rechazan;
+- `MAIL_ENCRYPTION=none` solo se acepta contra loopback para desarrollo/pruebas.
 
 ### UI de autenticación
 

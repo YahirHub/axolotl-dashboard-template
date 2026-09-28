@@ -19,7 +19,7 @@ func init() {
 		// This is the SMTP port used by your application to deliver e-mails to
 		// users of the application. Like the host we have set this value to
 		// stay compatible with the Mailgun e-mail application by default.
-		"port": config.Env("MAIL_PORT", 587),
+		"port": config.Env("MAIL_PORT", 1025),
 
 		// --------------------------------------------------------------------------
 		// Global "From" Address
@@ -29,8 +29,8 @@ func init() {
 		// the same address. Here, you may specify a name and address that is
 		// used globally for all e-mails that are sent by your application.
 		"from": map[string]any{
-			"address": config.Env("MAIL_FROM_ADDRESS", "hello@example.com"),
-			"name":    config.Env("MAIL_FROM_NAME", "Example"),
+			"address": config.Env("MAIL_FROM_ADDRESS", ""),
+			"name":    config.Env("MAIL_FROM_NAME", "Axolotl"),
 		},
 
 		// SMTP Server Username
@@ -40,7 +40,8 @@ func init() {
 		// connection. You may also set the "password" value below this one.
 		"username": config.Env("MAIL_USERNAME"),
 
-		"password": config.Env("MAIL_PASSWORD"),
+		"password":   config.Env("MAIL_PASSWORD"),
+		"encryption": config.Env("MAIL_ENCRYPTION", "auto"),
 
 		// Template Configuration
 		//

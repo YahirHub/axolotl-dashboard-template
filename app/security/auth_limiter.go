@@ -132,6 +132,20 @@ func (l *AuthLimiter) RecordSuccess(ip, identity string) {
 	}
 }
 
+func (l *AuthLimiter) ClearIdentity(identity string) {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+
+	fingerprint := IdentityFingerprint(identity)
+	delete(l.buckets, "identity:"+fingerprint)
+	suffix := ":" + fingerprint
+	for key := range l.buckets {
+		if strings.HasPrefix(key, "pair:") && strings.HasSuffix(key, suffix) {
+			delete(l.buckets, key)
+		}
+	}
+}
+
 func (l *AuthLimiter) Reset() {
 	l.mu.Lock()
 	defer l.mu.Unlock()

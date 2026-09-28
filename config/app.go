@@ -29,6 +29,9 @@ func init() {
 		// Application Debug Mode
 		"debug": config.Env("APP_DEBUG", false),
 
+		// Public application URL used to build absolute links in notifications.
+		"url": config.Env("APP_URL", "http://localhost:3000"),
+
 		// Application Timezone
 		//
 		// Here you may specify the default timezone for your application.

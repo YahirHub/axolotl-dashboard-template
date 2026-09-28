@@ -25,6 +25,7 @@ func (r *M20260928000200CreateUsersTable) Up() error {
 		table.String("password", 255)
 		table.String("role", 32)
 		table.Boolean("active")
+		table.UnsignedInteger("auth_version").Default(1)
 		table.Timestamps()
 		table.Unique("email")
 		table.Index("role")

@@ -9,12 +9,13 @@ const (
 
 type User struct {
 	orm.Model
-	Name     string
-	Email    string
-	Alias    string
-	Password string
-	Role     string
-	Active   bool
+	Name        string
+	Email       string
+	Alias       string
+	Password    string
+	Role        string
+	Active      bool
+	AuthVersion uint
 }
 
 func (u User) IsAdmin() bool {

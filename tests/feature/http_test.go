@@ -17,9 +17,14 @@ import (
 func resetUsers(t *testing.T) {
 	t.Helper()
 	security.LoginAttempts().Reset()
-	migration := &migrations.M20260928000200CreateUsersTable{}
-	_ = migration.Down()
-	require.NoError(t, migration.Up())
+
+	recoveryMigration := &migrations.M20260928000300AddAuthVersionAndPasswordResetTokens{}
+	userMigration := &migrations.M20260928000200CreateUsersTable{}
+
+	_ = recoveryMigration.Down()
+	_ = userMigration.Down()
+	require.NoError(t, userMigration.Up())
+	require.NoError(t, recoveryMigration.Up())
 }
 
 func createAdmin(t *testing.T) models.User {
@@ -28,12 +33,13 @@ func createAdmin(t *testing.T) models.User {
 	require.NoError(t, err)
 
 	user := models.User{
-		Name:     "Admin Test",
-		Email:    "admin@example.test",
-		Alias:    "AT",
-		Password: hashed,
-		Role:     models.RoleAdmin,
-		Active:   true,
+		Name:        "Admin Test",
+		Email:       "admin@example.test",
+		Alias:       "AT",
+		Password:    hashed,
+		Role:        models.RoleAdmin,
+		Active:      true,
+		AuthVersion: 1,
 	}
 	require.NoError(t, facades.Orm().Query().Create(&user))
 	return user
@@ -89,7 +95,10 @@ func TestAuthenticatedPages(t *testing.T) {
 	resetUsers(t)
 	admin := createAdmin(t)
 	var testCase tests.TestCase
-	session := map[string]any{"auth_user_id": fmt.Sprint(admin.ID)}
+	session := map[string]any{
+		"auth_user_id": fmt.Sprint(admin.ID),
+		"auth_version": fmt.Sprint(admin.AuthVersion),
+	}
 
 	for _, item := range []struct {
 		path   string

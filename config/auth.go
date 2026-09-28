@@ -43,5 +43,8 @@ func init() {
 		"registration": map[string]any{
 			"enabled": config.Env("AUTH_ALLOW_REGISTRATION", true),
 		},
+		"password_reset": map[string]any{
+			"ttl_minutes": config.Env("PASSWORD_RESET_TTL", 30),
+		},
 	})
 }

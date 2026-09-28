@@ -9,7 +9,7 @@
   <link rel="icon" type="image/svg+xml" href="/assets/brand/axolotl.svg">
   <link rel="icon" type="image/png" href="/assets/brand/axolotl.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-  <link rel="stylesheet" href="/assets/css/auth.css?v=20260928-1">
+  <link rel="stylesheet" href="/assets/css/auth.css?v=20260928-2">
 </head>
 <body>
   <main class="auth-shell">
@@ -20,13 +20,16 @@
       </a>
 
       <div class="auth-copy">
-        <span class="auth-kicker">{{ if eq .Mode "setup" }}Primera configuración{{ else if eq .Mode "register" }}Registro{{ else }}Acceso seguro{{ end }}</span>
+        <span class="auth-kicker">{{ if eq .Mode "setup" }}Primera configuración{{ else if eq .Mode "register" }}Registro{{ else if eq .Mode "forgot" }}Recuperación{{ else if eq .Mode "reset" }}Nueva contraseña{{ else }}Acceso seguro{{ end }}</span>
         <h1>{{ .Heading }}</h1>
         <p>{{ .Subtitle }}</p>
       </div>
 
       {{ if .Error }}
       <div class="auth-alert" role="alert"><i class="fa-solid fa-circle-exclamation"></i><span>{{ .Error }}</span></div>
+      {{ end }}
+      {{ if .Success }}
+      <div class="auth-alert auth-success" role="status"><i class="fa-solid fa-circle-check"></i><span>{{ .Success }}</span></div>
       {{ end }}
 
       {{ if eq .Mode "login" }}
@@ -43,6 +46,9 @@
         </label>
         <button class="auth-submit" type="submit">Iniciar sesión <i class="fa-solid fa-arrow-right"></i></button>
       </form>
+      {{ if .RecoveryEnabled }}
+      <p class="auth-switch"><a href="/forgot-password">¿Olvidaste tu contraseña?</a></p>
+      {{ end }}
       {{ if .RegistrationEnabled }}
       <p class="auth-switch">¿No tienes cuenta? <a href="/register">Crear cuenta</a></p>
       {{ end }}
@@ -77,6 +83,37 @@
         <button class="auth-submit" type="submit">Crear cuenta <i class="fa-solid fa-user-plus"></i></button>
       </form>
       <p class="auth-switch">¿Ya tienes cuenta? <a href="/login">Iniciar sesión</a></p>
+      {{ end }}
+
+      {{ if eq .Mode "forgot" }}
+      <form class="auth-form" action="/forgot-password" method="POST" autocomplete="on">
+        <input type="hidden" name="_token" value="{{ .CSRFToken }}">
+        <label>Correo
+          <input name="email" type="email" value="{{ .OldEmail }}" maxlength="190" autocomplete="email" required autofocus>
+        </label>
+        <div class="auth-note"><i class="fa-solid fa-envelope"></i><span>Si el correo pertenece a una cuenta activa, enviaremos un enlace temporal. La respuesta no revela si la cuenta existe.</span></div>
+        <button class="auth-submit" type="submit">Enviar enlace <i class="fa-solid fa-paper-plane"></i></button>
+      </form>
+      <p class="auth-switch"><a href="/login">Volver a iniciar sesión</a></p>
+      {{ end }}
+
+      {{ if eq .Mode "reset" }}
+        <form class="auth-form" id="passwordResetForm" action="/reset-password" method="POST" autocomplete="off">
+          <input type="hidden" name="_token" value="{{ .CSRFToken }}">
+          <input type="hidden" id="passwordResetToken" name="token" value="{{ .ResetToken }}">
+          <label>Nueva contraseña
+            <span class="password-wrap">
+              <input id="resetPassword" name="password" type="password" minlength="10" maxlength="128" autocomplete="new-password" required autofocus>
+              <button class="password-toggle" type="button" data-password-toggle="resetPassword" aria-label="Mostrar contraseña"><i class="fa-regular fa-eye"></i></button>
+            </span>
+          </label>
+          <label>Confirmar contraseña
+            <input name="password_confirmation" type="password" minlength="10" maxlength="128" autocomplete="new-password" required>
+          </label>
+          <div class="auth-note"><i class="fa-solid fa-shield-halved"></i><span>Al restablecerla se invalidan las sesiones anteriores de esta cuenta y el enlace queda inutilizable.</span></div>
+          <button class="auth-submit" id="passwordResetSubmit" type="submit">Actualizar contraseña <i class="fa-solid fa-key"></i></button>
+        </form>
+        <p class="auth-switch"><a href="/login">Volver a iniciar sesión</a></p>
       {{ end }}
 
       {{ if eq .Mode "setup" }}
@@ -130,7 +167,7 @@
       </div>
     </section>
   </main>
-  <script src="/assets/js/auth.js?v=20260928-1"></script>
+  <script src="/assets/js/auth.js?v=20260928-2"></script>
 </body>
 </html>
 {{ end }}

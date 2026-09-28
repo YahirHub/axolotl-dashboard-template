@@ -30,6 +30,13 @@ func Web() {
 	facades.Route().Middleware(httpmiddleware.Throttle("auth-register")).
 		Post("/register", authController.StoreRegister).Name("register.store")
 
+	facades.Route().Get("/forgot-password", authController.ForgotPassword).Name("password.forgot")
+	facades.Route().Middleware(httpmiddleware.Throttle("auth-recovery")).
+		Post("/forgot-password", authController.StoreForgotPassword).Name("password.email")
+	facades.Route().Get("/reset-password", authController.ResetPassword).Name("password.reset")
+	facades.Route().Middleware(httpmiddleware.Throttle("auth-recovery")).
+		Post("/reset-password", authController.StoreResetPassword).Name("password.update")
+
 	facades.Route().Middleware(requireAuth).Post("/logout", authController.Logout).Name("logout")
 
 	facades.Route().Middleware(requireAuth).Get("/dashboard", dashboardController.Index).Name("dashboard")

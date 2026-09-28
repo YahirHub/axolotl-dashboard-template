@@ -9,12 +9,30 @@ document.querySelectorAll('[data-password-toggle]').forEach(button=>{
   });
 });
 
+const resetForm=document.getElementById('passwordResetForm');
+const resetToken=document.getElementById('passwordResetToken');
+const resetSubmit=document.getElementById('passwordResetSubmit');
+
+if(resetForm&&resetToken){
+  if(!resetToken.value){
+    const params=new URLSearchParams(window.location.hash.replace(/^#/,''));
+    const token=params.get('token')||'';
+    if(/^[A-Za-z0-9_-]{40,128}$/.test(token)){
+      resetToken.value=token;
+      window.history.replaceState(null,'',window.location.pathname+window.location.search);
+    }else if(resetSubmit){
+      resetSubmit.disabled=true;
+      resetSubmit.title='Abre el enlace de recuperación recibido por correo.';
+    }
+  }
+}
+
 document.querySelectorAll('[data-otp]').forEach(group=>{
   const inputs=[...group.querySelectorAll('input')];
 
   inputs.forEach((input,index)=>{
     input.addEventListener('input',()=>{
-      input.value=input.value.replace(/D/g,'').slice(-1);
+      input.value=input.value.replace(/\D/g,'').slice(-1);
       if(input.value && index<inputs.length-1)inputs[index+1].focus();
     });
 
@@ -25,7 +43,7 @@ document.querySelectorAll('[data-otp]').forEach(group=>{
     });
 
     input.addEventListener('paste',event=>{
-      const digits=(event.clipboardData?.getData('text')||'').replace(/D/g,'').slice(0,6);
+      const digits=(event.clipboardData?.getData('text')||'').replace(/\D/g,'').slice(0,6);
       if(!digits)return;
       event.preventDefault();
       digits.split('').forEach((digit,i)=>{if(inputs[i])inputs[i].value=digit});
