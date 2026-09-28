@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -10,7 +11,7 @@ import (
 )
 
 func init() {
-	testDatabase := filepath.Join(os.TempDir(), "axolotl-dashboard-template-test.sqlite")
+	testDatabase := filepath.Join(os.TempDir(), fmt.Sprintf("axolotl-dashboard-template-test-%d.sqlite", os.Getpid()))
 	_ = os.Remove(testDatabase)
 
 	_ = os.Setenv("APP_ENV", "testing")
