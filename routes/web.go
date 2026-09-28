@@ -7,7 +7,9 @@ import (
 
 func Web() {
 	dashboardController := controllers.NewDashboardController()
+	healthController := controllers.NewHealthController()
 
-	facades.Route().Get("/", dashboardController.Index)
+	facades.Route().Get("/", dashboardController.Index).Name("dashboard")
+	facades.Route().Get("/health", healthController.Show).Name("health")
 	facades.Route().Static("assets", "./public")
 }
