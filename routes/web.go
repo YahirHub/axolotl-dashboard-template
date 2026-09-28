@@ -37,6 +37,7 @@ func Web() {
 	facades.Route().Middleware(requireAuth).Get("/servidor", pageController.Server).Name("server")
 	facades.Route().Middleware(requireAuth).Get("/componentes", pageController.Components).Name("components")
 	facades.Route().Middleware(requireAuth).Get("/archivos", fileController.Index).Name("files")
+	facades.Route().Middleware(requireAuth).Get("/archivos/*path", fileController.Index).Name("files.path")
 	facades.Route().Middleware(requireAuth).Get("/api/files", fileController.List).Name("files.list")
 	facades.Route().Middleware(requireAuth).Get("/api/files/read", fileController.Read).Name("files.read")
 	facades.Route().Middleware(requireAuth).Post("/api/files/create", fileController.Create).Name("files.create")

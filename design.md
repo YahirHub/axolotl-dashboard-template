@@ -1698,6 +1698,16 @@ Axolotl incluye una página independiente:
 
 Su objetivo es demostrar un módulo full-stack reusable para trabajar con archivos desde Go sin exponer libremente el filesystem del servidor.
 
+La navegación de carpetas usa rutas reales:
+
+```text
+/archivos
+/archivos/prueba
+/archivos/prueba/subcarpeta
+```
+
+El backend normaliza y valida cada segmento antes de acceder al workspace. Recargar la página conserva la carpeta actual y el historial del navegador funciona de forma natural.
+
 ### Backend
 
 La raíz se configura mediante:
@@ -1729,8 +1739,11 @@ POST /api/files/delete
 
 - todas las operaciones deben permanecer dentro de `FILES_ROOT`;
 - nunca aceptar rutas absolutas del cliente;
-- bloquear `../` y cualquier path traversal equivalente;
-- no seguir ni permitir symlinks;
+- bloquear `../`, percent-encoding ambiguo y cualquier path traversal equivalente;
+- no aceptar backslashes en paths lógicos;
+- limitar profundidad y longitud de ruta;
+- bloquear nombres reservados de Windows, caracteres de control y controles bidi;
+- no seguir ni permitir symlinks, junctions ni reparse points;
 - no devolver rutas físicas absolutas del host;
 - el root nunca puede eliminarse;
 - nombres nuevos deben validarse en backend;
@@ -1753,7 +1766,7 @@ La página usa:
 - creación de archivos y carpetas;
 - eliminación con modal de confirmación.
 
-El item `Archivos` del sidebar usa `data-route="files"` y debe quedar activo en `/archivos`.
+El item `Archivos` del sidebar usa `data-route="files"` y debe quedar activo en `/archivos` y cualquier ruta descendiente `/archivos/*`. El layout de Archivos inicia con el sidebar colapsado para maximizar el espacio del editor, pero el usuario puede expandirlo con el control normal.
 
 ### Editor tipo VS Code
 

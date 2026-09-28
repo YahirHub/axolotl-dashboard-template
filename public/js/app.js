@@ -2251,7 +2251,9 @@ function syncActiveRoute(){
     '/componentes':'components',
     '/archivos':'files'
   };
-  const route=routeByPath[path];
+  const route=path==='/archivos' || path.startsWith('/archivos/')
+    ? 'files'
+    : routeByPath[path];
   if(!route)return;
 
   $$('.nav-item[data-route]').forEach(link=>{

@@ -84,6 +84,31 @@ func TestWorkspaceRejectsTraversalAndInvalidNames(t *testing.T) {
 		t.Fatalf("se esperaba ErrInvalidPath para nombre inválido, recibido %v", err)
 	}
 
+	for _, invalid := range []string{
+		"%2e%2e/secret.txt",
+		"/absoluto",
+		`C:\\Windows\\System32`,
+		"foo//bar",
+		strings.Repeat("a/", 33) + "end",
+	} {
+		if _, err := workspace.Normalize(invalid); !errors.Is(err, ErrInvalidPath) {
+			t.Fatalf("se esperaba ErrInvalidPath para %q, recibido %v", invalid, err)
+		}
+	}
+
+	for _, invalidName := range []string{
+		"CON.txt",
+		"NUL",
+		"file%.txt",
+		" leading.txt",
+		"trailing.txt ",
+		"<script>.js",
+	} {
+		if _, err := workspace.Create("", invalidName, "file"); !errors.Is(err, ErrInvalidPath) {
+			t.Fatalf("se esperaba ErrInvalidPath para nombre %q, recibido %v", invalidName, err)
+		}
+	}
+
 	outside := t.TempDir()
 	link := filepath.Join(root, "link")
 	if err := os.Symlink(outside, link); err == nil {

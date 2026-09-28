@@ -5,6 +5,7 @@
 
   const csrf = document.querySelector('meta[name="csrf-token"]')?.content || '';
   const rootLabel = explorer.dataset.rootLabel || 'Demo';
+  const initialPath = explorer.dataset.currentPath || '';
 
   const els = {
     back: document.getElementById('fileBackBtn'),
@@ -37,9 +38,8 @@
   };
 
   const state = {
-    path: '',
+    path: initialPath,
     loaded: false,
-    history: [],
     entries: [],
     selected: null,
     rootFolders: [],
@@ -95,6 +95,17 @@
     return [parent, name].filter(Boolean).join('/');
   }
 
+  function routeForPath(path) {
+    const parts = String(path || '').split('/').filter(Boolean);
+    return '/archivos' + (parts.length ? '/' + parts.map(encodeURIComponent).join('/') : '');
+  }
+
+  function navigateTo(path) {
+    const target = String(path || '');
+    if (target === state.path) return;
+    requestEditorClose(() => window.location.assign(routeForPath(target)));
+  }
+
   function formatBytes(bytes) {
     if (!Number.isFinite(bytes) || bytes <= 0) return bytes === 0 ? '0 B' : '—';
     const units = ['B', 'KB', 'MB', 'GB'];
@@ -146,7 +157,7 @@
   }
 
   function updateToolbar() {
-    els.back.disabled = state.history.length === 0;
+    els.back.disabled = window.history.length <= 1;
     els.up.disabled = state.path === '';
     els.delete.disabled = !state.selected;
     els.count.textContent = state.entries.length + ' ' + (state.entries.length === 1 ? 'elemento' : 'elementos');
@@ -176,7 +187,7 @@
 
     els.breadcrumbs.innerHTML = nodes.join('');
     els.breadcrumbs.querySelectorAll('[data-path]').forEach(button => {
-      button.addEventListener('click', () => requestEditorClose(() => loadDirectory(button.dataset.path, true)));
+      button.addEventListener('click', () => navigateTo(button.dataset.path));
     });
   }
 
@@ -192,7 +203,7 @@
     ).join('');
 
     els.quickFolders.querySelectorAll('[data-quick-path]').forEach(button => {
-      button.addEventListener('click', () => requestEditorClose(() => loadDirectory(button.dataset.quickPath, true)));
+      button.addEventListener('click', () => navigateTo(button.dataset.quickPath));
     });
   }
 
@@ -236,16 +247,11 @@
     updateToolbar();
   }
 
-  async function loadDirectory(path, pushHistory) {
+  async function loadDirectory(path) {
     const nextPath = path || '';
-    const shouldPush = pushHistory !== false;
 
     try {
       const payload = await api('/api/files?path=' + encodeURIComponent(nextPath));
-
-      if (shouldPush && state.loaded && nextPath !== state.path) {
-        state.history.push(state.path);
-      }
 
       state.path = payload.path || nextPath;
       state.entries = Array.isArray(payload.entries) ? payload.entries : [];
@@ -269,7 +275,7 @@
 
   async function openEntry(entry) {
     if (entry.type === 'folder') {
-      requestEditorClose(() => loadDirectory(entry.path, true));
+      navigateTo(entry.path);
       return;
     }
     requestEditorClose(() => openFile(entry));
@@ -489,7 +495,7 @@
           type: kind
         });
         closeModal();
-        await loadDirectory(state.path, false);
+        await loadDirectory(state.path);
         showToast(isFolder ? 'Carpeta creada' : 'Archivo creado', name);
         if (!isFolder) {
           await openFile(created);
@@ -536,7 +542,7 @@
           closeEditorWithoutPrompt();
         }
 
-        await loadDirectory(state.path, false);
+        await loadDirectory(state.path);
         showToast('Elemento eliminado', item.name);
       } catch (error) {
         showToast('No se pudo eliminar', error.message);
@@ -544,20 +550,17 @@
     });
   }
 
-  els.rootButton?.addEventListener('click', () => requestEditorClose(() => loadDirectory('', true)));
-  els.refresh.addEventListener('click', () => requestEditorClose(() => loadDirectory(state.path, false)));
+  els.rootButton?.addEventListener('click', () => navigateTo(''));
+  els.refresh.addEventListener('click', () => requestEditorClose(() => loadDirectory(state.path)));
 
   els.back.addEventListener('click', () => {
-    if (!state.history.length) return;
-    requestEditorClose(() => {
-      const previous = state.history.pop();
-      loadDirectory(previous, false);
-    });
+    if (window.history.length <= 1) return;
+    requestEditorClose(() => window.history.back());
   });
 
   els.up.addEventListener('click', () => {
     if (!state.path) return;
-    requestEditorClose(() => loadDirectory(parentPath(state.path), true));
+    navigateTo(parentPath(state.path));
   });
 
   els.newFolder.addEventListener('click', () => openCreateModal('folder'));
@@ -605,5 +608,5 @@
     event.returnValue = '';
   });
 
-  loadDirectory('', false);
+  loadDirectory(initialPath);
 })();

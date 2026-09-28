@@ -10,6 +10,7 @@ import (
 	"sort"
 	"strings"
 	"time"
+	"unicode"
 	"unicode/utf8"
 )
 
@@ -60,8 +61,16 @@ func NewWorkspace(root string, maxBytes int64) (*Workspace, error) {
 
 func (w *Workspace) Root() string { return w.root }
 
+func (w *Workspace) Normalize(rel string) (string, error) {
+	_, clean, err := w.resolve(rel)
+	return clean, err
+}
+
 func (w *Workspace) EnsureDemo() error {
 	if err := os.MkdirAll(w.root, 0o755); err != nil {
+		return err
+	}
+	if err := w.verifyRoot(); err != nil {
 		return err
 	}
 	entries, err := os.ReadDir(w.root)
@@ -126,7 +135,7 @@ func (w *Workspace) List(rel string) ([]Entry, error) {
 		if err != nil {
 			return nil, err
 		}
-		if itemInfo.Mode()&os.ModeSymlink != 0 {
+		if itemInfo.Mode()&os.ModeSymlink != 0 || isReparsePoint(itemInfo) {
 			continue
 		}
 		relPath := item.Name()
@@ -191,8 +200,8 @@ func (w *Workspace) Save(rel, content string) error {
 	if err != nil {
 		return err
 	}
-	if clean == "" {
-		return fmt.Errorf("%w: se requiere archivo", ErrInvalidPath)
+	if clean == "" || clean == ".gitkeep" {
+		return fmt.Errorf("%w: se requiere archivo editable", ErrInvalidPath)
 	}
 	if err := w.rejectSymlinks(full); err != nil {
 		return err
@@ -266,8 +275,8 @@ func (w *Workspace) Delete(rel string) error {
 	if err != nil {
 		return err
 	}
-	if clean == "" {
-		return fmt.Errorf("%w: no se puede eliminar root", ErrInvalidPath)
+	if clean == "" || clean == ".gitkeep" {
+		return fmt.Errorf("%w: no se puede eliminar elemento protegido", ErrInvalidPath)
 	}
 	if err := w.rejectSymlinks(full); err != nil {
 		return err
@@ -276,11 +285,34 @@ func (w *Workspace) Delete(rel string) error {
 }
 
 func (w *Workspace) resolve(rel string) (full string, clean string, err error) {
-	raw := strings.TrimSpace(strings.ReplaceAll(rel, "\\", "/"))
-	if strings.ContainsRune(raw, '\x00') {
+	if err := w.verifyRoot(); err != nil {
+		return "", "", err
+	}
+
+	raw := rel
+	if strings.ContainsRune(raw, '\x00') || strings.Contains(raw, "\\") || strings.HasPrefix(raw, "/") {
 		return "", "", ErrInvalidPath
 	}
-	raw = strings.TrimPrefix(raw, "/")
+	if len(raw) > 1024 || strings.Contains(raw, "%") {
+		return "", "", ErrInvalidPath
+	}
+	if raw == "" {
+		return w.root, "", nil
+	}
+
+	segments := strings.Split(raw, "/")
+	if len(segments) > 32 {
+		return "", "", ErrInvalidPath
+	}
+	for _, segment := range segments {
+		if segment == "" {
+			return "", "", ErrInvalidPath
+		}
+		if err := validateName(segment); err != nil {
+			return "", "", err
+		}
+	}
+
 	clean = filepath.ToSlash(filepath.Clean(filepath.FromSlash(raw)))
 	if clean == "." {
 		clean = ""
@@ -289,6 +321,7 @@ func (w *Workspace) resolve(rel string) (full string, clean string, err error) {
 	if filepath.IsAbs(osRelative) || filepath.VolumeName(osRelative) != "" {
 		return "", "", ErrInvalidPath
 	}
+
 	full = filepath.Clean(filepath.Join(w.root, osRelative))
 	relCheck, err := filepath.Rel(w.root, full)
 	if err != nil {
@@ -311,8 +344,9 @@ func (w *Workspace) rejectSymlinks(full string) error {
 		return err
 	}
 	if rel == "." {
-		return nil
+		return w.verifyRoot()
 	}
+
 	current := w.root
 	for _, part := range strings.Split(rel, string(os.PathSeparator)) {
 		current = filepath.Join(current, part)
@@ -323,30 +357,73 @@ func (w *Workspace) rejectSymlinks(full string) error {
 		if err != nil {
 			return err
 		}
-		if info.Mode()&os.ModeSymlink != 0 {
-			return fmt.Errorf("%w: symlink no permitido", ErrInvalidPath)
+		if info.Mode()&os.ModeSymlink != 0 || isReparsePoint(info) {
+			return fmt.Errorf("%w: enlace/reparse point no permitido", ErrInvalidPath)
 		}
 	}
 	return nil
 }
 
+func (w *Workspace) verifyRoot() error {
+	info, err := os.Lstat(w.root)
+	if errors.Is(err, fs.ErrNotExist) {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	if info.Mode()&os.ModeSymlink != 0 || isReparsePoint(info) {
+		return fmt.Errorf("%w: root no puede ser enlace", ErrInvalidPath)
+	}
+
+	evaluated, err := filepath.EvalSymlinks(w.root)
+	if err != nil {
+		return err
+	}
+	evaluated, err = filepath.Abs(evaluated)
+	if err != nil {
+		return err
+	}
+	if !samePath(filepath.Clean(evaluated), filepath.Clean(w.root)) {
+		return fmt.Errorf("%w: root resuelto fuera de su ruta física", ErrInvalidPath)
+	}
+	return nil
+}
+
+func samePath(a, b string) bool {
+	if os.PathSeparator == '\\' {
+		return strings.EqualFold(a, b)
+	}
+	return a == b
+}
+
 func validateName(name string) error {
-	name = strings.TrimSpace(name)
-	if name == "" || name == "." || name == ".." {
-		return fmt.Errorf("%w: nombre vacío", ErrInvalidPath)
+	if name == "" || name != strings.TrimSpace(name) || name == "." || name == ".." {
+		return fmt.Errorf("%w: nombre inválido", ErrInvalidPath)
 	}
-	if len(name) > 120 {
-		return fmt.Errorf("%w: nombre demasiado largo", ErrInvalidPath)
+	if len(name) > 120 || !utf8.ValidString(name) {
+		return fmt.Errorf("%w: nombre demasiado largo o inválido", ErrInvalidPath)
 	}
-	if strings.ContainsAny(name, `/\\:*?"<>|`) {
+	if strings.ContainsAny(name, `/\\:*?"<>|%`) {
 		return fmt.Errorf("%w: caracteres no permitidos", ErrInvalidPath)
 	}
 	if strings.HasSuffix(name, ".") || strings.HasSuffix(name, " ") {
 		return fmt.Errorf("%w: terminación no permitida", ErrInvalidPath)
 	}
+
+	base := strings.ToUpper(strings.SplitN(name, ".", 2)[0])
+	switch base {
+	case "CON", "PRN", "AUX", "NUL",
+		"COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
+		"LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9":
+		return fmt.Errorf("%w: nombre reservado", ErrInvalidPath)
+	}
+
 	for _, r := range name {
-		if r < 32 {
-			return fmt.Errorf("%w: caracteres de control", ErrInvalidPath)
+		if unicode.IsControl(r) ||
+			(r >= 0x202A && r <= 0x202E) ||
+			(r >= 0x2066 && r <= 0x2069) {
+			return fmt.Errorf("%w: caracteres invisibles no permitidos", ErrInvalidPath)
 		}
 	}
 	return nil

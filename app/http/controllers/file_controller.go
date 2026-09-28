@@ -5,6 +5,7 @@ import (
 	"io/fs"
 	stdhttp "net/http"
 	"os"
+	"strings"
 
 	"github.com/goravel/framework/contracts/http"
 
@@ -20,6 +21,7 @@ type FilePageData struct {
 	CSRFToken    string
 	CurrentUser  CurrentUserView
 	RootLabel    string
+	CurrentPath  string
 	MaxEditBytes int
 }
 
@@ -41,6 +43,19 @@ func NewFileController() *FileController {
 }
 
 func (r *FileController) Index(ctx http.Context) http.Response {
+	if r.workspace == nil {
+		return ctx.Response().String(stdhttp.StatusServiceUnavailable, "Explorador no disponible.")
+	}
+
+	routePath := strings.TrimPrefix(ctx.Request().Route("path"), "/")
+	clean, err := r.workspace.Normalize(routePath)
+	if err != nil {
+		return ctx.Response().String(stdhttp.StatusNotFound, "Ruta no disponible.")
+	}
+	if _, err := r.workspace.List(clean); err != nil {
+		return ctx.Response().String(stdhttp.StatusNotFound, "Ruta no disponible.")
+	}
+
 	meta := pageMeta(
 		ctx,
 		"Archivos — Axolotl",
@@ -57,6 +72,7 @@ func (r *FileController) Index(ctx http.Context) http.Response {
 		CSRFToken:    meta.CSRFToken,
 		CurrentUser:  meta.CurrentUser,
 		RootLabel:    "Demo",
+		CurrentPath:  clean,
 		MaxEditBytes: facades.Config().GetInt("files.max_edit_bytes", 2*1024*1024),
 	})
 }
@@ -65,7 +81,10 @@ func (r *FileController) List(ctx http.Context) http.Response {
 	if r.workspace == nil {
 		return fileJSONError(ctx, stdhttp.StatusServiceUnavailable, "Explorador no disponible.")
 	}
-	path := ctx.Request().Query("path")
+	path, err := r.workspace.Normalize(ctx.Request().Query("path"))
+	if err != nil {
+		return fileJSONFromError(ctx, err)
+	}
 	entries, err := r.workspace.List(path)
 	if err != nil {
 		return fileJSONFromError(ctx, err)
