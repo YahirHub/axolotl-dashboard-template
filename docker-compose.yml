@@ -1,9 +1,16 @@
-version: '3'
-
 services:
-  goravel:
+  axolotl:
     build:
       context: .
+    env_file:
+      - .env
+    environment:
+      APP_HOST: 0.0.0.0
+      APP_PORT: 3000
+      DB_CONNECTION: sqlite
+      DB_DATABASE: /app/storage/axolotl.sqlite
     ports:
-      - "3000:3000"
-    restart: always
+      - "${APP_PORT:-3000}:3000"
+    volumes:
+      - ./storage:/app/storage
+    restart: unless-stopped

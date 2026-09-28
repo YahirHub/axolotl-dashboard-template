@@ -1442,3 +1442,107 @@ La separación es opcional; el archivo actual funciona como referencia completa 
 
 **Estado del proyecto:** plantilla base lista para reutilización y adaptación.
 
+
+
+## 31. Integración Goravel
+
+La implementación activa del design system vive en una aplicación Goravel 100% Go.
+
+### Mapeo de archivos
+
+```text
+design.md                              fuente de verdad visual
+public/css/app.css                     tokens y componentes visuales
+public/js/app.js                       interactividad frontend
+resources/views/dashboard.tmpl        página principal
+resources/views/partials/head.tmpl     metadatos y estilos
+resources/views/partials/scripts.tmpl  dependencias JS y app.js
+resources/views/partials/sidebar.tmpl  navegación lateral
+resources/views/partials/topbar.tmpl   header superior
+resources/views/partials/stats.tmpl    métricas superiores
+resources/views/partials/dashboard-grid.tmpl
+resources/views/partials/server-metrics.tmpl
+resources/views/partials/code-lab.tmpl
+resources/views/partials/overlays.tmpl modales/drawer/buscador/toasts
+```
+
+### Regla de plantillas
+
+El equivalente funcional a Blade es `html/template` integrado por Goravel/Gin.
+
+Los componentes compartidos deben declararse como templates nombrados:
+
+```gotemplate
+{{ define "partials/mi-componente" }}
+  ...
+{{ end }}
+```
+
+y consumirse mediante:
+
+```gotemplate
+{{ template "partials/mi-componente" . }}
+```
+
+No agregar otro motor de plantillas mientras `html/template` cubra el caso de uso.
+
+### Regla de assets
+
+- CSS de aplicación: `public/css/`.
+- JavaScript de aplicación: `public/js/`.
+- Las vistas no deben volver a incluir bloques monolíticos grandes de `<style>` o `<script>`.
+- Los assets públicos se sirven bajo `/assets/*`.
+- Las dependencias CDN actuales son demostrativas; si una aplicación necesita operación offline o CSP estricta, migrarlas a assets locales.
+
+### Backend y frontend
+
+Los controllers entregan datos; las vistas presentan esos datos.
+
+No colocar consultas ORM directamente en templates ni mezclar lógica de persistencia dentro de JavaScript de presentación.
+
+Para datos dinámicos futuros:
+
+```text
+Route -> Middleware -> Controller -> ORM/servicio -> View/JSON
+```
+
+Crear services solamente cuando exista lógica de negocio real que justifique una capa adicional.
+
+### Rutas y middleware
+
+La plantilla base incluye:
+
+```text
+GET /        dashboard
+GET /health  healthcheck
+/assets/*    estáticos
+```
+
+El middleware global `SecurityHeaders` aplica headers defensivos sin romper los CDNs de la demo.
+
+### Base de datos
+
+La conexión predeterminada es:
+
+```dotenv
+DB_CONNECTION=sqlite
+DB_DATABASE=storage/axolotl.sqlite
+```
+
+Los modelos pertenecen a `app/models/` y las migraciones a `database/migrations/`.
+
+No hardcodear rutas absolutas de base de datos dentro de modelos o controllers.
+
+### Regla para nuevos módulos
+
+Al añadir un módulo:
+
+1. crear el markup como partial si tiene responsabilidad visual propia;
+2. reutilizar tokens existentes;
+3. añadir JS solo si HTML/CSS no resuelven la interacción;
+4. añadir controller/ruta únicamente si requiere backend;
+5. añadir migración/modelo solo si persiste datos;
+6. añadir prueba mínima para lógica no trivial;
+7. actualizar `contexto/` y `tareas/`;
+8. validar `go test ./...` y `go vet ./...`.
+

@@ -42,4 +42,4 @@
 - El dashboard debe seguir siendo multipropósito/general.
 - No dejar controles aparentemente clicables sin función.
 - Mantener responsive, accesibilidad básica, skeletons, modales, buscador, submenús y tokens de tema.
-- La referencia original se conserva en `docs/reference/index-original.html` mientras se completa la modularización.
+- La referencia original se conserva en `docs/reference/index-original.html` como baseline visual y de regresión; la implementación activa ya está modularizada.

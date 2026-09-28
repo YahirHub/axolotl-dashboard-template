@@ -1,20 +1,27 @@
-FROM golang:alpine AS builder
+FROM golang:1.26-alpine AS builder
 
-ENV GO111MODULE=on \
-    CGO_ENABLED=0
+WORKDIR /src
 
-WORKDIR /build
+COPY go.mod go.sum ./
+RUN go mod download
+
 COPY . .
-RUN go mod tidy
-RUN go build --ldflags "-s -w -extldflags -static" -o main .
+RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /out/axolotl .
 
-FROM alpine:latest
+FROM alpine:3.22
 
-WORKDIR /www
+RUN addgroup -S axolotl && adduser -S -G axolotl axolotl
 
-COPY --from=builder /build/main /www/
-COPY --from=builder /build/.env /www/.env
-COPY --from=builder /build/public/ /www/public/
-COPY --from=builder /build/resources/ /www/resources/
+WORKDIR /app
 
-ENTRYPOINT ["/www/main"]
+COPY --from=builder /out/axolotl /app/axolotl
+COPY --from=builder /src/public /app/public
+COPY --from=builder /src/resources /app/resources
+
+RUN mkdir -p /app/storage/logs && chown -R axolotl:axolotl /app
+
+USER axolotl
+
+EXPOSE 3000
+
+ENTRYPOINT ["/app/axolotl"]
