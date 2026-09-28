@@ -1,0 +1,181 @@
+{{ define "partials/server-metrics" }}
+      <section class="card server-metrics" id="server-metrics-section">
+        <div class="card-head">
+          <div>
+            <div class="card-title"><i class="fa-solid fa-server"></i> Métricas del servidor</div>
+            <div class="text-muted" style="font-size:9px;margin-top:5px">
+              Monitor de recursos con actualización simulada en tiempo real.
+            </div>
+          </div>
+          <div class="server-toolbar">
+            <span class="server-status" id="serverStatus">Online</span>
+            <button class="btn-ui btn-outline-primary" id="serverPauseBtn" type="button">
+              <i class="fa-solid fa-pause"></i> Pausar
+            </button>
+          </div>
+        </div>
+
+        <div class="server-grid">
+          <article class="server-card cpu">
+            <div class="server-card-head">
+              <div>
+                <strong>CPU</strong>
+                <small>Uso total y distribución por núcleo</small>
+              </div>
+              <div class="server-value" id="cpuTopValue">42%</div>
+            </div>
+
+            <div class="gauge-layout">
+              <div class="speed-gauge">
+                <svg viewBox="0 0 210 125" aria-label="Uso de CPU">
+                  <defs>
+                    <linearGradient id="cpuGaugeGradient" x1="0" x2="1">
+                      <stop offset="0%" stop-color="var(--primary)"/>
+                      <stop offset="60%" stop-color="var(--secondary)"/>
+                      <stop offset="100%" stop-color="var(--info)"/>
+                    </linearGradient>
+                  </defs>
+                  <path class="gauge-track" d="M 25 105 A 80 80 0 0 1 185 105"/>
+                  <path class="gauge-progress" id="cpuGaugeArc" d="M 25 105 A 80 80 0 0 1 185 105"/>
+                  <g class="gauge-needle" id="cpuGaugeNeedle">
+                    <line x1="105" y1="105" x2="105" y2="39"/>
+                  </g>
+                  <circle class="gauge-center-dot" cx="105" cy="105" r="7"/>
+                  <text class="gauge-scale" x="19" y="121">0</text>
+                  <text class="gauge-scale" x="101" y="18">50</text>
+                  <text class="gauge-scale" x="181" y="121">100</text>
+                </svg>
+                <div class="gauge-readout">
+                  <strong id="cpuGaugeValue">42%</strong>
+                  <span>uso CPU</span>
+                </div>
+              </div>
+
+              <div>
+                <div class="cpu-summary">
+                  <div class="cpu-mini-stat"><span>Temperatura</span><strong id="cpuTemp">58°C</strong></div>
+                  <div class="cpu-mini-stat"><span>Frecuencia</span><strong id="cpuFreq">4.2 GHz</strong></div>
+                  <div class="cpu-mini-stat"><span>Procesos</span><strong id="cpuProcesses">184</strong></div>
+                  <div class="cpu-mini-stat"><span>Uptime</span><strong id="cpuUptime">6d 14h</strong></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="cores-title">Núcleos</div>
+            <div class="cpu-cores" id="cpuCores">
+              <div class="core-ring"><div class="core-circle" data-core="0"><span>38%</span></div><small>C0</small></div>
+              <div class="core-ring"><div class="core-circle" data-core="1"><span>51%</span></div><small>C1</small></div>
+              <div class="core-ring"><div class="core-circle" data-core="2"><span>44%</span></div><small>C2</small></div>
+              <div class="core-ring"><div class="core-circle" data-core="3"><span>29%</span></div><small>C3</small></div>
+              <div class="core-ring"><div class="core-circle" data-core="4"><span>63%</span></div><small>C4</small></div>
+              <div class="core-ring"><div class="core-circle" data-core="5"><span>47%</span></div><small>C5</small></div>
+              <div class="core-ring"><div class="core-circle" data-core="6"><span>34%</span></div><small>C6</small></div>
+              <div class="core-ring"><div class="core-circle" data-core="7"><span>41%</span></div><small>C7</small></div>
+            </div>
+          </article>
+
+          <article class="server-card ram">
+            <div class="server-card-head">
+              <div>
+                <strong>RAM</strong>
+                <small>Memoria física utilizada</small>
+              </div>
+              <div class="server-value" id="ramTopValue">68%</div>
+            </div>
+
+            <div class="gauge-layout ram-layout">
+              <div class="speed-gauge">
+                <svg viewBox="0 0 210 125" aria-label="Uso de RAM">
+                  <defs>
+                    <linearGradient id="ramGaugeGradient" x1="0" x2="1">
+                      <stop offset="0%" stop-color="var(--primary)"/>
+                      <stop offset="60%" stop-color="var(--secondary)"/>
+                      <stop offset="100%" stop-color="var(--warning)"/>
+                    </linearGradient>
+                  </defs>
+                  <path class="gauge-track" d="M 25 105 A 80 80 0 0 1 185 105"/>
+                  <path class="gauge-progress" id="ramGaugeArc" d="M 25 105 A 80 80 0 0 1 185 105"/>
+                  <g class="gauge-needle" id="ramGaugeNeedle">
+                    <line x1="105" y1="105" x2="105" y2="39"/>
+                  </g>
+                  <circle class="gauge-center-dot" cx="105" cy="105" r="7"/>
+                  <text class="gauge-scale" x="19" y="121">0</text>
+                  <text class="gauge-scale" x="101" y="18">50</text>
+                  <text class="gauge-scale" x="181" y="121">100</text>
+                </svg>
+                <div class="gauge-readout">
+                  <strong id="ramGaugeValue">68%</strong>
+                  <span>21.8 / 32 GB</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="storage-note">
+              <div><span>Disponible</span><strong id="ramAvailable">10.2 GB</strong></div>
+              <div><span>Swap</span><strong id="ramSwap">1.3 GB</strong></div>
+            </div>
+          </article>
+
+          <article class="server-card network">
+            <div class="server-card-head">
+              <div>
+                <strong>Red</strong>
+                <small>Tráfico entrante y saliente</small>
+              </div>
+              <div class="server-value" id="netLatency">18 ms</div>
+            </div>
+
+            <div class="network-layout">
+              <div class="network-chart-wrap"><canvas class="network-chart" id="networkChart"></canvas></div>
+
+              <div class="network-stats">
+                <div class="net-stat down">
+                  <span><i class="fa-solid fa-arrow-down"></i> Descarga</span>
+                  <strong id="netDownload">84.2 Mbps</strong>
+                </div>
+                <div class="net-stat up">
+                  <span><i class="fa-solid fa-arrow-up"></i> Subida</span>
+                  <strong id="netUpload">21.6 Mbps</strong>
+                </div>
+                <div class="net-stat">
+                  <span><i class="fa-solid fa-boxes-stacked"></i> Paquetes</span>
+                  <strong id="netPackets">18.4k/s</strong>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="server-card storage">
+            <div class="server-card-head">
+              <div>
+                <strong>Almacenamiento</strong>
+                <small>Uso por volumen</small>
+              </div>
+              <div class="server-value">3 volúmenes</div>
+            </div>
+
+            <div class="storage-list">
+              <div class="storage-row">
+                <div class="storage-row-top"><span>Sistema (C:)</span><strong id="diskCText">72% · 368 / 512 GB</strong></div>
+                <div class="storage-track"><div class="storage-fill" id="diskCFill" style="width:72%"></div></div>
+              </div>
+
+              <div class="storage-row">
+                <div class="storage-row-top"><span>Datos (D:)</span><strong id="diskDText">51% · 1.0 / 2 TB</strong></div>
+                <div class="storage-track"><div class="storage-fill" id="diskDFill" style="width:51%"></div></div>
+              </div>
+
+              <div class="storage-row">
+                <div class="storage-row-top"><span>Backups</span><strong id="diskBText">34% · 680 GB / 2 TB</strong></div>
+                <div class="storage-track"><div class="storage-fill" id="diskBFill" style="width:34%"></div></div>
+              </div>
+            </div>
+
+            <div class="storage-note">
+              <div><span>I/O lectura</span><strong id="diskRead">412 MB/s</strong></div>
+              <div><span>I/O escritura</span><strong id="diskWrite">188 MB/s</strong></div>
+            </div>
+          </article>
+        </div>
+      </section>
+{{ end }}

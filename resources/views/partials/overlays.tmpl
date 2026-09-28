@@ -1,0 +1,61 @@
+{{ define "partials/overlays" }}
+
+
+<!-- MULTIPURPOSE SEARCH -->
+<div class="search-layer" id="searchLayer" aria-hidden="true">
+  <section class="search-panel" role="dialog" aria-modal="true" aria-label="Búsqueda multipropósito">
+    <div class="search-head">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input class="search-input" id="globalSearchInput" type="search"
+             placeholder="Busca secciones, acciones, activos, novedades o escribe una pregunta..."
+             autocomplete="off">
+      <span class="search-esc">ESC</span>
+    </div>
+    <div class="search-tools" id="searchFilters">
+      <button class="search-filter active" type="button" data-filter="all">Todo</button>
+      <button class="search-filter" type="button" data-filter="section">Secciones</button>
+      <button class="search-filter" type="button" data-filter="asset">Datos</button>
+      <button class="search-filter" type="button" data-filter="action">Acciones</button>
+      <button class="search-filter" type="button" data-filter="news">Novedades</button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+    <div class="search-footer">
+      <span>↑ ↓ navegar · Enter abrir</span>
+      <span>Ctrl/Cmd + K abrir · ESC cerrar</span>
+    </div>
+  </section>
+</div>
+
+<!-- NOTIFICATION DRAWER -->
+<div class="backdrop" id="backdrop"></div>
+<aside class="drawer" id="notificationDrawer" aria-hidden="true">
+  <div class="drawer-head">
+    <h3>Notificaciones</h3>
+    <button class="close-btn" id="closeDrawerBtn" type="button"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="drawer-actions">
+    <button class="secondary" id="markAllReadBtn" type="button">Marcar todo leído</button>
+    <button class="primary" id="createAlertBtn" type="button">Crear alerta</button>
+  </div>
+  <div id="notificationList"></div>
+</aside>
+
+<!-- GENERIC MODAL -->
+<div class="modal-layer" id="modalLayer" aria-hidden="true">
+  <div class="modal" id="modalBox" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <div><h3 id="modalTitle">Detalle</h3><p id="modalSubtitle"></p></div>
+      <button class="close-btn" id="modalCloseBtn" type="button"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<button class="scroll-top" id="scrollTopBtn" type="button" aria-label="Volver arriba" title="Volver arriba">
+  <i class="fa-solid fa-arrow-up"></i>
+</button>
+<div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
+<div class="tooltip" id="tooltip"></div>
+
+
+{{ end }}

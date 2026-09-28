@@ -1,0 +1,11 @@
+{{ define "partials/dashboard-main" }}
+<main class="main" id="dashboard">
+  <div class="content-wrap">
+    {{ template "partials/topbar" . }}
+    {{ template "partials/stats" . }}
+    {{ template "partials/dashboard-grid" . }}
+    {{ template "partials/server-metrics" . }}
+    {{ template "partials/code-lab" . }}
+  </div>
+</main>
+{{ end }}

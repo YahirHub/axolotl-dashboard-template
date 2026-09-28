@@ -1,0 +1,227 @@
+{{ define "partials/code-lab" }}
+      <section class="card code-lab" id="code-lab-section">
+        <div class="card-head">
+          <div>
+            <div class="card-title"><i class="fa-solid fa-code"></i> Laboratorio UI &amp; Código</div>
+            <div class="text-muted" style="font-size:9px;margin-top:5px">
+              Galería visible para probar componentes, estados y el botón de copiar código.
+            </div>
+          </div>
+          <div class="component-badges">
+            <span class="component-badge">HTML</span>
+            <span class="component-badge">CSS utilities</span>
+            <span class="component-badge">JavaScript</span>
+            <span class="component-badge">Clipboard</span>
+          </div>
+        </div>
+
+        <div class="code-lab-grid">
+          <article class="demo-card">
+            <div class="demo-card-head">
+              <div>
+                <strong>Botones y tokens semánticos</strong>
+                <small>Prueba las clases globales estilo Bootstrap.</small>
+              </div>
+              <i class="fa-solid fa-palette text-primary"></i>
+            </div>
+
+            <div class="demo-preview">
+              <button class="btn-ui btn-primary" type="button" data-demo-toast="Primary">Primary</button>
+              <button class="btn-ui btn-secondary" type="button" data-demo-toast="Secondary">Secondary</button>
+              <button class="btn-ui btn-success" type="button" data-demo-toast="Success">Success</button>
+              <button class="btn-ui btn-danger" type="button" data-demo-toast="Danger">Danger</button>
+              <button class="btn-ui btn-outline-primary" type="button" data-demo-toast="Outline">Outline</button>
+            </div>
+
+            <pre><code>&lt;button class="btn-ui btn-primary"&gt;Primary&lt;/button&gt;
+&lt;button class="btn-ui btn-success"&gt;Success&lt;/button&gt;
+&lt;div class="bg-primary-soft border-primary rounded p-3"&gt;
+  Panel semántico
+&lt;/div&gt;</code></pre>
+
+            <div class="copy-demo-note">
+              <i class="fa-solid fa-check"></i>
+              Pulsa <b>Copiar</b> en la esquina del bloque. Al copiar cambia a <b>✓ Copiado</b>.
+            </div>
+          </article>
+
+          <article class="demo-card">
+            <div class="demo-card-head">
+              <div>
+                <strong>Modal reutilizable</strong>
+                <small>Usa la API <code>openUiModal()</code> con el mismo diseño del dashboard.</small>
+              </div>
+              <i class="fa-regular fa-window-maximize text-secondary"></i>
+            </div>
+
+            <div class="demo-preview">
+              <button class="btn-ui btn-primary" id="codeLabModalDemo" type="button">
+                <i class="fa-solid fa-up-right-from-square"></i> Abrir modal
+              </button>
+              <button class="btn-ui btn-ghost" id="codeLabConfirmDemo" type="button">
+                Modal de confirmación
+              </button>
+            </div>
+
+            <pre><code>openUiModal({
+  title: 'Nuevo registro',
+  subtitle: 'Componente reusable',
+  icon: 'fa-plus',
+  size: 'sm',
+  body: '&lt;div class="modal-callout"&gt;Contenido&lt;/div&gt;',
+  footer: '&lt;button class="btn-ui btn-primary"&gt;Guardar&lt;/button&gt;'
+});</code></pre>
+          </article>
+
+          <article class="demo-card">
+            <div class="demo-card-head">
+              <div>
+                <strong>Skeleton / carga de base de datos</strong>
+                <small>Simula una consulta y muestra el skeleton sobre el componente real.</small>
+              </div>
+              <i class="fa-solid fa-database text-info"></i>
+            </div>
+
+            <div class="demo-preview vertical">
+              <div class="demo-skeleton-card" id="codeLabSkeletonTarget">
+                <div class="demo-skeleton-content">
+                  <strong>Registro cargado</strong>
+                  <span>Este contenido queda cubierto por el skeleton mientras la petición está activa.</span>
+                  <div class="d-flex gap-2">
+                    <span class="theme-chip bg-success-soft text-success">Activo</span>
+                    <span class="theme-chip bg-primary-soft text-primary">Base de datos</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="demo-action-row">
+                <button class="btn-ui btn-primary" id="codeLabSkeletonDemo" type="button">
+                  <i class="fa-solid fa-rotate"></i> Simular carga
+                </button>
+              </div>
+            </div>
+
+            <pre><code>await withSkeleton('#mi-card', 'summary', async () =&gt; {
+  const data = await cargarDesdeBaseDeDatos();
+  renderizar(data);
+});</code></pre>
+          </article>
+
+          <article class="demo-card">
+            <div class="demo-card-head">
+              <div>
+                <strong>Toasts y feedback</strong>
+                <small>Confirmaciones rápidas para acciones que no necesitan modal.</small>
+              </div>
+              <i class="fa-regular fa-message text-success"></i>
+            </div>
+
+            <div class="demo-preview">
+              <button class="btn-ui btn-success" id="codeLabToastSuccess" type="button">Toast éxito</button>
+              <button class="btn-ui btn-warning" id="codeLabToastWarning" type="button">Toast aviso</button>
+              <button class="btn-ui btn-danger" id="codeLabToastDanger" type="button">Toast error</button>
+            </div>
+
+            <pre><code>toast(
+  'Registro guardado',
+  'La información fue actualizada correctamente.'
+);</code></pre>
+          </article>
+
+          <article class="demo-card full">
+            <div class="demo-card-head">
+              <div>
+                <strong>Detección automática de lenguaje</strong>
+                <small>Highlight.js detecta el lenguaje, colorea la sintaxis y muestra una etiqueta automática.</small>
+              </div>
+              <i class="fa-solid fa-highlighter text-warning"></i>
+            </div>
+
+            <div class="demo-preview vertical">
+              <div class="field">
+                <label>Prueba otro lenguaje</label>
+                <select id="syntaxDemoSelect">
+                  <option value="javascript">JavaScript</option>
+                  <option value="python">Python</option>
+                  <option value="sql">SQL</option>
+                  <option value="json">JSON</option>
+                  <option value="html">HTML</option>
+                  <option value="css">CSS</option>
+                  <option value="bash">Bash</option>
+                </select>
+              </div>
+              <div class="copy-demo-note">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                El bloque se vuelve a analizar al cambiar la opción. También puedes copiarlo desde el mismo componente.
+              </div>
+            </div>
+
+            <pre id="syntaxDemoPre"><code id="syntaxDemoCode">const dashboard = {
+  name: 'Axolotl',
+  theme: 'neo-prism',
+  modules: ['charts', 'search', 'sidebar']
+};
+
+console.log(dashboard.name);</code></pre>
+          </article>
+
+          <article class="demo-card full">
+            <div class="demo-card-head">
+              <div>
+                <strong>Ejemplo con pestañas de código</strong>
+                <small>Cambia entre HTML, CSS y JavaScript. Cada panel tiene su propio botón de copiar.</small>
+              </div>
+              <i class="fa-solid fa-terminal text-primary"></i>
+            </div>
+
+            <div class="demo-preview">
+              <div class="demo-kpi">
+                <span>Usuarios</span>
+                <strong class="text-primary">1,248</strong>
+              </div>
+              <div class="demo-kpi">
+                <span>Estado</span>
+                <strong class="text-success">Online</strong>
+              </div>
+              <div class="demo-kpi">
+                <span>Alertas</span>
+                <strong class="text-warning">12</strong>
+              </div>
+            </div>
+
+            <div class="code-tabs" data-code-tabs="main">
+              <button class="code-tab active" type="button" data-code-pane="html">HTML</button>
+              <button class="code-tab" type="button" data-code-pane="css">CSS</button>
+              <button class="code-tab" type="button" data-code-pane="js">JavaScript</button>
+            </div>
+
+            <div class="code-pane active" data-pane="html">
+              <pre><code data-language="html">&lt;div class="demo-kpi"&gt;
+  &lt;span&gt;Usuarios&lt;/span&gt;
+  &lt;strong class="text-primary"&gt;1,248&lt;/strong&gt;
+&lt;/div&gt;</code></pre>
+            </div>
+
+            <div class="code-pane" data-pane="css">
+              <pre><code data-language="css">.demo-kpi {
+  padding: 10px;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.demo-kpi strong {
+  color: var(--primary);
+}</code></pre>
+            </div>
+
+            <div class="code-pane" data-pane="js">
+              <pre><code data-language="javascript">const value = document.querySelector('.demo-kpi strong');
+
+value.textContent = '1,249';
+toast('Actualizado', 'La métrica cambió correctamente.');</code></pre>
+            </div>
+          </article>
+        </div>
+      </section>
+{{ end }}

@@ -1,0 +1,155 @@
+{{ define "partials/dashboard-grid" }}
+      <section class="dashboard-grid">
+        <div class="left-col">
+          <article class="card section sentiment-card" id="sentiment-section">
+            <div class="card-head">
+              <div class="card-title">Estado general
+                <button class="info-btn" type="button" data-tooltip="Índice compuesto por momentum, volatilidad, volumen y sentimiento."><i class="fa-regular fa-circle-question"></i></button>
+              </div>
+              <div class="periods" id="periodButtons">
+                <button type="button" data-period="1H">1H</button>
+                <button type="button" class="active" data-period="24H">24H</button>
+                <button type="button" data-period="7D">7D</button>
+                <button type="button" data-period="30D">30D</button>
+              </div>
+            </div>
+            <div class="sentiment-body">
+              <div class="gauge-wrap">
+                <div class="gauge-label" id="gaugeLabel">Alcista</div>
+                <div class="gauge" id="gauge"><strong><span id="gaugeValue">72</span><small>/100</small></strong></div>
+              </div>
+              <div>
+                <canvas id="sentChart" class="sent-chart"></canvas>
+                <div class="chart-hover" id="sentHover">
+                  <div class="metric-mini"><span>Hora</span><strong id="sentHoverTime">18:00</strong></div>
+                  <div class="metric-mini"><span>Índice</span><strong id="sentHoverValue">82 / 100</strong></div>
+                  <div class="metric-mini"><span>Lectura</span><strong class="up" id="sentHoverRead">Alcista</strong></div>
+                </div>
+              </div>
+            </div>
+            <div class="caption" id="aiCaption"><i class="fa-solid fa-wand-magic-sparkles"></i>Axolotl AI detecta fortaleza compradora y volatilidad controlada.</div>
+          </article>
+
+          <article class="card section" id="summary-section" data-skeleton="summary">
+            <div class="card-head">
+              <div class="card-title">Resumen IA
+                <button class="info-btn" type="button" data-tooltip="Resumen de los activos seleccionados y su tendencia reciente."><i class="fa-regular fa-circle-question"></i></button>
+              </div>
+              <button class="more-btn" id="summaryDetailsBtn" type="button">Ver detalles <i class="fa-solid fa-arrow-up-right-from-square"></i></button>
+            </div>
+            <div class="asset-grid">
+              <button class="asset selected" type="button" data-symbol="BTC">
+                <div class="coin btc"><i class="fa-brands fa-bitcoin"></i></div><div class="asset-name">BTC / MXN</div>
+                <div class="asset-price money" data-mxn="1923450">$ 1,923,450</div><div class="asset-delta">+2.45%</div><canvas id="a1" class="tiny"></canvas>
+              </button>
+              <button class="asset" type="button" data-symbol="ETH">
+                <div class="coin eth"><i class="fa-brands fa-ethereum"></i></div><div class="asset-name">ETH / MXN</div>
+                <div class="asset-price money" data-mxn="72610">$ 72,610</div><div class="asset-delta">+3.21%</div><canvas id="a2" class="tiny"></canvas>
+              </button>
+              <button class="asset" type="button" data-symbol="SOL">
+                <div class="coin sol">S</div><div class="asset-name">SOL / MXN</div>
+                <div class="asset-price money" data-mxn="3450">$ 3,450</div><div class="asset-delta down">-1.02%</div><canvas id="a3" class="tiny"></canvas>
+              </button>
+              <button class="asset" type="button" data-symbol="XRP">
+                <div class="coin xrp">X</div><div class="asset-name">XRP / MXN</div>
+                <div class="asset-price money" data-mxn="42.80">$ 42.80</div><div class="asset-delta">+4.15%</div><canvas id="a4" class="tiny"></canvas>
+              </button>
+            </div>
+            <div class="insight-panel hidden" id="summaryInsights" aria-hidden="true">
+              <div>Momentum<strong id="insightMomentum">Fuerte</strong></div>
+              <div>Volatilidad<strong id="insightVol">Media</strong></div>
+              <div>Lectura IA<strong id="insightRead">Compradora</strong></div>
+            </div>
+          </article>
+
+          <article class="card section" id="prediction-section">
+            <div class="card-head">
+              <div class="card-title"><span id="predictionTitle">Seguimiento IA (BTC / MXN)</span>
+                <button class="info-btn" type="button" data-tooltip="Proyección demostrativa para la plantilla. No representa asesoría financiera."><i class="fa-regular fa-circle-question"></i></button>
+              </div>
+            </div>
+            <div class="pred-meta">
+              <div>Precio actual<strong class="money" id="predCurrent" data-mxn="1923450">$ 1,923,450</strong></div>
+              <div class="forecast">Pronóstico (24 h)<strong id="predForecast">+4.18%</strong></div>
+            </div>
+            <canvas id="predChart" class="pred-chart"></canvas>
+            <div class="chart-hover" id="predHover">
+              <div class="metric-mini"><span>Periodo</span><strong id="predHoverTime">24:00</strong></div>
+              <div class="metric-mini"><span>Valor índice</span><strong id="predHoverValue">11.68</strong></div>
+              <div class="metric-mini"><span>Movimiento</span><strong class="up" id="predHoverMove">Proyección +</strong></div>
+            </div>
+          </article>
+
+          <article class="card section" id="portfolio-section">
+            <div class="card-head">
+              <div class="card-title">Distribución general
+                <button class="info-btn" type="button" data-tooltip="Haz clic en un segmento o activo para ver su participación."><i class="fa-regular fa-circle-question"></i></button>
+              </div>
+              <button class="more-btn" id="managePortfolioBtn" type="button">Administrar</button>
+            </div>
+            <div class="portfolio-body">
+              <div class="donut-wrap">
+                <canvas id="portChart" class="donut"></canvas>
+                <div class="donut-center"><div id="portfolioCenter">Valor total<strong class="money" data-mxn="1284275">$ 1.284 M</strong><span>+5.23%</span></div></div>
+              </div>
+              <div class="legend" id="portfolioLegend">
+                <button class="legend-row" type="button" data-index="0"><span class="dot" style="background:#F5B86F"></span><span>Bitcoin (BTC)</span><strong>45.2%</strong></button>
+                <button class="legend-row" type="button" data-index="1"><span class="dot" style="background:#B58AF6"></span><span>Ethereum (ETH)</span><strong>25.6%</strong></button>
+                <button class="legend-row" type="button" data-index="2"><span class="dot" style="background:#FC779B"></span><span>Solana (SOL)</span><strong>12.8%</strong></button>
+                <button class="legend-row" type="button" data-index="3"><span class="dot" style="background:#FCBBD5"></span><span>XRP</span><strong>8.7%</strong></button>
+                <button class="legend-row" type="button" data-index="4"><span class="dot" style="background:#765464"></span><span>Otros</span><strong>7.7%</strong></button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <aside class="right-col">
+          <article class="card market-card" id="market-section" data-skeleton="market">
+            <div class="card-head">
+              <div class="card-title">Resumen general
+                <button class="info-btn" type="button" data-tooltip="Selecciona un activo para abrir su detalle."><i class="fa-regular fa-circle-question"></i></button>
+              </div>
+            </div>
+            <div class="market-list">
+              <button class="market-row" type="button" data-symbol="BTC"><div class="coin btc"><i class="fa-brands fa-bitcoin"></i></div><div><strong>BTC / MXN</strong><small>Bitcoin</small></div><div class="market-price money" data-mxn="1923450">$ 1,923,450<span>+2.45%</span></div></button>
+              <button class="market-row" type="button" data-symbol="ETH"><div class="coin eth"><i class="fa-brands fa-ethereum"></i></div><div><strong>ETH / MXN</strong><small>Ethereum</small></div><div class="market-price money" data-mxn="72610">$ 72,610<span>+3.21%</span></div></button>
+              <button class="market-row" type="button" data-symbol="SOL"><div class="coin sol">S</div><div><strong>SOL / MXN</strong><small>Solana</small></div><div class="market-price money" data-mxn="3450">$ 3,450<span class="down">-1.02%</span></div></button>
+              <button class="market-row" type="button" data-symbol="XRP"><div class="coin xrp">X</div><div><strong>XRP / MXN</strong><small>XRP</small></div><div class="market-price money" data-mxn="42.80">$ 42.80<span>+4.15%</span></div></button>
+              <button class="market-row" type="button" data-symbol="DOGE"><div class="coin doge">Ð</div><div><strong>DOGE / MXN</strong><small>Dogecoin</small></div><div class="market-price money" data-mxn="3.78">$ 3.78<span>+2.18%</span></div></button>
+            </div>
+            <button class="more-btn" id="allMarketsBtn" type="button">Ver todos los registros <i class="fa-solid fa-arrow-right"></i></button>
+          </article>
+
+          <article class="card section" id="signals-section">
+            <div class="card-head">
+              <div class="card-title">Actividad IA
+                <button class="info-btn" type="button" data-tooltip="Señales demostrativas con entrada, objetivo y confianza."><i class="fa-regular fa-circle-question"></i></button>
+              </div>
+            </div>
+            <div class="signal">
+              <div class="signal-top"><div class="signal-asset"><div class="coin btc"><i class="fa-brands fa-bitcoin"></i></div>BTC / MXN</div><button class="buy" type="button" data-trade="BTC">COMPRAR</button></div>
+              <div class="sig-grid"><span>Entrada</span><b class="money" data-mxn="1920000">$ 1,920,000</b><span>Objetivo</span><b class="money" data-mxn="1980000">$ 1,980,000</b><span>Confianza</span><b>85%</b></div>
+              <div class="conf"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></div>
+            </div>
+            <div class="signal">
+              <div class="signal-top"><div class="signal-asset"><div class="coin eth"><i class="fa-brands fa-ethereum"></i></div>ETH / MXN</div><button class="buy" type="button" data-trade="ETH">COMPRAR</button></div>
+              <div class="sig-grid"><span>Entrada</span><b class="money" data-mxn="71900">$ 71,900</b><span>Objetivo</span><b class="money" data-mxn="74200">$ 74,200</b><span>Confianza</span><b>79%</b></div>
+              <div class="conf"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></div>
+            </div>
+            <button class="more-btn" id="allSignalsBtn" type="button">Ver toda la actividad <i class="fa-solid fa-arrow-right"></i></button>
+          </article>
+
+          <article class="card section news-card" id="news-section" data-skeleton="news">
+            <div class="card-head"><div class="card-title">Novedades
+              <button class="info-btn" type="button" data-tooltip="Contenido de ejemplo para la plantilla."><i class="fa-regular fa-circle-question"></i></button>
+            </div></div>
+            <div class="news-list">
+              <button class="news-item" type="button" data-news="0"><div class="thumb"></div><div><strong>Mercado mantiene impulso positivo durante la sesión.</strong><small>Hace 30 min</small></div></button>
+              <button class="news-item" type="button" data-news="1"><div class="thumb" style="filter:hue-rotate(35deg)"></div><div><strong>Bitcoin registra mayor volumen e interés institucional.</strong><small>Hace 1 h</small></div></button>
+              <button class="news-item" type="button" data-news="2"><div class="thumb" style="filter:hue-rotate(80deg)"></div><div><strong>Ethereum acelera mientras crece la actividad de la red.</strong><small>Hace 2 h</small></div></button>
+            </div>
+            <button class="more-btn" id="allNewsBtn" type="button">Ver todas las novedades <i class="fa-solid fa-arrow-right"></i></button>
+          </article>
+        </aside>
+      </section>
+{{ end }}
