@@ -5,8 +5,8 @@
             <i class="fa-solid fa-bars"></i>
           </button>
           <div class="welcome-copy">
-            <h1>Centro de operaciones</h1>
-            <p>Una vista general para proyectos, equipo, actividad y salud del sistema.</p>
+            <h1>{{ .PageTitle }}</h1>
+            <p>{{ .PageSubtitle }}</p>
           </div>
         </div>
 
@@ -38,11 +38,11 @@
           </div>
 
           <div class="dropdown hidden" id="userMenu">
-            <button class="drop-item" data-user-action="profile"><i class="fa-regular fa-user"></i><span>Editar cuenta</span></button>
-            <button class="drop-item" data-user-action="settings"><i class="fa-solid fa-sliders"></i><span>Preferencias</span></button>
+            <a class="drop-item" href="/cuenta"><i class="fa-regular fa-user"></i><span>Editar cuenta</span></a>
+            <a class="drop-item" href="/cuenta#preferencias"><i class="fa-solid fa-sliders"></i><span>Preferencias</span></a>
             <button class="drop-item" data-user-action="theme"><i class="fa-solid fa-palette"></i><span>Personalizar tema</span></button>
-            <button class="drop-item" data-user-action="components"><i class="fa-solid fa-layer-group"></i><span>Componentes UI</span></button>
-            <button class="drop-item" data-user-action="security"><i class="fa-solid fa-shield-halved"></i><span>Seguridad</span></button>
+            <a class="drop-item" href="/componentes"><i class="fa-solid fa-layer-group"></i><span>Componentes UI</span></a>
+            <a class="drop-item" href="/cuenta#seguridad"><i class="fa-solid fa-shield-halved"></i><span>Seguridad</span></a>
             <div class="drop-sep"></div>
             <button class="drop-item" data-user-action="logout"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Cerrar sesión</span></button>
           </div>

@@ -102,6 +102,9 @@ public/
 resources/
 └── views/
     ├── dashboard.tmpl
+    ├── account.tmpl
+    ├── server.tmpl
+    ├── components.tmpl
     └── partials/
         ├── head.tmpl
         ├── scripts.tmpl
@@ -136,7 +139,7 @@ Goravel integra `html/template`. Axolotl usa templates nombrados y partials:
 
 No se agregó otro motor de plantillas: el objetivo es conservar una solución nativa, rápida y con pocas dependencias.
 
-El dashboard inicial está pensado como catálogo funcional de patrones reutilizables. El `DashboardController` entrega datos demostrativos para KPIs, proyectos, tareas, actividad, equipo, agenda e integraciones; esos datos pueden reemplazarse después por ORM, APIs o servicios sin reconstruir el layout.
+La aplicación es multipágina. `/dashboard` concentra el overview de negocio; `/cuenta`, `/servidor` y `/componentes` separan configuración, observabilidad y catálogo UI. El `DashboardController` entrega datos demostrativos para KPIs, proyectos, tareas, actividad, equipo, agenda e integraciones; esos datos pueden reemplazarse después por ORM, APIs o servicios sin reconstruir el layout.
 
 La fuente de verdad visual y las reglas para crear nuevos componentes están en:
 
@@ -153,9 +156,13 @@ docs/reference/index-original.html
 ## Rutas
 
 ```text
-GET /           dashboard
-GET /health     healthcheck con prueba de SQLite
-/assets/*       archivos estáticos
+GET /              dashboard de entrada
+GET /dashboard     overview general
+GET /cuenta        perfil, preferencias y seguridad
+GET /servidor      métricas técnicas
+GET /componentes   laboratorio UI y catálogo de componentes
+GET /health        healthcheck con prueba de SQLite
+/assets/*          archivos estáticos
 ```
 
 Consultar las rutas registradas:

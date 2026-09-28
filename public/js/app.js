@@ -54,6 +54,35 @@ const state={
   ]
 };
 
+const accountStorageKey='axolotl-account-v1';
+
+function saveAccountState(){
+  try{
+    localStorage.setItem(accountStorageKey,JSON.stringify({
+      user:state.user,
+      compact:state.compact,
+      animations:state.animations
+    }));
+  }catch(_){}
+}
+
+function loadAccountState(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(accountStorageKey)||'null');
+    if(!saved)return;
+    if(saved.user && typeof saved.user==='object'){
+      state.user={
+        name:String(saved.user.name||state.user.name),
+        email:String(saved.user.email||state.user.email),
+        role:String(saved.user.role||state.user.role),
+        alias:String(saved.user.alias||state.user.alias).slice(0,3).toUpperCase()
+      };
+    }
+    if(typeof saved.compact==='boolean')state.compact=saved.compact;
+    if(typeof saved.animations==='boolean')state.animations=saved.animations;
+  }catch(_){}
+}
+
 const assets={
  WEB:{name:'Portal web',mxn:420000,change:12.4,forecast:8.2,momentum:'En ritmo',vol:'Media',read:'Saludable',series:[62,64,65,67,66,69,71,70,73,75,76,78,80,81,83,84,86]},
  CRM:{name:'CRM comercial',mxn:315000,change:7.2,forecast:5.6,momentum:'En ritmo',vol:'Baja',read:'Estable',series:[54,55,57,58,60,59,62,63,65,66,68,69,71,72,74,75,77]},
@@ -231,6 +260,7 @@ function makeSpark(id,data,color='#FC779B',secondary='#FCBBD5',tertiary='#D49AF6
 }
 
 function initCharts(){
+  if(!$('#sentChart') || !$('#predChart') || !$('#portChart')) return;
   makeSpark('#sp1',[4,4.2,4.1,4.6,4.4,4.9,4.7,5.3,5.1,5.6,5.4,6.0],cssVar('--primary'),cssVar('--secondary'),cssVar('--info'));
   makeSpark('#sp2',[3.7,4.0,3.9,4.3,4.7,4.5,4.9,5.3,5.1,5.7,5.7,6.3],cssVar('--success'),cssVar('--primary'),cssVar('--info'));
   makeSpark('#sp3',[4.0,4.2,4.1,4.5,4.3,4.8,4.6,5.0,4.9,5.4,5.3,5.8],cssVar('--secondary'),cssVar('--info'),cssVar('--primary'));
@@ -676,7 +706,7 @@ function assetDetail(symbol){
       <button class="primary" type="button" id="modalSelectBtn">Usar en tendencia</button>
     </div>`);
   $('#modalAnalyzeBtn').addEventListener('click',()=>toast('Lectura del proyecto',`Estado actual: ${a.read}.`));
-  $('#modalSelectBtn').addEventListener('click',()=>{selectAsset(symbol);closeModal();smoothScrollTo($('#prediction-section'),{offset:-40,duration:.9})});
+  $('#modalSelectBtn').addEventListener('click',()=>{if($('#prediction-section')){selectAsset(symbol);closeModal();smoothScrollTo($('#prediction-section'),{offset:-40,duration:.9})}else{closeModal();openDashboardSection('prediction-section')}});
 }
 
 function allMarkets(){
@@ -991,7 +1021,7 @@ function riskDetail(){
       <div class="card section"><div style="font-size:9px;color:var(--muted)">Incidentes abiertos</div><strong style="font-size:18px">0</strong></div>
     </div>
     <div class="modal-actions"><button class="primary" type="button" id="riskSettingsBtn">Ver métricas</button></div>`);
-  $('#riskSettingsBtn').addEventListener('click',()=>{closeModal();smoothScrollTo($('#server-metrics-section'),{offset:-30})});
+  $('#riskSettingsBtn').addEventListener('click',()=>{closeModal();openRoute('/servidor')});
 }
 
 function logout(){
@@ -1011,27 +1041,41 @@ let searchFilter='all';
 let searchActiveIndex=0;
 let searchVisibleItems=[];
 
+function openRoute(path){
+  window.location.href=path;
+}
+
+function openDashboardSection(id){
+  const target=$('#'+id);
+  const onDashboard=window.location.pathname==='/' || window.location.pathname==='/dashboard';
+  if(onDashboard && target){
+    smoothScrollTo(target,{offset:-10});
+    return;
+  }
+  window.location.href='/dashboard#'+id;
+}
+
 const searchIndex=[
-  {type:'section',title:'Dashboard',desc:'Volver al centro de operaciones.',icon:'fa-house',action:()=>smoothScrollTo($('#dashboard'))},
-  {type:'section',title:'Proyectos',desc:'Abrir proyectos destacados.',icon:'fa-diagram-project',action:()=>smoothScrollTo($('#summary-section'))},
-  {type:'section',title:'Tareas',desc:'Abrir tareas prioritarias.',icon:'fa-list-check',action:()=>smoothScrollTo($('#signals-section'))},
-  {type:'section',title:'Actividad',desc:'Abrir el feed de actividad.',icon:'fa-clock-rotate-left',action:()=>smoothScrollTo($('#news-section'))},
-  {type:'section',title:'Rendimiento',desc:'Ver analítica operativa.',icon:'fa-chart-line',action:()=>smoothScrollTo($('#sentiment-section'))},
-  {type:'section',title:'Distribución',desc:'Ver distribución de capacidad.',icon:'fa-chart-pie',action:()=>smoothScrollTo($('#portfolio-section'))},
-  {type:'section',title:'Equipo',desc:'Ver carga y disponibilidad.',icon:'fa-users',action:()=>smoothScrollTo($('#team-section'))},
-  {type:'section',title:'Agenda',desc:'Abrir próximos hitos.',icon:'fa-calendar',action:()=>smoothScrollTo($('#schedule-section'))},
-  {type:'section',title:'Integraciones',desc:'Ver servicios conectables.',icon:'fa-plug',action:()=>smoothScrollTo($('#integrations-section'))},
-  {type:'section',title:'Métricas del servidor',desc:'CPU, RAM, red y almacenamiento.',icon:'fa-server',action:()=>smoothScrollTo($('#server-metrics-section'))},
-  {type:'section',title:'Laboratorio UI',desc:'Probar componentes y copiar ejemplos de código.',icon:'fa-code',action:()=>smoothScrollTo($('#code-lab-section'))},
+  {type:'section',title:'Dashboard',desc:'Volver al centro de operaciones.',icon:'fa-house',action:()=>openRoute('/dashboard')},
+  {type:'section',title:'Proyectos',desc:'Abrir proyectos destacados.',icon:'fa-diagram-project',action:()=>openDashboardSection('summary-section')},
+  {type:'section',title:'Tareas',desc:'Abrir tareas prioritarias.',icon:'fa-list-check',action:()=>openDashboardSection('signals-section')},
+  {type:'section',title:'Actividad',desc:'Abrir el feed de actividad.',icon:'fa-clock-rotate-left',action:()=>openDashboardSection('news-section')},
+  {type:'section',title:'Rendimiento',desc:'Ver analítica operativa.',icon:'fa-chart-line',action:()=>openDashboardSection('sentiment-section')},
+  {type:'section',title:'Distribución',desc:'Ver distribución de capacidad.',icon:'fa-chart-pie',action:()=>openDashboardSection('portfolio-section')},
+  {type:'section',title:'Equipo',desc:'Ver carga y disponibilidad.',icon:'fa-users',action:()=>openDashboardSection('team-section')},
+  {type:'section',title:'Agenda',desc:'Abrir próximos hitos.',icon:'fa-calendar',action:()=>openDashboardSection('schedule-section')},
+  {type:'section',title:'Integraciones',desc:'Ver servicios conectables.',icon:'fa-plug',action:()=>openDashboardSection('integrations-section')},
+  {type:'section',title:'Servidor',desc:'CPU, RAM, red y almacenamiento.',icon:'fa-server',action:()=>openRoute('/servidor')},
+  {type:'section',title:'Componentes UI',desc:'Probar componentes y copiar ejemplos de código.',icon:'fa-code',action:()=>openRoute('/componentes')},
 
   {type:'action',title:'Crear alerta',desc:'Configurar una regla de monitoreo.',icon:'fa-bell',action:createAlertModal},
   {type:'action',title:'Abrir notificaciones',desc:'Ver el centro de notificaciones.',icon:'fa-inbox',action:openDrawer},
-  {type:'action',title:'Preferencias',desc:'Configurar apariencia y comportamiento.',icon:'fa-sliders',action:settingsModal},
+  {type:'action',title:'Preferencias',desc:'Configurar apariencia y comportamiento.',icon:'fa-sliders',action:()=>openRoute('/cuenta#preferencias')},
   {type:'action',title:'Personalizar tema',desc:'Editar la paleta Axolotl.',icon:'fa-palette',action:themeModal},
-  {type:'action',title:'Componentes UI',desc:'Ver componentes reutilizables.',icon:'fa-layer-group',action:componentsModal},
-  {type:'action',title:'Mi perfil',desc:'Editar nombre, correo y alias.',icon:'fa-user',action:profileModal},
-  {type:'action',title:'Seguridad',desc:'Abrir opciones de seguridad.',icon:'fa-shield-halved',action:securityModal},
-  {type:'action',title:'Administrar capacidad',desc:'Editar la distribución general.',icon:'fa-chart-pie',action:managePortfolio},
+  {type:'action',title:'Componentes UI',desc:'Ver componentes reutilizables.',icon:'fa-layer-group',action:()=>openRoute('/componentes')},
+  {type:'action',title:'Mi perfil',desc:'Editar nombre, correo y alias.',icon:'fa-user',action:()=>openRoute('/cuenta')},
+  {type:'action',title:'Seguridad',desc:'Abrir opciones de seguridad.',icon:'fa-shield-halved',action:()=>openRoute('/cuenta#seguridad')},
+  {type:'action',title:'Administrar capacidad',desc:'Editar la distribución general.',icon:'fa-chart-pie',action:()=>openDashboardSection('portfolio-section')},
   {type:'action',title:'Estado de la aplicación',desc:'Ver backend, base de datos y healthcheck.',icon:'fa-microchip',action:aiStatus},
   {type:'action',title:'Modo compacto',desc:'Abrir ajustes visuales.',icon:'fa-compress',action:settingsModal},
 
@@ -2021,10 +2065,47 @@ function runTemplateAction(action){
   }
   if(action==='export'){toast('Exportación preparada','Aquí puedes conectar CSV, XLSX o PDF.');return}
   if(action==='report'){toast('Reporte','Aquí puedes conectar un controller o job de reportes.');return}
-  if(action==='invite'){profileModal();return}
+  if(action==='invite'){openRoute('/cuenta');return}
   if(action==='team'){toast('Equipo','Conecta esta acción a tu módulo de usuarios o permisos.');return}
   if(action==='calendar' || action==='schedule'){toast('Agenda','Conecta esta acción a eventos, reservas o recordatorios.');return}
   if(action==='integrations' || action==='integration'){toast('Integraciones','Conecta aquí webhooks, correo, storage u otros servicios.');return}
+}
+
+function initAccountPage(){
+  const form=$('#accountProfileForm');
+  if(!form)return;
+
+  $('#accountName').value=state.user.name;
+  $('#accountEmail').value=state.user.email;
+  $('#accountAlias').value=state.user.alias;
+  $('#accountRole').value=state.user.role;
+  $('#accountCompact').checked=state.compact;
+  $('#accountAnimations').checked=state.animations;
+
+  form.addEventListener('submit',e=>{
+    e.preventDefault();
+    state.user.name=$('#accountName').value.trim()||'Usuario Axolotl';
+    state.user.email=$('#accountEmail').value.trim()||'usuario@axolotl.demo';
+    state.user.alias=($('#accountAlias').value.trim()||'AX').slice(0,3).toUpperCase();
+    state.user.role=$('#accountRole').value;
+    saveAccountState();
+    syncUserUI();
+    toast('Perfil guardado','Los datos se conservarán en este navegador.');
+  });
+
+  $('#accountPreferencesSave')?.addEventListener('click',()=>{
+    state.compact=$('#accountCompact').checked;
+    state.animations=$('#accountAnimations').checked;
+    document.body.classList.toggle('compact',state.compact);
+    Chart.defaults.animation=state.animations?{duration:500}:false;
+    saveAccountState();
+    toast('Preferencias guardadas','La configuración visual fue actualizada.');
+  });
+
+  $('#accountThemeBtn')?.addEventListener('click',themeModal);
+  $('#accountSecuritySave')?.addEventListener('click',()=>{
+    toast('Seguridad guardada','Controles demostrativos actualizados.');
+  });
 }
 
 /* Events */
@@ -2074,7 +2155,7 @@ $('#userBtn').addEventListener('click',e=>{e.stopPropagation();toggleDropdown($(
 document.addEventListener('click',e=>{if(!e.target.closest('.top-actions')){$$('.dropdown').forEach(d=>d.classList.add('hidden'));$('#currencyBtn').setAttribute('aria-expanded','false');$('#userBtn').setAttribute('aria-expanded','false')}});
 
 $$('#currencyMenu .drop-item').forEach(btn=>btn.addEventListener('click',()=>{
-  state.currency=btn.dataset.currency;updateCurrency();selectAsset(state.selectedAsset);
+  state.currency=btn.dataset.currency;updateCurrency();if($('#predictionTitle'))selectAsset(state.selectedAsset);
   $('#currencyMenu').classList.add('hidden');toast('Moneda actualizada',`Ahora se muestran valores en ${state.currency}.`);
 }));
 $$('#userMenu .drop-item').forEach(btn=>btn.addEventListener('click',()=>{
@@ -2154,6 +2235,7 @@ function activateSidebarTarget(targetId){
 $$('.nav-group-toggle').forEach(btn=>btn.addEventListener('click',()=>{
   toggleNavGroup(btn.closest('.nav-group'));
 }));
+$$('.nav a').forEach(link=>link.addEventListener('click',closeMobileSidebar));
 
 $$('.nav-item[data-target],.nav-subitem[data-target]').forEach(btn=>btn.addEventListener('click',()=>{
   const target=$('#'+btn.dataset.target);
@@ -2184,7 +2266,7 @@ $$('.task-card').forEach(btn=>btn.addEventListener('click',()=>taskDetail(btn.da
 $$('.news-item').forEach(btn=>btn.addEventListener('click',()=>newsModal(Number(btn.dataset.news))));
 $$('#portfolioLegend .legend-row').forEach(btn=>btn.addEventListener('click',()=>selectPortfolio(Number(btn.dataset.index))));
 
-$('#summaryDetailsBtn').addEventListener('click',()=>{
+$('#summaryDetailsBtn')?.addEventListener('click',()=>{
   const a=assets[state.selectedAsset];
   openModal(
     `Detalle del proyecto · ${state.selectedAsset}`,
@@ -2226,10 +2308,10 @@ $('#summaryDetailsBtn').addEventListener('click',()=>{
     smoothScrollTo($('#prediction-section'),{offset:-40,duration:.9});
   });
 });
-$('#allMarketsBtn').addEventListener('click',allMarkets);
-$('#allSignalsBtn').addEventListener('click',allSignals);
-$('#allNewsBtn').addEventListener('click',allNews);
-$('#managePortfolioBtn').addEventListener('click',managePortfolio);
+$('#allMarketsBtn')?.addEventListener('click',allMarkets);
+$('#allSignalsBtn')?.addEventListener('click',allSignals);
+$('#allNewsBtn')?.addEventListener('click',allNews);
+$('#managePortfolioBtn')?.addEventListener('click',managePortfolio);
 $('#aiStatusBtn')?.addEventListener('click',aiStatus);
 $('#riskRing')?.addEventListener('click',riskDetail);
 $$('.template-action').forEach(btn=>btn.addEventListener('click',()=>runTemplateAction(btn.dataset.templateAction)));
@@ -2247,12 +2329,11 @@ $$('[data-tooltip]').forEach(el=>{
 });
 
 /* Demo scroll spy */
-const tracked=[
+const tracked=$('#dashboard')?[
   'dashboard','summary-section','signals-section','news-section',
   'sentiment-section','prediction-section','portfolio-section',
-  'team-section','schedule-section','integrations-section',
-  'server-metrics-section','code-lab-section'
-].map(id=>$('#'+id)).filter(Boolean);
+  'team-section','schedule-section','integrations-section'
+].map(id=>$('#'+id)).filter(Boolean):[];
 const spy=new IntersectionObserver(entries=>{
   const visible=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
   if(!visible)return;
@@ -2269,6 +2350,9 @@ scrollTopBtn.addEventListener('click',()=>{
   setTimeout(()=>scrollTopBtn.classList.remove('scrolling'),1450);
 });
 
+loadAccountState();
+document.body.classList.toggle('compact',state.compact);
+Chart.defaults.animation=state.animations?{duration:500}:false;
 loadTheme();
 initCharts();
 initSmoothMotion();
@@ -2277,6 +2361,7 @@ checkHighlightRuntime();
 enhanceCodeBlocks(document);
 initCodeLab();
 initServerMetrics();
+initAccountPage();
 renderNotifications();
 updateBadge();
 updateCurrency();

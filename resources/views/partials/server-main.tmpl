@@ -1,0 +1,44 @@
+{{ define "partials/server-main" }}
+<main class="main" id="server-page">
+  <div class="content-wrap">
+    {{ template "partials/topbar" . }}
+
+    <section class="server-overview">
+      <article class="card stat">
+        <div>
+          <div class="stat-label">Estado</div>
+          <div class="stat-value text-success">Online</div>
+          <div class="stat-change">Healthcheck <span>/health</span></div>
+        </div>
+        <i class="fa-solid fa-circle-check server-overview-icon text-success"></i>
+      </article>
+      <article class="card stat">
+        <div>
+          <div class="stat-label">Backend</div>
+          <div class="stat-value">Goravel</div>
+          <div class="stat-change text-primary">Go <span>aplicación activa</span></div>
+        </div>
+        <i class="fa-solid fa-code server-overview-icon text-primary"></i>
+      </article>
+      <article class="card stat">
+        <div>
+          <div class="stat-label">Base de datos</div>
+          <div class="stat-value">SQLite</div>
+          <div class="stat-change text-info">GORM <span>driver embebido</span></div>
+        </div>
+        <i class="fa-solid fa-database server-overview-icon text-info"></i>
+      </article>
+      <article class="card stat">
+        <div>
+          <div class="stat-label">Monitor</div>
+          <div class="stat-value">Live demo</div>
+          <div class="stat-change text-secondary">2.6 s <span>actualización</span></div>
+        </div>
+        <i class="fa-solid fa-wave-square server-overview-icon text-secondary"></i>
+      </article>
+    </section>
+
+    {{ template "partials/server-metrics" . }}
+  </div>
+</main>
+{{ end }}

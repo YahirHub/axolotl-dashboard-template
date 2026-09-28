@@ -69,7 +69,7 @@ type DashboardIntegration struct {
 }
 
 type DashboardPageData struct {
-	Title        string
+	PageMeta
 	Metrics      []DashboardMetric
 	Projects     []DashboardProject
 	Tasks        []DashboardTask
@@ -87,7 +87,12 @@ func NewDashboardController() *DashboardController {
 
 func (r *DashboardController) Index(ctx http.Context) http.Response {
 	data := DashboardPageData{
-		Title: "Axolotl — Dashboard Multipropósito",
+		PageMeta: PageMeta{
+			Title:        "Dashboard — Axolotl",
+			PageTitle:    "Dashboard",
+			PageSubtitle: "Vista general de operación, proyectos, trabajo, equipo y actividad.",
+			ActiveRoute:  "dashboard",
+		},
 		Metrics: []DashboardMetric{
 			{Label: "Ingresos del mes", Value: "$1.28 M", Change: "+8.4%", Detail: "vs. mes anterior", SparkID: "sp1", Tone: "primary"},
 			{Label: "Tareas completadas", Value: "327", Change: "+12.1%", Detail: "últimos 30 días", SparkID: "sp2", Tone: "success"},

@@ -1,0 +1,22 @@
+{{ define "partials/components-main" }}
+<main class="main" id="components-page">
+  <div class="content-wrap">
+    {{ template "partials/topbar" . }}
+
+    <section class="card section component-intro">
+      <div>
+        <div class="card-title"><i class="fa-solid fa-layer-group"></i> Design system reutilizable</div>
+        <p class="text-muted">Esta página concentra los componentes visuales y patrones interactivos para que el dashboard principal permanezca enfocado en negocio.</p>
+      </div>
+      <div class="component-badges">
+        <span class="component-badge">Tokens</span>
+        <span class="component-badge">Modales</span>
+        <span class="component-badge">Skeletons</span>
+        <span class="component-badge">Código</span>
+      </div>
+    </section>
+
+    {{ template "partials/code-lab" . }}
+  </div>
+</main>
+{{ end }}

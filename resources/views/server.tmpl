@@ -1,0 +1,14 @@
+{{ define "server.tmpl" }}
+<!doctype html>
+<html lang="es">
+{{ template "partials/head" . }}
+<body>
+  <div class="app" id="app">
+    {{ template "partials/sidebar" . }}
+    {{ template "partials/server-main" . }}
+  </div>
+  {{ template "partials/overlays" . }}
+  {{ template "partials/scripts" . }}
+</body>
+</html>
+{{ end }}

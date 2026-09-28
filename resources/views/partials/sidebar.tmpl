@@ -9,18 +9,18 @@
     </div>
 
     <nav class="nav" aria-label="Navegación principal">
-      <button class="nav-item active" data-target="dashboard" type="button">
+      <a class="nav-item {{ if eq .ActiveRoute "dashboard" }}active{{ end }}" href="/dashboard">
         <i class="fa-solid fa-house"></i><span>Dashboard</span>
-      </button>
+      </a>
 
       <div class="nav-group" data-nav-group="management">
         <button class="nav-item nav-group-toggle" type="button" aria-expanded="false">
           <i class="fa-solid fa-briefcase"></i><span class="nav-label">Gestión</span><i class="fa-solid fa-chevron-right nav-chevron"></i>
         </button>
         <div class="nav-submenu">
-          <button class="nav-subitem" type="button" data-target="summary-section"><i class="fa-solid fa-diagram-project"></i><span>Proyectos</span></button>
-          <button class="nav-subitem" type="button" data-target="signals-section"><i class="fa-solid fa-list-check"></i><span>Tareas</span></button>
-          <button class="nav-subitem" type="button" data-target="news-section"><i class="fa-solid fa-clock-rotate-left"></i><span>Actividad</span></button>
+          <a class="nav-subitem" href="/dashboard#summary-section"><i class="fa-solid fa-diagram-project"></i><span>Proyectos</span></a>
+          <a class="nav-subitem" href="/dashboard#signals-section"><i class="fa-solid fa-list-check"></i><span>Tareas</span></a>
+          <a class="nav-subitem" href="/dashboard#news-section"><i class="fa-solid fa-clock-rotate-left"></i><span>Actividad</span></a>
         </div>
       </div>
 
@@ -29,10 +29,9 @@
           <i class="fa-solid fa-chart-line"></i><span class="nav-label">Analítica</span><i class="fa-solid fa-chevron-right nav-chevron"></i>
         </button>
         <div class="nav-submenu">
-          <button class="nav-subitem" type="button" data-target="sentiment-section"><i class="fa-solid fa-gauge-high"></i><span>Rendimiento</span></button>
-          <button class="nav-subitem" type="button" data-target="prediction-section"><i class="fa-solid fa-wave-square"></i><span>Tendencias</span></button>
-          <button class="nav-subitem" type="button" data-target="portfolio-section"><i class="fa-solid fa-chart-pie"></i><span>Distribución</span></button>
-          <button class="nav-subitem" type="button" data-target="server-metrics-section"><i class="fa-solid fa-server"></i><span>Métricas servidor</span></button>
+          <a class="nav-subitem" href="/dashboard#sentiment-section"><i class="fa-solid fa-gauge-high"></i><span>Rendimiento</span></a>
+          <a class="nav-subitem" href="/dashboard#prediction-section"><i class="fa-solid fa-wave-square"></i><span>Tendencias</span></a>
+          <a class="nav-subitem" href="/dashboard#portfolio-section"><i class="fa-solid fa-chart-pie"></i><span>Distribución</span></a>
         </div>
       </div>
 
@@ -41,28 +40,27 @@
           <i class="fa-solid fa-layer-group"></i><span class="nav-label">Workspace</span><i class="fa-solid fa-chevron-right nav-chevron"></i>
         </button>
         <div class="nav-submenu">
-          <button class="nav-subitem" type="button" data-target="team-section"><i class="fa-solid fa-users"></i><span>Equipo</span></button>
-          <button class="nav-subitem" type="button" data-target="schedule-section"><i class="fa-regular fa-calendar"></i><span>Agenda</span></button>
-          <button class="nav-subitem" type="button" data-target="integrations-section"><i class="fa-solid fa-plug"></i><span>Integraciones</span></button>
+          <a class="nav-subitem" href="/dashboard#team-section"><i class="fa-solid fa-users"></i><span>Equipo</span></a>
+          <a class="nav-subitem" href="/dashboard#schedule-section"><i class="fa-regular fa-calendar"></i><span>Agenda</span></a>
+          <a class="nav-subitem" href="/dashboard#integrations-section"><i class="fa-solid fa-plug"></i><span>Integraciones</span></a>
         </div>
       </div>
+
+      <a class="nav-item {{ if eq .ActiveRoute "server" }}active{{ end }}" href="/servidor">
+        <i class="fa-solid fa-server"></i><span>Servidor</span>
+      </a>
+
+      <a class="nav-item {{ if eq .ActiveRoute "account" }}active{{ end }}" href="/cuenta">
+        <i class="fa-regular fa-user"></i><span>Cuenta</span>
+      </a>
+
+      <a class="nav-item {{ if eq .ActiveRoute "components" }}active{{ end }}" href="/componentes">
+        <i class="fa-solid fa-code"></i><span>Componentes</span>
+      </a>
 
       <button class="nav-item" data-action="alerts" type="button">
         <i class="fa-regular fa-bell"></i><span>Notificaciones</span>
       </button>
-
-      <div class="nav-group" data-nav-group="settings">
-        <button class="nav-item nav-group-toggle" type="button" aria-expanded="false">
-          <i class="fa-solid fa-gear"></i><span class="nav-label">Ajustes</span><i class="fa-solid fa-chevron-right nav-chevron"></i>
-        </button>
-        <div class="nav-submenu">
-          <button class="nav-subitem" type="button" data-action="settings"><i class="fa-solid fa-sliders"></i><span>Preferencias</span></button>
-          <button class="nav-subitem" type="button" data-action="theme"><i class="fa-solid fa-palette"></i><span>Tema</span></button>
-          <button class="nav-subitem" type="button" data-action="components"><i class="fa-solid fa-layer-group"></i><span>Componentes UI</span></button>
-          <button class="nav-subitem" type="button" data-target="code-lab-section"><i class="fa-solid fa-code"></i><span>Laboratorio UI</span></button>
-          <button class="nav-subitem" type="button" data-action="security"><i class="fa-solid fa-shield-halved"></i><span>Seguridad</span></button>
-        </div>
-      </div>
     </nav>
 
     <div class="sidebar-spacer"></div>

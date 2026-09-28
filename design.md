@@ -1510,13 +1510,19 @@ Crear services solamente cuando exista lógica de negocio real que justifique un
 
 ### Rutas y middleware
 
-La plantilla base incluye:
+La plantilla base es multipágina:
 
 ```text
-GET /        dashboard
-GET /health  healthcheck
-/assets/*    estáticos
+GET /              dashboard de entrada
+GET /dashboard     overview general
+GET /cuenta        perfil, preferencias y seguridad
+GET /servidor      métricas técnicas
+GET /componentes   laboratorio y catálogo UI
+GET /health        healthcheck
+/assets/*          estáticos
 ```
+
+Las páginas comparten sidebar, topbar, overlays, scripts y design system. No concentrar funcionalidades independientes en una única vista larga cuando representan áreas distintas del producto.
 
 El middleware global `SecurityHeaders` aplica headers defensivos sin romper los CDNs de la demo.
 
@@ -1537,7 +1543,7 @@ No hardcodear rutas absolutas de base de datos dentro de modelos o controllers.
 
 La página inicial debe demostrar patrones reutilizables de varias áreas, no representar una sola industria.
 
-Orden recomendado:
+Contenido recomendado de `/dashboard`:
 
 ```text
 KPIs
@@ -1545,8 +1551,14 @@ KPIs
 → proyectos y tareas
 → actividad
 → equipo, agenda e integraciones
-→ métricas técnicas
-→ laboratorio UI
+```
+
+Las áreas técnicas y de configuración viven en rutas dedicadas:
+
+```text
+/servidor    → métricas técnicas
+/cuenta      → perfil, preferencias y seguridad
+/componentes → laboratorio UI
 ```
 
 Los datos repetibles del demo salen de `DashboardController` y se renderizan con `html/template`. Un proyecto consumidor puede sustituirlos por ORM, APIs o servicios manteniendo los mismos partials.

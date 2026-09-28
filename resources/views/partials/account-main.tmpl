@@ -1,0 +1,121 @@
+{{ define "partials/account-main" }}
+<main class="main" id="account-page">
+  <div class="content-wrap">
+    {{ template "partials/topbar" . }}
+
+    <section class="page-grid">
+      <article class="card section page-card" id="perfil">
+        <div class="card-head">
+          <div>
+            <div class="card-title"><i class="fa-regular fa-user"></i> Perfil</div>
+            <div class="section-subtitle">Datos básicos del usuario de la plantilla.</div>
+          </div>
+        </div>
+
+        <form id="accountProfileForm">
+          <div class="modal-grid">
+            <div class="field">
+              <label>Nombre</label>
+              <input id="accountName" value="Usuario Axolotl">
+            </div>
+            <div class="field">
+              <label>Correo</label>
+              <input id="accountEmail" type="email" value="usuario@axolotl.demo">
+            </div>
+            <div class="field">
+              <label>Alias</label>
+              <input id="accountAlias" maxlength="3" value="AX">
+            </div>
+            <div class="field">
+              <label>Rol</label>
+              <select id="accountRole">
+                <option>Administrador</option>
+                <option>Editor</option>
+                <option>Analista</option>
+                <option>Usuario</option>
+              </select>
+            </div>
+          </div>
+          <div class="page-actions">
+            <button class="btn-ui btn-primary" type="submit"><i class="fa-solid fa-check"></i> Guardar perfil</button>
+          </div>
+        </form>
+      </article>
+
+      <article class="card section page-card" id="preferencias">
+        <div class="card-head">
+          <div>
+            <div class="card-title"><i class="fa-solid fa-sliders"></i> Preferencias</div>
+            <div class="section-subtitle">Comportamiento visual y experiencia del dashboard.</div>
+          </div>
+        </div>
+
+        <div class="switch-row">
+          <div class="switch-copy">
+            <strong>Modo compacto</strong>
+            <small>Reduce espacios y altura de tarjetas.</small>
+          </div>
+          <label class="switch"><input id="accountCompact" type="checkbox"><span class="slider"></span></label>
+        </div>
+
+        <div class="switch-row">
+          <div class="switch-copy">
+            <strong>Animaciones</strong>
+            <small>Activa transiciones y movimientos del dashboard.</small>
+          </div>
+          <label class="switch"><input id="accountAnimations" type="checkbox" checked><span class="slider"></span></label>
+        </div>
+
+        <div class="page-actions">
+          <button class="btn-ui btn-primary" id="accountPreferencesSave" type="button"><i class="fa-solid fa-floppy-disk"></i> Guardar preferencias</button>
+          <button class="btn-ui btn-outline-primary" id="accountThemeBtn" type="button"><i class="fa-solid fa-palette"></i> Personalizar tema</button>
+        </div>
+      </article>
+
+      <article class="card section page-card" id="seguridad">
+        <div class="card-head">
+          <div>
+            <div class="card-title"><i class="fa-solid fa-shield-halved"></i> Seguridad</div>
+            <div class="section-subtitle">Controles de ejemplo para una futura capa de autenticación.</div>
+          </div>
+        </div>
+
+        <div class="switch-row">
+          <div class="switch-copy">
+            <strong>Autenticación en dos pasos</strong>
+            <small>Estado demostrativo; conecta aquí tu proveedor de autenticación.</small>
+          </div>
+          <label class="switch"><input id="accountTwoFA" type="checkbox" checked><span class="slider"></span></label>
+        </div>
+
+        <div class="switch-row">
+          <div class="switch-copy">
+            <strong>Alertas de inicio de sesión</strong>
+            <small>Notifica nuevos accesos a la cuenta.</small>
+          </div>
+          <label class="switch"><input id="accountLoginAlerts" type="checkbox" checked><span class="slider"></span></label>
+        </div>
+
+        <div class="page-actions">
+          <button class="btn-ui btn-primary" id="accountSecuritySave" type="button"><i class="fa-solid fa-lock"></i> Guardar seguridad</button>
+        </div>
+      </article>
+
+      <article class="card section page-card">
+        <div class="card-head">
+          <div>
+            <div class="card-title"><i class="fa-solid fa-sitemap"></i> Arquitectura de cuenta</div>
+            <div class="section-subtitle">Punto de extensión para auth, sesiones, roles y permisos.</div>
+          </div>
+        </div>
+        <div class="account-info-grid">
+          <div><span>Sesión</span><strong>Preparada para middleware</strong></div>
+          <div><span>Roles</span><strong>UI demostrativa</strong></div>
+          <div><span>Persistencia</span><strong>SQLite / GORM</strong></div>
+          <div><span>Configuración</span><strong>.env + Goravel</strong></div>
+        </div>
+      </article>
+    </section>
+  </div>
+</main>
+{{ end }}

@@ -1,0 +1,14 @@
+{{ define "account.tmpl" }}
+<!doctype html>
+<html lang="es">
+{{ template "partials/head" . }}
+<body>
+  <div class="app" id="app">
+    {{ template "partials/sidebar" . }}
+    {{ template "partials/account-main" . }}
+  </div>
+  {{ template "partials/overlays" . }}
+  {{ template "partials/scripts" . }}
+</body>
+</html>
+{{ end }}
