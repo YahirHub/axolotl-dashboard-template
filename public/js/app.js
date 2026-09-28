@@ -234,6 +234,7 @@ function makeSpark(id,data,color='#FC779B',secondary='#FCBBD5',tertiary='#D49AF6
     },
     options:{
       responsive:true,maintainAspectRatio:false,
+      animations:{colors:false},
       interaction:{mode:'index',intersect:false},
       plugins:{
         legend:{display:false},
@@ -289,6 +290,7 @@ function initCharts(){
       }]},
     options:{
       responsive:true,maintainAspectRatio:false,
+      animations:{colors:false},
       interaction:{mode:'index',intersect:false},
       plugins:{
         legend:{display:false},
@@ -344,6 +346,7 @@ function initCharts(){
       }]},
     options:{
       responsive:true,maintainAspectRatio:false,
+      animations:{colors:false},
       interaction:{mode:'index',intersect:false},
       plugins:{
         legend:{display:false},
@@ -1844,6 +1847,7 @@ function initNetworkChart(){
       responsive:true,
       maintainAspectRatio:false,
       animation:{duration:760,easing:'easeInOutCubic'},
+      animations:{colors:false},
       interaction:{mode:'index',intersect:false},
       plugins:{
         legend:{
