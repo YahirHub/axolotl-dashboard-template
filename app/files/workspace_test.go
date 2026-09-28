@@ -93,6 +93,12 @@ func TestWorkspaceRejectsTraversalAndInvalidNames(t *testing.T) {
 	}
 }
 
+func TestLanguageForPathIncludesPHP(t *testing.T) {
+	if got := LanguageForPath("index.php"); got != "php" {
+		t.Fatalf("lenguaje PHP inesperado: %q", got)
+	}
+}
+
 func TestWorkspaceRejectsBinaryAndOversizedFiles(t *testing.T) {
 	root := t.TempDir()
 	workspace, err := NewWorkspace(root, 16)

@@ -161,8 +161,15 @@
 }
 .editor-input{
   z-index:2;resize:none;outline:none;background:transparent;
-  color:transparent;-webkit-text-fill-color:transparent;caret-color:#fff2f7;
+  color:#d8c7cf;-webkit-text-fill-color:#d8c7cf;caret-color:#fff2f7;
   overflow:auto;
+}
+.editor-code-wrap.highlight-ready .editor-input{
+  color:transparent;
+  -webkit-text-fill-color:transparent;
+}
+.editor-code-wrap:not(.highlight-ready) .editor-highlight{
+  visibility:hidden;
 }
 .editor-input::selection{background:rgba(252,119,155,.24)}
 .editor-input::-webkit-scrollbar{width:10px;height:10px}
@@ -188,7 +195,14 @@
 .editor-highlight .hljs-comment,
 .editor-highlight .hljs-quote{color:#765464;font-style:italic}
 .editor-highlight .hljs-built_in,
-.editor-highlight .hljs-type{color:#fcbBD5}
+.editor-highlight .hljs-type,
+.editor-highlight .hljs-variable,
+.editor-highlight .hljs-template-variable{color:#fcbBD5}
+.editor-highlight .hljs-meta,
+.editor-highlight .hljs-tag,
+.editor-highlight .hljs-name,
+.editor-highlight .hljs-attribute{color:#fc779b}
+.editor-highlight .hljs-params{color:#f5b86f}
 
 @media(max-width:1180px){
   .file-toolbar{grid-template-columns:auto minmax(160px,1fr)}

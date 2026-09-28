@@ -648,7 +648,7 @@ function updateCodeLanguageBadge(shell,language){
 function enhanceCodeBlocks(root=document){
   $$('pre code',root).forEach(code=>{
     const pre=code.closest('pre');
-    if(!pre)return;
+    if(!pre || pre.classList.contains('editor-highlight') || code.closest('[data-no-code-enhance]'))return;
 
     let shell=pre.parentElement;
     if(!shell.classList.contains('code-shell')){

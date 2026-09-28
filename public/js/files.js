@@ -22,6 +22,7 @@
     editorName: document.getElementById('editorFileName'),
     editorLanguage: document.getElementById('editorLanguage'),
     editorInput: document.getElementById('editorInput'),
+    editorWrap: document.getElementById('editorCodeWrap'),
     editorHighlight: document.getElementById('editorHighlight'),
     editorHighlightCode: document.getElementById('editorHighlightCode'),
     editorLines: document.getElementById('editorLineNumbers'),
@@ -305,23 +306,39 @@
 
   function updateEditorVisuals() {
     const editorContent = els.editorInput.value;
-    const language = languageForHighlight(state.currentFile?.language || 'plaintext');
+    const requestedLanguage = state.currentFile?.language || 'plaintext';
+    const language = languageForHighlight(requestedLanguage);
+    let highlighted = false;
 
-    if (window.hljs && language && window.hljs.getLanguage(language)) {
+    if (window.hljs) {
       try {
-        els.editorHighlightCode.innerHTML = window.hljs.highlight(editorContent, {
-          language,
-          ignoreIllegals: true
-        }).value + '\n';
-        els.editorHighlightCode.className = 'hljs language-' + language;
-      } catch (_) {
-        els.editorHighlightCode.textContent = editorContent + '\n';
-        els.editorHighlightCode.className = '';
+        if (language && window.hljs.getLanguage(language)) {
+          const result = window.hljs.highlight(editorContent, {
+            language,
+            ignoreIllegals: true
+          });
+          els.editorHighlightCode.innerHTML = result.value + '\n';
+          els.editorHighlightCode.className = 'hljs language-' + language;
+          highlighted = true;
+        } else if (editorContent && typeof window.hljs.highlightAuto === 'function') {
+          const result = window.hljs.highlightAuto(editorContent);
+          els.editorHighlightCode.innerHTML = result.value + '\n';
+          els.editorHighlightCode.className = result.language
+            ? 'hljs language-' + result.language
+            : 'hljs';
+          highlighted = true;
+        }
+      } catch (error) {
+        console.warn('Axolotl: no se pudo colorear el archivo.', error);
       }
-    } else {
+    }
+
+    if (!highlighted) {
       els.editorHighlightCode.textContent = editorContent + '\n';
       els.editorHighlightCode.className = '';
     }
+
+    els.editorWrap?.classList.toggle('highlight-ready', highlighted);
 
     const lineCount = Math.max(1, editorContent.split('\n').length);
     els.editorLines.textContent = Array.from({ length: lineCount }, (_, index) => index + 1).join('\n');
