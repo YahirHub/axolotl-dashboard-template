@@ -11,7 +11,7 @@ Cerrar la primera versión utilizable de Axolotl Dashboard Template como starter
 - Gin es el driver HTTP.
 - `html/template` integrado por Goravel/Gin es el motor de vistas, organizado en templates nombrados y partials.
 - SQLite es la base embebida por defecto, seleccionada por `.env`.
-- Las pruebas usan un SQLite temporal separado del archivo de desarrollo.
+- Las pruebas usan un SQLite temporal separado del archivo de desarrollo y nombrado por PID para evitar colisiones entre procesos concurrentes.
 - `/health` verifica aplicación y conexión SQLite.
 - El middleware global aplica headers de seguridad compatibles con la demo basada en CDN.
 - La referencia original se mantiene como baseline en `docs/reference/index-original.html`.
