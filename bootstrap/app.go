@@ -11,6 +11,7 @@ import (
 
 	appfacades "github.com/YahirHub/axolotl-dashboard-template/app/facades"
 	appmiddleware "github.com/YahirHub/axolotl-dashboard-template/app/http/middleware"
+	appsecurity "github.com/YahirHub/axolotl-dashboard-template/app/security"
 	"github.com/YahirHub/axolotl-dashboard-template/config"
 	"github.com/YahirHub/axolotl-dashboard-template/routes"
 )
@@ -33,13 +34,16 @@ func Boot() contractsfoundation.Application {
 		WithConfig(config.Boot).
 		WithCallback(func() {
 			appfacades.RateLimiter().For("auth-login", func(ctx contractshttp.Context) contractshttp.Limit {
-				return limit.PerMinute(10).By(ctx.Request().Ip())
+				return limit.PerMinute(30).By(appsecurity.ClientAddress(ctx))
 			})
 			appfacades.RateLimiter().For("auth-register", func(ctx contractshttp.Context) contractshttp.Limit {
-				return limit.PerMinute(5).By(ctx.Request().Ip())
+				return limit.PerMinute(8).By(appsecurity.ClientAddress(ctx))
 			})
 			appfacades.RateLimiter().For("auth-setup", func(ctx contractshttp.Context) contractshttp.Limit {
-				return limit.PerMinute(5).By(ctx.Request().Ip())
+				return limit.PerMinute(8).By(appsecurity.ClientAddress(ctx))
+			})
+			appfacades.RateLimiter().For("auth-recovery", func(ctx contractshttp.Context) contractshttp.Limit {
+				return limit.PerMinute(6).By(appsecurity.ClientAddress(ctx))
 			})
 		}).
 		Create()

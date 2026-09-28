@@ -9,12 +9,14 @@ import (
 
 	"github.com/YahirHub/axolotl-dashboard-template/app/facades"
 	"github.com/YahirHub/axolotl-dashboard-template/app/models"
+	"github.com/YahirHub/axolotl-dashboard-template/app/security"
 	"github.com/YahirHub/axolotl-dashboard-template/database/migrations"
 	"github.com/YahirHub/axolotl-dashboard-template/tests"
 )
 
 func resetUsers(t *testing.T) {
 	t.Helper()
+	security.LoginAttempts().Reset()
 	migration := &migrations.M20260928000200CreateUsersTable{}
 	_ = migration.Down()
 	require.NoError(t, migration.Up())

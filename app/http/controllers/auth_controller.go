@@ -5,6 +5,7 @@ import (
 	stdhttp "net/http"
 	"net/mail"
 	"strings"
+	"time"
 	"unicode"
 
 	"github.com/goravel/framework/contracts/http"
@@ -137,19 +138,35 @@ func (r *AuthController) StoreLogin(ctx http.Context) http.Response {
 
 	email := normalizeEmail(ctx.Request().Input("email"))
 	password := ctx.Request().Input("password")
-	if email == "" || len(email) > 190 || password == "" || len(password) > 128 {
+	ip := security.ClientAddress(ctx)
+	limiter := security.LoginAttempts()
+
+	if retry, blocked := limiter.Check(ip, email); blocked {
+		return r.blockedLogin(ctx, email, ip, retry)
+	}
+
+	fail := func() http.Response {
+		retry := limiter.RecordFailure(ip, email)
+		if retry > 0 {
+			return r.blockedLogin(ctx, email, ip, retry)
+		}
 		return r.authViewWithOld(ctx, "login", "Credenciales incorrectas.", "", email, "")
+	}
+
+	if email == "" || len(email) > 190 || password == "" || len(password) > 128 {
+		_, _ = facades.Hash().Make("AxolotlDummyPassword123!")
+		return fail()
 	}
 
 	var user models.User
 	if err := facades.Orm().Query().Where("email", email).Where("active", true).First(&user); err != nil {
-		// Ejecuta una operación Argon2id incluso cuando el correo no existe
-		// para reducir diferencias de tiempo que permitan enumerar usuarios.
+		// Ejecuta Argon2id aunque el correo no exista para reducir diferencias
+		// de tiempo que podrían facilitar enumeración de usuarios.
 		_, _ = facades.Hash().Make("AxolotlDummyPassword123!")
-		return r.authViewWithOld(ctx, "login", "Credenciales incorrectas.", "", email, "")
+		return fail()
 	}
 	if !facades.Hash().Check(password, user.Password) {
-		return r.authViewWithOld(ctx, "login", "Credenciales incorrectas.", "", email, "")
+		return fail()
 	}
 
 	if facades.Hash().NeedsRehash(user.Password) {
@@ -160,11 +177,34 @@ func (r *AuthController) StoreLogin(ctx http.Context) http.Response {
 	}
 
 	if _, err := facades.Auth(ctx).Login(&user); err != nil {
-		facades.Log().Errorf("error iniciando sesión para %s: %v", email, err)
+		facades.Log().Errorf("error iniciando sesión: %v", err)
 		return r.authViewWithOld(ctx, "login", "No fue posible iniciar sesión.", "", email, "")
 	}
 
+	limiter.RecordSuccess(ip, email)
 	return ctx.Response().Redirect(stdhttp.StatusSeeOther, "/dashboard")
+}
+
+func (r *AuthController) blockedLogin(ctx http.Context, email, ip string, retry time.Duration) http.Response {
+	seconds := int(retry.Seconds())
+	if seconds < 1 {
+		seconds = 1
+	}
+	ctx.Response().Header("Retry-After", fmt.Sprint(seconds))
+	facades.Log().Channel("security").Warningf(
+		"login bloqueado ip=%s identity=%s retry_seconds=%d",
+		ip,
+		security.IdentityFingerprint(email),
+		seconds,
+	)
+	return r.authViewWithOld(
+		ctx,
+		"login",
+		"Demasiados intentos. Espera un momento antes de volver a intentarlo.",
+		"",
+		email,
+		"",
+	)
 }
 
 func (r *AuthController) Register(ctx http.Context) http.Response {

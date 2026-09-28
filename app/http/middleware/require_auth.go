@@ -23,6 +23,11 @@ func (r *RequireAuth) Handle(ctx http.Context) {
 	}
 
 	if facades.Auth(ctx).Guest() {
+		facades.Log().Channel("security").Warningf(
+			"acceso privado sin sesión ip=%s path=%s",
+			security.ClientAddress(ctx),
+			ctx.Request().Path(),
+		)
 		_ = ctx.Response().Redirect(stdhttp.StatusSeeOther, "/login").Abort()
 		return
 	}

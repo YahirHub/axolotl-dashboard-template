@@ -154,6 +154,48 @@ func TestRegistrationCreatesOnlyStandardUser(t *testing.T) {
 	require.True(t, facades.Hash().Check("StrongUser123!", user.Password))
 }
 
+func TestLoginProgressiveBlock(t *testing.T) {
+	resetUsers(t)
+	admin := createAdmin(t)
+
+	var testCase tests.TestCase
+	loginPage, err := testCase.Http(t).Get("/login")
+	require.NoError(t, err)
+	loginPage.AssertOk()
+
+	values := url.Values{
+		"email":    {admin.Email},
+		"password": {"WrongPassword123!"},
+	}
+
+	var last contractshttp.Response
+	for i := 0; i < 5; i++ {
+		last = postForm(
+			t,
+			"/login",
+			values,
+			loginPage.Cookies(),
+			loginPage.Headers().Get("X-CSRF-TOKEN"),
+		)
+	}
+
+	require.NotNil(t, last)
+	last.AssertOk().AssertSee([]string{"Demasiados intentos"})
+	require.NotEmpty(t, last.Headers().Get("Retry-After"))
+
+	correctWhileBlocked := postForm(
+		t,
+		"/login",
+		url.Values{
+			"email":    {admin.Email},
+			"password": {"AdminPass123!"},
+		},
+		loginPage.Cookies(),
+		loginPage.Headers().Get("X-CSRF-TOKEN"),
+	)
+	correctWhileBlocked.AssertOk().AssertSee([]string{"Demasiados intentos"})
+}
+
 func TestLoginLogoutSessionFlow(t *testing.T) {
 	resetUsers(t)
 	admin := createAdmin(t)
