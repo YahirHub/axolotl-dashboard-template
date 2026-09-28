@@ -1,7 +1,11 @@
 package config
 
 import (
+	"fmt"
+	"path/filepath"
+
 	"github.com/goravel/framework/contracts/database/driver"
+	"github.com/goravel/framework/support/path"
 	sqlitefacades "github.com/goravel/sqlite/facades"
 
 	"github.com/YahirHub/axolotl-dashboard-template/app/facades"
@@ -9,11 +13,17 @@ import (
 
 func init() {
 	config := facades.Config()
+
+	database := fmt.Sprint(config.Env("DB_DATABASE", "storage/axolotl.sqlite"))
+	if !filepath.IsAbs(database) {
+		database = path.Base(database)
+	}
+
 	config.Add("database", map[string]any{
 		"default": config.Env("DB_CONNECTION", "sqlite"),
 		"connections": map[string]any{
 			"sqlite": map[string]any{
-				"database": config.Env("DB_DATABASE", "storage/axolotl.sqlite"),
+				"database": database,
 				"prefix":   "",
 				"singular": false,
 				"via": func() (driver.Driver, error) {
