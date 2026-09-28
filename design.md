@@ -1533,6 +1533,34 @@ Los modelos pertenecen a `app/models/` y las migraciones a `database/migrations/
 
 No hardcodear rutas absolutas de base de datos dentro de modelos o controllers.
 
+### Dashboard multipropósito
+
+La página inicial debe demostrar patrones reutilizables de varias áreas, no representar una sola industria.
+
+Orden recomendado:
+
+```text
+KPIs
+→ rendimiento y tendencias
+→ proyectos y tareas
+→ actividad
+→ equipo, agenda e integraciones
+→ métricas técnicas
+→ laboratorio UI
+```
+
+Los datos repetibles del demo salen de `DashboardController` y se renderizan con `html/template`. Un proyecto consumidor puede sustituirlos por ORM, APIs o servicios manteniendo los mismos partials.
+
+Reglas:
+
+- evitar cards que repitan la misma información;
+- cada módulo debe demostrar un patrón diferente;
+- no centrar la plantilla en finanzas, cripto, e-commerce u otra vertical;
+- preservar IDs de sección usados por sidebar, búsqueda y scroll spy;
+- mantener el logo SVG visible una sola vez en el sidebar;
+- no repetir la marca como decoración en el footer del sidebar;
+- usar partials separados cuando el módulo tenga responsabilidad visual propia.
+
 ### Regla para nuevos módulos
 
 Al añadir un módulo:

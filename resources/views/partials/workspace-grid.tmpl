@@ -1,0 +1,85 @@
+{{ define "partials/workspace-grid" }}
+      <section class="workspace-grid">
+        <article class="card section workspace-card" id="team-section">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Equipo</div>
+              <div class="section-subtitle">Carga y disponibilidad del equipo</div>
+            </div>
+            <button class="more-btn template-action" type="button" data-template-action="team">Administrar</button>
+          </div>
+          <div class="team-list">
+            {{ range .Team }}
+            <div class="team-row">
+              <div class="team-avatar">{{ .Initials }}</div>
+              <div class="team-copy">
+                <strong>{{ .Name }}</strong>
+                <small>{{ .Role }} · {{ .Status }}</small>
+              </div>
+              <div class="team-load">
+                <span>{{ .Load }}%</span>
+                <div class="mini-progress"><i style="width:{{ .Load }}%"></i></div>
+              </div>
+            </div>
+            {{ end }}
+          </div>
+        </article>
+
+        <article class="card section workspace-card" id="schedule-section">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Agenda</div>
+              <div class="section-subtitle">Próximos hitos y reuniones</div>
+            </div>
+            <button class="more-btn template-action" type="button" data-template-action="calendar">Calendario</button>
+          </div>
+          <div class="schedule-list">
+            {{ range .Schedule }}
+            <button class="schedule-row template-action" type="button" data-template-action="schedule">
+              <span class="schedule-date border-{{ .Tone }}"><b>{{ .Day }}</b><small>{{ .Month }}</small></span>
+              <span class="schedule-copy"><strong>{{ .Title }}</strong><small>{{ .Meta }}</small></span>
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+            {{ end }}
+          </div>
+        </article>
+
+        <article class="card section workspace-card" id="integrations-section">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Integraciones</div>
+              <div class="section-subtitle">Servicios listos para conectar</div>
+            </div>
+            <button class="more-btn template-action" type="button" data-template-action="integrations">Configurar</button>
+          </div>
+          <div class="integration-grid">
+            {{ range .Integrations }}
+            <button class="integration-card template-action" type="button" data-template-action="integration">
+              <span class="integration-icon bg-{{ .Tone }}-soft text-{{ .Tone }}"><i class="fa-solid {{ .Icon }}"></i></span>
+              <span><strong>{{ .Name }}</strong><small>{{ .Detail }}</small></span>
+              <em class="text-{{ .Tone }}">{{ .Status }}</em>
+            </button>
+            {{ end }}
+          </div>
+        </article>
+
+        <article class="card section workspace-card quick-actions-card" id="quick-actions-section">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Acciones rápidas</div>
+              <div class="section-subtitle">Patrones comunes de una aplicación real</div>
+            </div>
+          </div>
+          <div class="quick-actions-grid">
+            <button class="quick-action template-action" type="button" data-template-action="new-record"><i class="fa-solid fa-plus"></i><span>Nuevo registro</span></button>
+            <button class="quick-action template-action" type="button" data-template-action="export"><i class="fa-solid fa-file-export"></i><span>Exportar</span></button>
+            <button class="quick-action template-action" type="button" data-template-action="report"><i class="fa-solid fa-chart-column"></i><span>Crear reporte</span></button>
+            <button class="quick-action template-action" type="button" data-template-action="invite"><i class="fa-solid fa-user-plus"></i><span>Invitar usuario</span></button>
+          </div>
+          <div class="workspace-note">
+            <i class="fa-solid fa-code-branch"></i>
+            <span>Estos bloques son demostrativos: puedes conectarlos a controllers, ORM, APIs o jobs sin cambiar el sistema visual.</span>
+          </div>
+        </article>
+      </section>
+{{ end }}

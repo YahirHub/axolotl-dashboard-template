@@ -20,6 +20,12 @@ func TestDashboardRoute(t *testing.T) {
 		AssertHeader("X-Frame-Options", "SAMEORIGIN").
 		AssertSee([]string{
 			"Axolotl",
+			"Centro de operaciones",
+			"Proyectos destacados",
+			"Tareas prioritarias",
+			"Equipo",
+			"Agenda",
+			"Integraciones",
 			"Métricas del servidor",
 			"Laboratorio UI",
 			"/assets/css/app.css",

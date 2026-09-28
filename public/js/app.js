@@ -45,34 +45,34 @@ const state={
   compact:false,
   animations:true,
   risk:'Moderado',
-  selectedAsset:'BTC',
+  selectedAsset:'WEB',
   notifications:[
-    {id:1,title:'Señal BTC activada',text:'BTC alcanzó el rango de entrada configurado.',time:'Hace 8 min',unread:true,icon:'fa-bolt'},
-    {id:2,title:'Cambio de sentimiento',text:'El índice de mercado pasó a zona alcista.',time:'Hace 24 min',unread:true,icon:'fa-chart-line'},
-    {id:3,title:'Movimiento en ETH',text:'Ethereum superó el umbral de variación de 3%.',time:'Hace 1 h',unread:true,icon:'fa-bell'},
-    {id:4,title:'Resumen diario listo',text:'Tu resumen automático está disponible.',time:'Ayer',unread:false,icon:'fa-file-lines'}
+    {id:1,title:'Despliegue completado',text:'Portal web v2.4.0 quedó disponible para validación.',time:'Hace 8 min',unread:true,icon:'fa-rocket'},
+    {id:2,title:'Tarea próxima a vencer',text:'Validar flujo de onboarding vence hoy a las 16:30.',time:'Hace 24 min',unread:true,icon:'fa-list-check'},
+    {id:3,title:'Capacidad elevada',text:'La cola de procesamiento alcanzó 82% de utilización.',time:'Hace 1 h',unread:true,icon:'fa-server'},
+    {id:4,title:'Resumen diario listo',text:'El resumen operativo ya está disponible.',time:'Ayer',unread:false,icon:'fa-file-lines'}
   ]
 };
 
 const assets={
- BTC:{name:'Bitcoin',mxn:1923450,change:2.45,forecast:4.18,momentum:'Fuerte',vol:'Media',read:'Compradora',series:[10.45,10.62,10.55,10.78,10.72,10.94,10.80,10.67,10.82,10.76,10.98,11.08,11.20,11.14,11.32,11.47,11.68]},
- ETH:{name:'Ethereum',mxn:72610,change:3.21,forecast:3.64,momentum:'Fuerte',vol:'Media-alta',read:'Compradora',series:[8.1,8.3,8.25,8.6,8.5,8.7,8.65,8.9,8.82,9.05,8.94,9.2,9.38,9.31,9.55,9.62,9.78]},
- SOL:{name:'Solana',mxn:3450,change:-1.02,forecast:1.92,momentum:'Neutral',vol:'Alta',read:'Espera',series:[6.1,6.0,6.12,5.98,6.05,5.9,5.82,5.93,5.85,5.78,5.88,5.84,5.96,6.02,6.08,6.14,6.19]},
- XRP:{name:'XRP',mxn:42.80,change:4.15,forecast:2.78,momentum:'Fuerte',vol:'Media',read:'Compradora',series:[4.1,4.2,4.18,4.32,4.29,4.44,4.4,4.55,4.51,4.62,4.58,4.72,4.76,4.83,4.9,4.96,5.04]},
- DOGE:{name:'Dogecoin',mxn:3.78,change:2.18,forecast:1.44,momentum:'Moderado',vol:'Alta',read:'Especulativa',series:[3.2,3.25,3.18,3.31,3.28,3.36,3.33,3.41,3.38,3.45,3.5,3.48,3.56,3.6,3.63,3.66,3.72]}
+ WEB:{name:'Portal web',mxn:420000,change:12.4,forecast:8.2,momentum:'En ritmo',vol:'Media',read:'Saludable',series:[62,64,65,67,66,69,71,70,73,75,76,78,80,81,83,84,86]},
+ CRM:{name:'CRM comercial',mxn:315000,change:7.2,forecast:5.6,momentum:'En ritmo',vol:'Baja',read:'Estable',series:[54,55,57,58,60,59,62,63,65,66,68,69,71,72,74,75,77]},
+ APP:{name:'App móvil',mxn:580000,change:-3.1,forecast:4.1,momentum:'Atención',vol:'Alta',read:'Revisión',series:[72,73,71,70,69,68,70,67,66,65,64,66,65,67,68,69,71]},
+ DATA:{name:'Data Hub',mxn:265000,change:4.9,forecast:6.4,momentum:'Estable',vol:'Media',read:'Saludable',series:[48,50,52,51,54,56,57,59,58,61,63,64,66,68,69,71,73]},
+ OPS:{name:'Automatización Ops',mxn:190000,change:9.3,forecast:7.1,momentum:'En ritmo',vol:'Baja',read:'Saludable',series:[45,47,49,52,53,55,57,59,61,64,66,68,70,72,75,77,79]}
 };
 
 const periodData={
- '1H':{value:61,label:'Neutral +',caption:'Axolotl AI detecta recuperación de corto plazo.',series:[48,51,49,53,55,52,58,57,60,61,59,62,61]},
- '24H':{value:72,label:'Alcista',caption:'Axolotl AI detecta fortaleza compradora y volatilidad controlada.',series:[42,39,45,48,54,65,58,72,64,70,66,76,82]},
- '7D':{value:68,label:'Alcista',caption:'La tendencia semanal sigue positiva con pausas de consolidación.',series:[38,44,46,51,49,56,60,64,61,66,70,67,72]},
- '30D':{value:57,label:'Neutral',caption:'El horizonte mensual muestra equilibrio con sesgo ligeramente positivo.',series:[55,52,58,54,57,59,56,60,58,61,59,57,62]}
+ '1H':{value:76,label:'Estable',caption:'La operación se mantiene estable durante la última hora.',series:[70,72,71,73,74,72,75,74,76,77,75,76,76]},
+ '24H':{value:84,label:'Óptimo',caption:'La operación mantiene buen ritmo con capacidad disponible.',series:[68,70,72,71,74,77,75,79,78,80,81,83,86]},
+ '7D':{value:79,label:'Saludable',caption:'La semana mantiene entregas constantes y pocas incidencias.',series:[64,66,68,69,70,72,74,73,76,77,78,80,79]},
+ '30D':{value:73,label:'Saludable',caption:'El mes conserva un desempeño estable con margen de mejora.',series:[66,67,69,68,70,71,72,73,71,74,75,73,76]}
 };
 
 const news=[
- {title:'Mercado mantiene impulso positivo durante la sesión.',time:'Hace 30 min',body:'Los principales activos digitales mantienen una sesión favorable. Esta nota es contenido demostrativo para la plantilla Axolotl.'},
- {title:'Bitcoin registra mayor volumen e interés institucional.',time:'Hace 1 h',body:'El volumen de negociación aumentó durante la sesión. Los datos son ficticios y sirven para demostrar el comportamiento del componente de noticias.'},
- {title:'Ethereum acelera mientras crece la actividad de la red.',time:'Hace 2 h',body:'Ethereum presenta mayor actividad en la demostración del dashboard. Sustituye este contenido por tu API o CMS en producción.'}
+ {title:'Despliegue completado',time:'Hace 18 min',body:'Portal web versión 2.4.0 quedó disponible. Este feed demuestra cómo presentar eventos provenientes de backend, auditoría o webhooks.'},
+ {title:'Nuevo comentario',time:'Hace 42 min',body:'Se agregó una observación al CRM comercial. En producción este componente puede alimentarse desde la base de datos o un sistema de colaboración.'},
+ {title:'Alerta de capacidad',time:'Hace 1 h',body:'La cola de procesamiento de la App móvil alcanzó 82%. El contenido es demostrativo y puede sustituirse por telemetría real.'}
 ];
 
 let sentChart,predChart,portChart;
@@ -271,8 +271,8 @@ function initCharts(){
           titleColor:'#B18D9C',
           bodyColor:'#FFF2F7',
           callbacks:{
-            title:items=>`Seguimiento · ${sentimentHoverLabel(items[0].dataIndex)}`,
-            label:ctx=>`Sentimiento: ${ctx.parsed.y}/100`,
+            title:items=>`Rendimiento · ${sentimentHoverLabel(items[0].dataIndex)}`,
+            label:ctx=>`Índice operativo: ${ctx.parsed.y}/100`,
             afterLabel:ctx=>sentimentReading(ctx.parsed.y)
           }
         }
@@ -298,7 +298,7 @@ function initCharts(){
     type:'line',
     data:{labels:['00:00','','','','06:00','','','','12:00','','','','18:00','','','','24:00'],
       datasets:[{
-        data:assets.BTC.series,
+        data:assets.WEB.series,
         borderColor:ctx=>prismLineGradient(ctx.chart,cssVar('--primary'),cssVar('--secondary'),cssVar('--info')),
         backgroundColor:ctx=>prismAreaGradient(ctx.chart),
         borderWidth:2,
@@ -326,7 +326,7 @@ function initCharts(){
           titleColor:'#B18D9C',
           bodyColor:'#FFF2F7',
           callbacks:{
-            title:items=>`Proyección · ${predictionHoverLabel(items[0].dataIndex)}`,
+            title:items=>`Tendencia · ${predictionHoverLabel(items[0].dataIndex)}`,
             label:ctx=>`Índice: ${Number(ctx.parsed.y).toFixed(2)}`,
             afterLabel:ctx=>ctx.dataIndex>=11?'Zona proyectada':'Histórico ilustrativo'
           }
@@ -352,9 +352,9 @@ function initCharts(){
 
   portChart=new Chart($('#portChart'),{
     type:'doughnut',
-    data:{labels:['Bitcoin','Ethereum','Solana','XRP','Otros'],
+    data:{labels:['Producto','Ventas','Operaciones','Analítica','Soporte'],
       datasets:[{
-        data:[45.2,25.6,12.8,8.7,7.7],
+        data:[34,22,19,15,10],
         backgroundColor:[
           cssVar('--warning'),
           '#B58AF6',
@@ -378,10 +378,10 @@ function initCharts(){
 }
 
 function sentimentReading(v){
-  if(v>=70) return 'Alcista fuerte';
-  if(v>=60) return 'Alcista';
-  if(v>=45) return 'Neutral';
-  return 'Bajista';
+  if(v>=82) return 'Óptimo';
+  if(v>=70) return 'Saludable';
+  if(v>=55) return 'Atención';
+  return 'Crítico';
 }
 function sentimentHoverLabel(i){
   const labels=['00:00','01:30','03:00','04:30','06:00','07:30','09:00','10:30','12:00','13:30','15:00','16:30','18:00'];
@@ -408,8 +408,7 @@ function selectAsset(symbol){
   state.selectedAsset=symbol;
   const a=assets[symbol];
   $$('.asset').forEach(el=>el.classList.toggle('selected',el.dataset.symbol===symbol));
-  $('#predictionTitle').textContent=`Predicción IA (${symbol} / ${state.currency})`;
-  $('#predCurrent').dataset.mxn=a.mxn;
+  $('#predictionTitle').textContent=`Tendencia · ${a.name}`;
   $('#predCurrent').textContent=formatMoney(a.mxn);
   $('#predForecast').textContent=(a.forecast>=0?'+':'')+a.forecast.toFixed(2)+'%';
   $('#insightMomentum').textContent=a.momentum;
@@ -417,15 +416,15 @@ function selectAsset(symbol){
   $('#insightRead').textContent=a.read;
   predChart.data.datasets[0].data=a.series;
   predChart.update();
-  toast(`${symbol} seleccionado`,`La predicción y el resumen se actualizaron.`);
+  toast(`${a.name} seleccionado`,`El resumen y la tendencia se actualizaron.`);
 }
 
 function selectPortfolio(index){
   const rows=$$('#portfolioLegend .legend-row');
   rows.forEach((r,i)=>r.classList.toggle('selected',i===index));
-  const labels=['Bitcoin','Ethereum','Solana','XRP','Otros'];
-  const pct=[45.2,25.6,12.8,8.7,7.7][index];
-  $('#portfolioCenter').innerHTML=`${labels[index]}<strong>${pct.toFixed(1)}%</strong><span>del portafolio</span>`;
+  const labels=['Producto','Ventas','Operaciones','Analítica','Soporte'];
+  const pct=[34,22,19,15,10][index];
+  $('#portfolioCenter').innerHTML=`${labels[index]}<strong>${pct.toFixed(1)}%</strong><span>de capacidad</span>`;
 }
 
 function toggleDropdown(menu,button){
@@ -664,43 +663,49 @@ function toast(title,text){
 
 function assetDetail(symbol){
   const a=assets[symbol];
-  openModal(`${a.name} · ${symbol}`,`Vista detallada del activo en ${state.currency}.`,
+  if(!a)return;
+  openModal(`${a.name} · ${symbol}`,'Detalle de proyecto demostrativo.',
     `<div class="modal-grid">
-      <div class="field"><label>Precio actual</label><div class="card section" style="font-size:20px;font-weight:800">${formatMoney(a.mxn)}</div></div>
-      <div class="field"><label>Variación 24 h</label><div class="card section" style="font-size:20px;font-weight:800;color:${a.change>=0?'var(--green)':'var(--red)'}">${a.change>=0?'+':''}${a.change.toFixed(2)}%</div></div>
-      <div class="field"><label>Momentum</label><div class="card section">${a.momentum}</div></div>
-      <div class="field"><label>Volatilidad</label><div class="card section">${a.vol}</div></div>
+      <div class="field"><label>Presupuesto</label><div class="card section" style="font-size:20px;font-weight:800">${formatMoney(a.mxn)}</div></div>
+      <div class="field"><label>Variación</label><div class="card section" style="font-size:20px;font-weight:800;color:${a.change>=0?'var(--green)':'var(--red)'}">${a.change>=0?'+':''}${a.change.toFixed(2)}%</div></div>
+      <div class="field"><label>Estado</label><div class="card section">${a.momentum}</div></div>
+      <div class="field"><label>Complejidad</label><div class="card section">${a.vol}</div></div>
     </div>
     <div class="modal-actions">
-      <button class="secondary" type="button" id="modalAnalyzeBtn">Analizar</button>
-      <button class="primary" type="button" id="modalSelectBtn">Usar en predicción</button>
+      <button class="secondary" type="button" id="modalAnalyzeBtn">Ver lectura</button>
+      <button class="primary" type="button" id="modalSelectBtn">Usar en tendencia</button>
     </div>`);
-  $('#modalAnalyzeBtn').addEventListener('click',()=>toast('Análisis IA',`Lectura actual: ${a.read}.`));
+  $('#modalAnalyzeBtn').addEventListener('click',()=>toast('Lectura del proyecto',`Estado actual: ${a.read}.`));
   $('#modalSelectBtn').addEventListener('click',()=>{selectAsset(symbol);closeModal();smoothScrollTo($('#prediction-section'),{offset:-40,duration:.9})});
 }
 
 function allMarkets(){
-  const rows=Object.entries(assets).map(([s,a])=>`<tr><td><b>${s}</b><br><span style="color:var(--muted)">${a.name}</span></td><td>${formatMoney(a.mxn)}</td><td style="color:${a.change>=0?'var(--green)':'var(--red)'}">${a.change>=0?'+':''}${a.change.toFixed(2)}%</td><td><button class="secondary market-open" data-symbol="${s}" type="button">Abrir</button></td></tr>`).join('');
-  openModal('Todos los registros','Listado demostrativo de registros.',`<table class="data-table"><thead><tr><th>Activo</th><th>Precio</th><th>24 h</th><th></th></tr></thead><tbody>${rows}</tbody></table>`,true);
-  $$('.market-open',$('#modalContent')).forEach(b=>b.addEventListener('click',()=>assetDetail(b.dataset.symbol)));
+  const rows=[
+    ['Conversión','18.4%','+2.1 pts','Saludable'],
+    ['Tiempo de respuesta','2m 18s','-14%','Mejorando'],
+    ['Órdenes procesadas','1,842','+9.8%','En ritmo'],
+    ['Backlog','37','+5','Atención']
+  ].map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('');
+  openModal('Reporte operativo','Ejemplo de tabla reutilizable para indicadores.',`<table class="data-table"><thead><tr><th>Indicador</th><th>Valor</th><th>Cambio</th><th>Estado</th></tr></thead><tbody>${rows}</tbody></table>`,true);
 }
 
 function tradeModal(symbol){
   const a=assets[symbol];
-  openModal(`Simular compra de ${symbol}`,'Esta plantilla no ejecuta operaciones reales.',
+  if(!a)return;
+  openModal(`Nueva acción · ${a.name}`,'Ejemplo de formulario contextual reutilizable.',
     `<form id="tradeForm">
       <div class="modal-grid">
-        <div class="field"><label>Monto</label><input id="tradeAmount" type="number" min="1" step="1" value="5000"></div>
-        <div class="field"><label>Precio de referencia</label><input value="${formatMoney(a.mxn)}" disabled></div>
+        <div class="field"><label>Responsable</label><input id="taskOwner" value="Usuario Axolotl"></div>
+        <div class="field"><label>Prioridad</label><select id="taskPriority"><option>Media</option><option>Alta</option><option>Baja</option></select></div>
       </div>
-      <div class="modal-actions"><button class="secondary" type="button" id="cancelTrade">Cancelar</button><button class="primary" type="submit">Simular operación</button></div>
+      <div class="field" style="margin-top:10px"><label>Descripción</label><input id="taskDescription" value="Dar seguimiento a ${a.name}"></div>
+      <div class="modal-actions"><button class="secondary" type="button" id="cancelTrade">Cancelar</button><button class="primary" type="submit">Crear acción</button></div>
     </form>`);
   $('#cancelTrade').addEventListener('click',closeModal);
   $('#tradeForm').addEventListener('submit',e=>{
     e.preventDefault();
-    const amt=Number($('#tradeAmount').value);
-    if(!amt||amt<=0){toast('Monto inválido','Ingresa una cantidad mayor que cero.');return}
-    closeModal();toast('Operación simulada',`${formatMoney(amt/state.rates[state.currency])} asignados a ${symbol}.`);
+    closeModal();
+    toast('Acción creada',`Se agregó una acción para ${a.name}.`);
   });
 }
 
@@ -861,14 +866,14 @@ function settingsModal(){
   openModal('Preferencias','Configura el comportamiento visual de esta plantilla.',
     `<div class="switch-row"><div class="switch-copy"><strong>Modo compacto</strong><small>Reduce separaciones y altura de tarjetas.</small></div><label class="switch"><input id="compactToggle" type="checkbox" ${state.compact?'checked':''}><span class="slider"></span></label></div>
      <div class="switch-row"><div class="switch-copy"><strong>Animaciones de gráficas</strong><small>Activa o desactiva transiciones.</small></div><label class="switch"><input id="animToggle" type="checkbox" ${state.animations?'checked':''}><span class="slider"></span></label></div>
-     <div class="field" style="margin-top:12px"><label>Perfil de riesgo</label><select id="riskSelect"><option>Conservador</option><option ${state.risk==='Moderado'?'selected':''}>Moderado</option><option>Agresivo</option></select></div>
+     <div class="modal-callout" style="margin-top:12px">Los módulos del dashboard son independientes: puedes reemplazar proyectos, tareas, agenda o métricas sin cambiar el layout general.</div>
      <div class="modal-actions"><button class="secondary" type="button" id="resetSettings">Restablecer</button><button class="primary" type="button" id="saveSettings">Guardar cambios</button></div>`);
-  $('#resetSettings').addEventListener('click',()=>{$('#compactToggle').checked=false;$('#animToggle').checked=true;$('#riskSelect').value='Moderado'});
+  $('#resetSettings').addEventListener('click',()=>{$('#compactToggle').checked=false;$('#animToggle').checked=true});
   $('#saveSettings').addEventListener('click',()=>{
-    state.compact=$('#compactToggle').checked;state.animations=$('#animToggle').checked;state.risk=$('#riskSelect').value;
+    state.compact=$('#compactToggle').checked;
+    state.animations=$('#animToggle').checked;
     document.body.classList.toggle('compact',state.compact);
     Chart.defaults.animation=state.animations?{duration:500}:false;
-    $$('.risk-stat .stat-value').forEach(x=>x.textContent=state.risk);
     closeModal();toast('Preferencias guardadas','Los cambios visuales se aplicaron.');
   });
 }
@@ -908,27 +913,31 @@ function alertsModal(){
 
 function createAlertModal(){
   closeDrawer();
-  openModal('Crear alerta','Configura una condición de precio para la plantilla.',
+  openModal('Crear alerta','Configura una regla reutilizable para cualquier módulo.',
     `<form id="alertForm"><div class="modal-grid">
-      <div class="field"><label>Activo</label><select id="alertAsset">${Object.keys(assets).map(s=>`<option>${s}</option>`).join('')}</select></div>
-      <div class="field"><label>Condición</label><select id="alertCond"><option>Sube por encima de</option><option>Baja por debajo de</option><option>Variación % mayor a</option></select></div>
-      <div class="field"><label>Valor</label><input id="alertValue" type="number" min="0" step="0.01" value="2000000"></div>
+      <div class="field"><label>Módulo</label><select id="alertAsset">${Object.entries(assets).map(([s,a])=>`<option value="${s}">${a.name}</option>`).join('')}</select></div>
+      <div class="field"><label>Condición</label><select id="alertCond"><option>Progreso menor a</option><option>Variación mayor a</option><option>Estado cambia a atención</option></select></div>
+      <div class="field"><label>Umbral</label><input id="alertValue" type="number" min="0" step="1" value="70"></div>
       <div class="field"><label>Canal</label><select><option>Dashboard</option><option>Correo (demo)</option></select></div>
     </div><div class="modal-actions"><button class="primary" type="submit">Crear alerta</button></div></form>`);
   $('#alertForm').addEventListener('submit',e=>{
-    e.preventDefault();const symbol=$('#alertAsset').value,cond=$('#alertCond').value,val=Number($('#alertValue').value);
+    e.preventDefault();
+    const symbol=$('#alertAsset').value,cond=$('#alertCond').value,val=Number($('#alertValue').value);
     if(!Number.isFinite(val)||val<0){toast('Valor inválido','Revisa el umbral de la alerta.');return}
-    state.notifications.unshift({id:Date.now(),title:`Alerta ${symbol} creada`,text:`${cond} ${val}.`,time:'Ahora',unread:true,icon:'fa-bell'});
-    updateBadge();closeModal();toast('Alerta creada',`${symbol}: ${cond} ${val}.`);
+    const name=assets[symbol]?.name||symbol;
+    state.notifications.unshift({id:Date.now(),title:`Alerta creada · ${name}`,text:`${cond}: ${val}.`,time:'Ahora',unread:true,icon:'fa-bell'});
+    updateBadge();closeModal();toast('Alerta creada',`${name}: ${cond} ${val}.`);
   });
 }
 
 function allSignals(){
   const rows=[
-    ['BTC','COMPRAR','85%'],['ETH','COMPRAR','79%'],['SOL','ESPERAR','61%'],['XRP','COMPRAR','73%'],['DOGE','ESPERAR','58%']
-  ].map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td><button class="secondary sig-open" data-symbol="${r[0]}" type="button">Detalle</button></td></tr>`).join('');
-  openModal('Toda la actividad','Actividad ficticia para la plantilla.',`<table class="data-table"><thead><tr><th>Activo</th><th>Acción</th><th>Confianza</th><th></th></tr></thead><tbody>${rows}</tbody></table>`,true);
-  $$('.sig-open',$('#modalContent')).forEach(b=>b.addEventListener('click',()=>assetDetail(b.dataset.symbol)));
+    ['T-184','Validar flujo de onboarding','Mariana','72%','Hoy · 16:30'],
+    ['T-207','Revisar segmentación de clientes','Diego','48%','Mañana · 10:00'],
+    ['T-231','Publicar build interno','Sofía','61%','30 Sep'],
+    ['T-249','Documentar modelo de eventos','Alex','34%','2 Oct']
+  ].map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td></tr>`).join('');
+  openModal('Todas las tareas','Ejemplo de tabla de trabajo reutilizable.',`<table class="data-table"><thead><tr><th>ID</th><th>Tarea</th><th>Responsable</th><th>Avance</th><th>Vence</th></tr></thead><tbody>${rows}</tbody></table>`,true);
 }
 
 function newsModal(index){
@@ -938,16 +947,18 @@ function newsModal(index){
 }
 
 function allNews(){
-  openModal('Todas las novedades','Contenido de novedades de ejemplo.',
+  openModal('Toda la actividad','Eventos recientes de demostración.',
     news.map((n,i)=>`<button class="notification news-open" data-news="${i}" type="button" style="width:100%;color:inherit;text-align:left"><strong>${n.title}</strong><p>${n.body}</p><small>${n.time}</small></button>`).join(''),true);
   $$('.news-open',$('#modalContent')).forEach(b=>b.addEventListener('click',()=>newsModal(Number(b.dataset.news))));
 }
 
 function managePortfolio(){
-  openModal('Administrar portafolio','Edita porcentajes demostrativos. El total debe ser 100%.',
-    `<form id="portfolioForm">${['BTC','ETH','SOL','XRP','Otros'].map((s,i)=>`<div class="field" style="margin-bottom:8px"><label>${s}</label><input class="port-input" data-index="${i}" type="number" min="0" max="100" step="0.1" value="${[45.2,25.6,12.8,8.7,7.7][i]}"></div>`).join('')}
+  const labels=['Producto','Ventas','Operaciones','Analítica','Soporte'];
+  const defaults=[34,22,19,15,10];
+  openModal('Administrar capacidad','Edita la distribución demostrativa. El total debe ser 100%.',
+    `<form id="portfolioForm">${labels.map((s,i)=>`<div class="field" style="margin-bottom:8px"><label>${s}</label><input class="port-input" data-index="${i}" type="number" min="0" max="100" step="0.1" value="${defaults[i]}"></div>`).join('')}
     <div id="portfolioTotal" style="font-size:11px;color:var(--muted)">Total: 100.0%</div>
-    <div class="modal-actions"><button class="primary" type="submit">Aplicar composición</button></div></form>`);
+    <div class="modal-actions"><button class="primary" type="submit">Aplicar distribución</button></div></form>`);
   const updateTotal=()=>{
     const t=$$('.port-input').reduce((s,x)=>s+(Number(x.value)||0),0);
     $('#portfolioTotal').textContent=`Total: ${t.toFixed(1)}%`;
@@ -956,28 +967,31 @@ function managePortfolio(){
   $$('.port-input').forEach(i=>i.addEventListener('input',updateTotal));
   $('#portfolioForm').addEventListener('submit',e=>{
     e.preventDefault();const vals=$$('.port-input').map(x=>Number(x.value)||0);const total=vals.reduce((a,b)=>a+b,0);
-    if(Math.abs(total-100)>.01){toast('Composición inválida','El total debe ser exactamente 100%.');return}
+    if(Math.abs(total-100)>.01){toast('Distribución inválida','El total debe ser exactamente 100%.');return}
     portChart.data.datasets[0].data=vals;portChart.update();
     $$('#portfolioLegend .legend-row strong').forEach((el,i)=>el.textContent=vals[i].toFixed(1)+'%');
-    closeModal();toast('Portafolio actualizado','La gráfica fue recalculada.');
+    closeModal();toast('Capacidad actualizada','La gráfica fue recalculada.');
   });
 }
 
 function aiStatus(){
-  openModal('Estado de Axolotl AI','Motor de análisis de demostración.',
+  openModal('Estado de la aplicación','Resumen técnico de la plantilla.',
    `<div class="modal-grid">
-     <div class="card section"><div style="color:var(--muted);font-size:10px">Estado</div><strong style="color:var(--green)">Operativo</strong></div>
-     <div class="card section"><div style="color:var(--muted);font-size:10px">Precisión</div><strong>78.6%</strong></div>
-     <div class="card section"><div style="color:var(--muted);font-size:10px">Mercados</div><strong>5 activos</strong></div>
-     <div class="card section"><div style="color:var(--muted);font-size:10px">Último análisis</div><strong>Ahora</strong></div>
+     <div class="card section"><div style="color:var(--muted);font-size:10px">Aplicación</div><strong style="color:var(--green)">Operativa</strong></div>
+     <div class="card section"><div style="color:var(--muted);font-size:10px">Base de datos</div><strong>SQLite conectada</strong></div>
+     <div class="card section"><div style="color:var(--muted);font-size:10px">Backend</div><strong>Goravel</strong></div>
+     <div class="card section"><div style="color:var(--muted);font-size:10px">Healthcheck</div><strong>/health</strong></div>
    </div>`);
 }
 
 function riskDetail(){
-  openModal('Perfil de riesgo','Resumen de riesgo de la demostración.',
-   `<div style="font-size:12px;line-height:1.7;color:#abc0bd">El perfil actual es <b style="color:var(--text)">${state.risk}</b>. En una implementación real, este módulo podría combinar volatilidad, concentración, exposición y drawdown.</div>
-    <div class="modal-actions"><button class="primary" type="button" id="riskSettingsBtn">Configurar perfil</button></div>`);
-  $('#riskSettingsBtn').addEventListener('click',settingsModal);
+  openModal('Disponibilidad del sistema','Indicador general de salud de la aplicación.',
+   `<div class="modal-grid">
+      <div class="card section"><div style="font-size:9px;color:var(--muted)">Disponibilidad</div><strong style="font-size:18px">99.97%</strong></div>
+      <div class="card section"><div style="font-size:9px;color:var(--muted)">Incidentes abiertos</div><strong style="font-size:18px">0</strong></div>
+    </div>
+    <div class="modal-actions"><button class="primary" type="button" id="riskSettingsBtn">Ver métricas</button></div>`);
+  $('#riskSettingsBtn').addEventListener('click',()=>{closeModal();smoothScrollTo($('#server-metrics-section'),{offset:-30})});
 }
 
 function logout(){
@@ -998,31 +1012,34 @@ let searchActiveIndex=0;
 let searchVisibleItems=[];
 
 const searchIndex=[
-  {type:'section',title:'Dashboard',desc:'Volver al inicio del panel.',icon:'fa-house',action:()=>$('#dashboard').scrollIntoView({behavior:'smooth',block:'start'})},
-  {type:'section',title:'Analítica',desc:'Ir al resumen general y registros.',icon:'fa-chart-line',action:()=>smoothScrollTo($('#market-section'))},
-  {type:'section',title:'Análisis IA',desc:'Abrir estado general y seguimiento IA.',icon:'fa-brain',action:()=>smoothScrollTo($('#sentiment-section'))},
-  {type:'section',title:'Resumen',desc:'Ir a la distribución general.',icon:'fa-chart-pie',action:()=>smoothScrollTo($('#portfolio-section'))},
-  {type:'section',title:'Actividad',desc:'Abrir actividad IA.',icon:'fa-wand-magic-sparkles',action:()=>smoothScrollTo($('#signals-section'))},
-  {type:'section',title:'Novedades',desc:'Abrir las novedades recientes.',icon:'fa-newspaper',action:()=>smoothScrollTo($('#news-section'))},
-  {type:'section',title:'Métricas del servidor',desc:'CPU, RAM, red y almacenamiento en tiempo real.',icon:'fa-server',action:()=>smoothScrollTo($('#server-metrics-section'))},
+  {type:'section',title:'Dashboard',desc:'Volver al centro de operaciones.',icon:'fa-house',action:()=>smoothScrollTo($('#dashboard'))},
+  {type:'section',title:'Proyectos',desc:'Abrir proyectos destacados.',icon:'fa-diagram-project',action:()=>smoothScrollTo($('#summary-section'))},
+  {type:'section',title:'Tareas',desc:'Abrir tareas prioritarias.',icon:'fa-list-check',action:()=>smoothScrollTo($('#signals-section'))},
+  {type:'section',title:'Actividad',desc:'Abrir el feed de actividad.',icon:'fa-clock-rotate-left',action:()=>smoothScrollTo($('#news-section'))},
+  {type:'section',title:'Rendimiento',desc:'Ver analítica operativa.',icon:'fa-chart-line',action:()=>smoothScrollTo($('#sentiment-section'))},
+  {type:'section',title:'Distribución',desc:'Ver distribución de capacidad.',icon:'fa-chart-pie',action:()=>smoothScrollTo($('#portfolio-section'))},
+  {type:'section',title:'Equipo',desc:'Ver carga y disponibilidad.',icon:'fa-users',action:()=>smoothScrollTo($('#team-section'))},
+  {type:'section',title:'Agenda',desc:'Abrir próximos hitos.',icon:'fa-calendar',action:()=>smoothScrollTo($('#schedule-section'))},
+  {type:'section',title:'Integraciones',desc:'Ver servicios conectables.',icon:'fa-plug',action:()=>smoothScrollTo($('#integrations-section'))},
+  {type:'section',title:'Métricas del servidor',desc:'CPU, RAM, red y almacenamiento.',icon:'fa-server',action:()=>smoothScrollTo($('#server-metrics-section'))},
   {type:'section',title:'Laboratorio UI',desc:'Probar componentes y copiar ejemplos de código.',icon:'fa-code',action:()=>smoothScrollTo($('#code-lab-section'))},
 
-  {type:'action',title:'Crear alerta',desc:'Configurar una nueva alerta.',icon:'fa-bell',action:createAlertModal},
+  {type:'action',title:'Crear alerta',desc:'Configurar una regla de monitoreo.',icon:'fa-bell',action:createAlertModal},
   {type:'action',title:'Abrir notificaciones',desc:'Ver el centro de notificaciones.',icon:'fa-inbox',action:openDrawer},
   {type:'action',title:'Preferencias',desc:'Configurar apariencia y comportamiento.',icon:'fa-sliders',action:settingsModal},
-  {type:'action',title:'Personalizar tema',desc:'Editar la paleta Axolotl y los colores semánticos.',icon:'fa-palette',action:themeModal},
-  {type:'action',title:'Componentes UI',desc:'Ver modales, utilidades y ejemplos con código.',icon:'fa-layer-group',action:componentsModal},
+  {type:'action',title:'Personalizar tema',desc:'Editar la paleta Axolotl.',icon:'fa-palette',action:themeModal},
+  {type:'action',title:'Componentes UI',desc:'Ver componentes reutilizables.',icon:'fa-layer-group',action:componentsModal},
   {type:'action',title:'Mi perfil',desc:'Editar nombre, correo y alias.',icon:'fa-user',action:profileModal},
   {type:'action',title:'Seguridad',desc:'Abrir opciones de seguridad.',icon:'fa-shield-halved',action:securityModal},
-  {type:'action',title:'Administrar distribución',desc:'Editar porcentajes del resumen.',icon:'fa-chart-pie',action:managePortfolio},
-  {type:'action',title:'Estado de Axolotl AI',desc:'Ver estado del motor de IA.',icon:'fa-microchip',action:aiStatus},
+  {type:'action',title:'Administrar capacidad',desc:'Editar la distribución general.',icon:'fa-chart-pie',action:managePortfolio},
+  {type:'action',title:'Estado de la aplicación',desc:'Ver backend, base de datos y healthcheck.',icon:'fa-microchip',action:aiStatus},
   {type:'action',title:'Modo compacto',desc:'Abrir ajustes visuales.',icon:'fa-compress',action:settingsModal},
 
   ...Object.entries(assets).map(([symbol,a])=>({
     type:'asset',
     title:`${symbol} · ${a.name}`,
-    desc:`Valor ${formatMoney(a.mxn)} · variación ${a.change>=0?'+':''}${a.change.toFixed(2)}%`,
-    icon:symbol==='BTC'?'fa-bitcoin':'fa-chart-line',
+    desc:`Presupuesto ${formatMoney(a.mxn)} · variación ${a.change>=0?'+':''}${a.change.toFixed(2)}%`,
+    icon:'fa-diagram-project',
     action:()=>assetDetail(symbol)
   })),
 
@@ -1030,13 +1047,13 @@ const searchIndex=[
     type:'news',
     title:n.title,
     desc:n.time,
-    icon:'fa-newspaper',
+    icon:'fa-clock-rotate-left',
     action:()=>newsModal(i)
   }))
 ];
 
 function searchTypeLabel(type){
-  return {section:'Sección',asset:'Dato',action:'Acción',news:'Novedad'}[type]||'Resultado';
+  return {section:'Sección',asset:'Proyecto',action:'Acción',news:'Actividad'}[type]||'Resultado';
 }
 
 function normalizeSearch(v){
@@ -1089,7 +1106,7 @@ function renderSearchResults(){
     answer.className='search-answer';
     const safe=q.replace(/[<>&"]/g,m=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[m]));
     answer.innerHTML=`<div class="search-answer-head"><i class="fa-solid fa-wand-magic-sparkles"></i> Respuesta simulada</div>
-      <p>No encontré una coincidencia exacta para <b>${safe||'tu búsqueda'}</b>. En una implementación real, aquí puedes conectar búsqueda global, API, base de datos o un asistente. Como demo, puedes buscar “alerta”, “perfil”, “BTC”, “analítica” o “novedades”.</p>`;
+      <p>No encontré una coincidencia exacta para <b>${safe||'tu búsqueda'}</b>. En una implementación real, aquí puedes conectar búsqueda global, API, base de datos o un asistente. Como demo, puedes buscar “proyecto”, “tareas”, “equipo”, “servidor” o “integraciones”.</p>`;
     searchResults.appendChild(answer);
     return;
   }
@@ -1950,6 +1967,66 @@ function initServerMetrics(){
 }
 
 
+
+const operationDetails={
+  conversion:{title:'Conversión',value:'18.4%',detail:'Objetivo mensual 20%',note:'Ejemplo de KPI comercial con comparación contra objetivo.'},
+  response:{title:'Tiempo de respuesta',value:'2m 18s',detail:'Mejora de 14%',note:'Ejemplo de KPI de soporte o SLA.'},
+  orders:{title:'Órdenes procesadas',value:'1,842',detail:'+9.8% vs. ayer',note:'Ejemplo de throughput para operaciones o logística.'},
+  backlog:{title:'Backlog',value:'37',detail:'5 pendientes nuevos',note:'Ejemplo de inventario de trabajo pendiente.'}
+};
+
+function operationDetail(key){
+  const item=operationDetails[key];
+  if(!item)return;
+  openModal(item.title,'Indicador operativo demostrativo.',
+    `<div class="modal-grid">
+      <div class="card section"><div style="font-size:9px;color:var(--muted)">Presupuesto</div><strong style="font-size:20px">${item.value}</strong></div>
+      <div class="card section"><div style="font-size:9px;color:var(--muted)">Contexto</div><strong>${item.detail}</strong></div>
+    </div>
+    <div class="modal-callout" style="margin-top:12px">${item.note}</div>`);
+}
+
+const taskDetails={
+  'T-184':{title:'Validar flujo de onboarding',owner:'Mariana',due:'Hoy · 16:30',progress:72},
+  'T-207':{title:'Revisar segmentación de clientes',owner:'Diego',due:'Mañana · 10:00',progress:48},
+  'T-231':{title:'Publicar build interno',owner:'Sofía',due:'30 Sep',progress:61},
+  'T-249':{title:'Documentar modelo de eventos',owner:'Alex',due:'2 Oct',progress:34}
+};
+
+function taskDetail(id){
+  const item=taskDetails[id];
+  if(!item)return;
+  openModal(`${id} · ${item.title}`,'Detalle de tarea demostrativa.',
+    `<div class="modal-grid">
+      <div class="card section"><div style="font-size:9px;color:var(--muted)">Responsable</div><strong>${item.owner}</strong></div>
+      <div class="card section"><div style="font-size:9px;color:var(--muted)">Vence</div><strong>${item.due}</strong></div>
+      <div class="card section"><div style="font-size:9px;color:var(--muted)">Avance</div><strong>${item.progress}%</strong></div>
+      <div class="card section"><div style="font-size:9px;color:var(--muted)">Estado</div><strong style="color:var(--primary)">En proceso</strong></div>
+    </div>`);
+}
+
+function runTemplateAction(action){
+  if(action==='new-record'){
+    openUiModal({
+      title:'Nuevo registro',
+      subtitle:'Formulario base conectado al sistema de modales.',
+      icon:'fa-plus',
+      size:'sm',
+      body:'<div class="field"><label>Nombre</label><input placeholder="Nuevo elemento"></div><div class="field" style="margin-top:10px"><label>Descripción</label><input placeholder="Descripción breve"></div>',
+      footer:'<button class="btn-ui btn-ghost" type="button" id="quickCancel">Cancelar</button><button class="btn-ui btn-primary" type="button" id="quickSave">Guardar</button>'
+    });
+    $('#quickCancel')?.addEventListener('click',closeModal);
+    $('#quickSave')?.addEventListener('click',()=>{closeModal();toast('Registro creado','Acción demostrativa completada.')});
+    return;
+  }
+  if(action==='export'){toast('Exportación preparada','Aquí puedes conectar CSV, XLSX o PDF.');return}
+  if(action==='report'){toast('Reporte','Aquí puedes conectar un controller o job de reportes.');return}
+  if(action==='invite'){profileModal();return}
+  if(action==='team'){toast('Equipo','Conecta esta acción a tu módulo de usuarios o permisos.');return}
+  if(action==='calendar' || action==='schedule'){toast('Agenda','Conecta esta acción a eventos, reservas o recordatorios.');return}
+  if(action==='integrations' || action==='integration'){toast('Integraciones','Conecta aquí webhooks, correo, storage u otros servicios.');return}
+}
+
 /* Events */
 const appEl=$('#app');
 const sidebarToggle=$('#sidebarToggle');
@@ -2102,23 +2179,23 @@ $$('.nav-item[data-action],.nav-subitem[data-action]').forEach(btn=>btn.addEvent
 
 $$('#periodButtons button').forEach(btn=>btn.addEventListener('click',()=>setPeriod(btn.dataset.period)));
 $$('.asset').forEach(btn=>btn.addEventListener('click',()=>selectAsset(btn.dataset.symbol)));
-$$('.market-row').forEach(btn=>btn.addEventListener('click',()=>assetDetail(btn.dataset.symbol)));
-$$('.buy').forEach(btn=>btn.addEventListener('click',()=>tradeModal(btn.dataset.trade)));
+$$('.operation-row').forEach(btn=>btn.addEventListener('click',()=>operationDetail(btn.dataset.operation)));
+$$('.task-card').forEach(btn=>btn.addEventListener('click',()=>taskDetail(btn.dataset.task)));
 $$('.news-item').forEach(btn=>btn.addEventListener('click',()=>newsModal(Number(btn.dataset.news))));
 $$('#portfolioLegend .legend-row').forEach(btn=>btn.addEventListener('click',()=>selectPortfolio(Number(btn.dataset.index))));
 
 $('#summaryDetailsBtn').addEventListener('click',()=>{
   const a=assets[state.selectedAsset];
   openModal(
-    `Detalle del resumen · ${state.selectedAsset}`,
+    `Detalle del proyecto · ${state.selectedAsset}`,
     'Vista ampliada del elemento seleccionado en la plantilla multipropósito.',
     `<div class="modal-grid">
       <div class="card section">
-        <div style="color:var(--muted);font-size:10px">Elemento seleccionado</div>
+        <div style="color:var(--muted);font-size:10px">Proyecto seleccionado</div>
         <strong style="display:block;margin-top:5px">${a.name} (${state.selectedAsset})</strong>
       </div>
       <div class="card section">
-        <div style="color:var(--muted);font-size:10px">Valor actual</div>
+        <div style="color:var(--muted);font-size:10px">Presupuesto</div>
         <strong style="display:block;margin-top:5px">${formatMoney(a.mxn)}</strong>
       </div>
       <div class="card section">
@@ -2126,20 +2203,20 @@ $('#summaryDetailsBtn').addEventListener('click',()=>{
         <strong style="display:block;margin-top:5px;color:${a.change>=0?'var(--green)':'var(--red)'}">${a.change>=0?'+':''}${a.change.toFixed(2)}%</strong>
       </div>
       <div class="card section">
-        <div style="color:var(--muted);font-size:10px">Tendencia IA</div>
+        <div style="color:var(--muted);font-size:10px">Lectura</div>
         <strong style="display:block;margin-top:5px">${a.read}</strong>
       </div>
     </div>
     <div style="margin-top:12px" class="card section">
       <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">
-        <div><span style="font-size:9px;color:var(--muted)">Momentum</span><strong style="display:block;margin-top:4px">${a.momentum}</strong></div>
-        <div><span style="font-size:9px;color:var(--muted)">Volatilidad</span><strong style="display:block;margin-top:4px">${a.vol}</strong></div>
-        <div><span style="font-size:9px;color:var(--muted)">Proyección</span><strong style="display:block;margin-top:4px;color:var(--teal)">${a.forecast>=0?'+':''}${a.forecast.toFixed(2)}%</strong></div>
+        <div><span style="font-size:9px;color:var(--muted)">Estado</span><strong style="display:block;margin-top:4px">${a.momentum}</strong></div>
+        <div><span style="font-size:9px;color:var(--muted)">Complejidad</span><strong style="display:block;margin-top:4px">${a.vol}</strong></div>
+        <div><span style="font-size:9px;color:var(--muted)">Objetivo semanal</span><strong style="display:block;margin-top:4px;color:var(--teal)">${a.forecast>=0?'+':''}${a.forecast.toFixed(2)}%</strong></div>
       </div>
     </div>
     <div class="modal-actions">
       <button class="secondary" type="button" id="detailsCloseBtn">Cerrar</button>
-      <button class="primary" type="button" id="detailsUseBtn">Usar en seguimiento</button>
+      <button class="primary" type="button" id="detailsUseBtn">Ver tendencia</button>
     </div>`
   );
   $('#detailsCloseBtn').addEventListener('click',closeModal);
@@ -2153,8 +2230,9 @@ $('#allMarketsBtn').addEventListener('click',allMarkets);
 $('#allSignalsBtn').addEventListener('click',allSignals);
 $('#allNewsBtn').addEventListener('click',allNews);
 $('#managePortfolioBtn').addEventListener('click',managePortfolio);
-$('#aiStatusBtn').addEventListener('click',aiStatus);
-$('#riskRing').addEventListener('click',riskDetail);
+$('#aiStatusBtn')?.addEventListener('click',aiStatus);
+$('#riskRing')?.addEventListener('click',riskDetail);
+$$('.template-action').forEach(btn=>btn.addEventListener('click',()=>runTemplateAction(btn.dataset.templateAction)));
 
 /* Tooltips */
 const tt=$('#tooltip');
@@ -2170,8 +2248,10 @@ $$('[data-tooltip]').forEach(el=>{
 
 /* Demo scroll spy */
 const tracked=[
-  'dashboard','market-section','summary-section','sentiment-section',
-  'prediction-section','portfolio-section','signals-section','news-section','server-metrics-section','code-lab-section'
+  'dashboard','summary-section','signals-section','news-section',
+  'sentiment-section','prediction-section','portfolio-section',
+  'team-section','schedule-section','integrations-section',
+  'server-metrics-section','code-lab-section'
 ].map(id=>$('#'+id)).filter(Boolean);
 const spy=new IntersectionObserver(entries=>{
   const visible=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];

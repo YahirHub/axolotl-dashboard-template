@@ -1,6 +1,6 @@
 {{ define "partials/sidebar" }}
   <div class="mobile-sidebar-backdrop" id="mobileSidebarBackdrop"></div>
-<aside class="sidebar">
+  <aside class="sidebar">
     <div class="sidebar-top">
       <button class="panel-toggle" id="sidebarToggle" type="button" aria-label="Ocultar sidebar" title="Ocultar/mostrar sidebar">
         <span class="panel-logo" aria-hidden="true"><img class="panel-brand-image" src="/assets/brand/axolotl.svg" alt=""></span>
@@ -13,55 +13,42 @@
         <i class="fa-solid fa-house"></i><span>Dashboard</span>
       </button>
 
+      <div class="nav-group" data-nav-group="management">
+        <button class="nav-item nav-group-toggle" type="button" aria-expanded="false">
+          <i class="fa-solid fa-briefcase"></i><span class="nav-label">Gestión</span><i class="fa-solid fa-chevron-right nav-chevron"></i>
+        </button>
+        <div class="nav-submenu">
+          <button class="nav-subitem" type="button" data-target="summary-section"><i class="fa-solid fa-diagram-project"></i><span>Proyectos</span></button>
+          <button class="nav-subitem" type="button" data-target="signals-section"><i class="fa-solid fa-list-check"></i><span>Tareas</span></button>
+          <button class="nav-subitem" type="button" data-target="news-section"><i class="fa-solid fa-clock-rotate-left"></i><span>Actividad</span></button>
+        </div>
+      </div>
+
       <div class="nav-group" data-nav-group="analytics">
         <button class="nav-item nav-group-toggle" type="button" aria-expanded="false">
           <i class="fa-solid fa-chart-line"></i><span class="nav-label">Analítica</span><i class="fa-solid fa-chevron-right nav-chevron"></i>
         </button>
         <div class="nav-submenu">
-          <button class="nav-subitem" type="button" data-target="market-section"><i class="fa-solid fa-table-list"></i><span>Resumen general</span></button>
-          <button class="nav-subitem" type="button" data-target="summary-section"><i class="fa-solid fa-chart-simple"></i><span>Resumen IA</span></button>
-          <button class="nav-subitem" type="button" data-target="prediction-section"><i class="fa-solid fa-wave-square"></i><span>Seguimiento</span></button>
+          <button class="nav-subitem" type="button" data-target="sentiment-section"><i class="fa-solid fa-gauge-high"></i><span>Rendimiento</span></button>
+          <button class="nav-subitem" type="button" data-target="prediction-section"><i class="fa-solid fa-wave-square"></i><span>Tendencias</span></button>
+          <button class="nav-subitem" type="button" data-target="portfolio-section"><i class="fa-solid fa-chart-pie"></i><span>Distribución</span></button>
           <button class="nav-subitem" type="button" data-target="server-metrics-section"><i class="fa-solid fa-server"></i><span>Métricas servidor</span></button>
         </div>
       </div>
 
-      <div class="nav-group" data-nav-group="ai">
+      <div class="nav-group" data-nav-group="workspace">
         <button class="nav-item nav-group-toggle" type="button" aria-expanded="false">
-          <i class="fa-regular fa-circle-check"></i><span class="nav-label">Análisis IA</span><i class="fa-solid fa-chevron-right nav-chevron"></i>
+          <i class="fa-solid fa-layer-group"></i><span class="nav-label">Workspace</span><i class="fa-solid fa-chevron-right nav-chevron"></i>
         </button>
         <div class="nav-submenu">
-          <button class="nav-subitem" type="button" data-target="sentiment-section"><i class="fa-solid fa-gauge-high"></i><span>Estado general</span></button>
-          <button class="nav-subitem" type="button" data-action="ai-status"><i class="fa-solid fa-brain"></i><span>Motor Axolotl</span></button>
-        </div>
-      </div>
-
-      <div class="nav-group" data-nav-group="summary">
-        <button class="nav-item nav-group-toggle" type="button" aria-expanded="false">
-          <i class="fa-regular fa-square-check"></i><span class="nav-label">Resumen</span><i class="fa-solid fa-chevron-right nav-chevron"></i>
-        </button>
-        <div class="nav-submenu">
-          <button class="nav-subitem" type="button" data-target="portfolio-section"><i class="fa-solid fa-chart-pie"></i><span>Distribución</span></button>
-          <button class="nav-subitem" type="button" data-action="portfolio"><i class="fa-solid fa-sliders"></i><span>Administrar</span></button>
-        </div>
-      </div>
-
-      <div class="nav-group" data-nav-group="activity">
-        <button class="nav-item nav-group-toggle" type="button" aria-expanded="false">
-          <i class="fa-solid fa-wand-magic-sparkles"></i><span class="nav-label">Actividad</span><i class="fa-solid fa-chevron-right nav-chevron"></i>
-        </button>
-        <div class="nav-submenu">
-          <button class="nav-subitem" type="button" data-target="signals-section"><i class="fa-solid fa-bolt"></i><span>Actividad IA</span></button>
-          <button class="nav-subitem" type="button" data-action="notifications"><i class="fa-regular fa-bell"></i><span>Notificaciones</span></button>
-          <button class="nav-subitem" type="button" data-action="create-alert"><i class="fa-solid fa-plus"></i><span>Crear alerta</span></button>
+          <button class="nav-subitem" type="button" data-target="team-section"><i class="fa-solid fa-users"></i><span>Equipo</span></button>
+          <button class="nav-subitem" type="button" data-target="schedule-section"><i class="fa-regular fa-calendar"></i><span>Agenda</span></button>
+          <button class="nav-subitem" type="button" data-target="integrations-section"><i class="fa-solid fa-plug"></i><span>Integraciones</span></button>
         </div>
       </div>
 
       <button class="nav-item" data-action="alerts" type="button">
-        <i class="fa-regular fa-bell"></i><span>Alertas</span>
-      </button>
-
-      <button class="nav-item" data-target="news-section" type="button">
-        <i class="fa-regular fa-newspaper"></i><span>Novedades</span>
+        <i class="fa-regular fa-bell"></i><span>Notificaciones</span>
       </button>
 
       <div class="nav-group" data-nav-group="settings">
@@ -80,11 +67,12 @@
 
     <div class="sidebar-spacer"></div>
 
-    <button class="ai-box" id="aiStatusBtn" type="button" aria-label="Ver estado de Axolotl AI">
-      <div class="ai-orb"><img class="ai-brand-image" src="/assets/brand/axolotl.svg" alt="" aria-hidden="true"></div>
-      <strong>Axolotl AI</strong>
-      <div class="active-pill">Activo</div>
-      <p>Monitoreo continuo de métricas, actividad y tendencias.</p>
-    </button>
+    <div class="sidebar-footer-note" aria-label="Estado de la aplicación">
+      <span class="sidebar-status-dot"></span>
+      <div>
+        <strong>Axolotl</strong>
+        <small>Backend conectado</small>
+      </div>
+    </div>
   </aside>
 {{ end }}

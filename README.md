@@ -110,6 +110,7 @@ resources/
         ├── topbar.tmpl
         ├── stats.tmpl
         ├── dashboard-grid.tmpl
+        ├── workspace-grid.tmpl
         ├── server-metrics.tmpl
         ├── code-lab.tmpl
         └── overlays.tmpl
@@ -134,6 +135,8 @@ Goravel integra `html/template`. Axolotl usa templates nombrados y partials:
 ```
 
 No se agregó otro motor de plantillas: el objetivo es conservar una solución nativa, rápida y con pocas dependencias.
+
+El dashboard inicial está pensado como catálogo funcional de patrones reutilizables. El `DashboardController` entrega datos demostrativos para KPIs, proyectos, tareas, actividad, equipo, agenda e integraciones; esos datos pueden reemplazarse después por ORM, APIs o servicios sin reconstruir el layout.
 
 La fuente de verdad visual y las reglas para crear nuevos componentes están en:
 
