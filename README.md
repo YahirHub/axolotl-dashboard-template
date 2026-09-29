@@ -1,8 +1,26 @@
-# Axolotl Dashboard Template
+# Axolotl — Panel multipropósito en Go
 
-Plantilla de dashboard multipropósito con identidad visual Axolotl, construida como aplicación modular **100% Go** sobre [Goravel](https://www.goravel.dev/).
+**Axolotl** es un panel administrativo multipropósito construido como aplicación modular **100% Go** sobre Goravel. Está pensado como starter para sistemas internos, paneles administrativos, herramientas operativas, backoffices, portales de gestión y proyectos que necesiten autenticación, SQLite, vistas server-side y componentes reutilizables sin depender de un frontend SPA.
 
-La interfaz original se conserva como referencia visual, pero la aplicación activa ya utiliza controllers, rutas, middleware, vistas server-side, configuración por `.env`, ORM y SQLite.
+La aplicación incluye dashboard, cuentas, métricas de servidor, catálogo de componentes, explorador de archivos seguro, autenticación con setup inicial, recuperación opcional por correo y una arquitectura multipágina preparada para crecer por rutas independientes.
+
+La interfaz original se conserva como referencia visual, pero la aplicación activa utiliza controllers, rutas, middleware, vistas server-side, configuración por `.env`, ORM y SQLite.
+
+## Requisitos
+
+Para ejecutarlo localmente solo necesitas:
+
+- **Go 1.25 o superior**.
+- Git únicamente si vas a clonar/versionar el proyecto.
+- Un navegador moderno.
+- No necesitas instalar SQLite por separado: el driver es embebido.
+- Node/npm no son necesarios para arrancar la aplicación; los assets frontend de la demo se sirven directamente y algunas librerías visuales se cargan por CDN.
+
+Comprobar Go:
+
+```bash
+go version
+```
 
 ## Stack
 
@@ -15,6 +33,8 @@ La interfaz original se conserva como referencia visual, pero la aplicación act
 - Chart.js, Lenis, AOS, Highlight.js y Font Awesome por CDN para la demo frontend.
 
 ## Inicio rápido
+
+> Axolotl **no ejecuta migraciones automáticamente** al arrancar. En una instalación nueva debes ejecutar `go run . artisan migrate` antes de `go run .`.
 
 ### 1. Preparar el entorno
 
@@ -33,6 +53,14 @@ cp .env.example .env
 go run . artisan key:generate
 go run . artisan migrate
 ```
+
+Los tres pasos hacen lo siguiente:
+
+1. crean tu archivo local `.env`;
+2. generan `APP_KEY`;
+3. crean/actualizan las tablas de SQLite mediante las migraciones del proyecto.
+
+Si ya existe un `.env` válido, no necesitas copiarlo de nuevo.
 
 ### 2. Ejecutar
 
@@ -79,6 +107,28 @@ Healthcheck:
 http://127.0.0.1:3000/health
 ```
 
+### Reiniciar desde una base limpia
+
+Detén el servidor antes de borrar SQLite.
+
+PowerShell:
+
+```powershell
+Remove-Item .\storage\axolotl.sqlite -Force -ErrorAction SilentlyContinue
+go run . artisan migrate
+go run .
+```
+
+Linux/macOS:
+
+```bash
+rm -f storage/axolotl.sqlite
+go run . artisan migrate
+go run .
+```
+
+Al crear una base nueva se generará nuevamente el flujo de primer administrador y un PIN temporal distinto.
+
 ## Configuración
 
 La configuración sigue el enfoque de Laravel mediante variables de entorno.
@@ -112,6 +162,32 @@ MAIL_FROM_ADDRESS=
 MAIL_FROM_NAME=Axolotl
 PASSWORD_RESET_TTL=30
 ```
+
+Variables principales:
+
+| Variable | Uso |
+| --- | --- |
+| `APP_NAME` | Nombre de la aplicación. |
+| `APP_ENV` | Entorno, por ejemplo `local` o `production`. |
+| `APP_DEBUG` | Activa/desactiva información de depuración. En producción debe ser `false`. |
+| `APP_URL` | URL pública base. Se usa, entre otras cosas, para enlaces de recuperación. |
+| `APP_HOST` | Dirección donde escucha el servidor HTTP. |
+| `APP_PORT` | Puerto HTTP. |
+| `DB_CONNECTION` | Driver de base de datos. El starter usa `sqlite`. |
+| `DB_DATABASE` | Archivo SQLite, relativo al proyecto o absoluto. |
+| `SESSION_DRIVER` | Backend de sesiones. Por defecto `file`. |
+| `SESSION_LIFETIME` | Duración de sesión en minutos. |
+| `SESSION_SECURE` | Debe ser `true` cuando la aplicación funciona bajo HTTPS. |
+| `AUTH_ALLOW_REGISTRATION` | Habilita o deshabilita el registro público de usuarios estándar. |
+| `FILES_ROOT` | Carpeta raíz permitida para el explorador de archivos. |
+| `FILES_MAX_EDIT_BYTES` | Tamaño máximo de un archivo editable desde el explorador. |
+| `MAIL_HOST` | Servidor SMTP. Si queda vacío, recuperación por correo permanece deshabilitada. |
+| `MAIL_PORT` | Puerto SMTP. |
+| `MAIL_USERNAME` / `MAIL_PASSWORD` | Credenciales SMTP, cuando sean necesarias. |
+| `MAIL_ENCRYPTION` | `auto`, `tls`, `starttls` o `none` solo para loopback/desarrollo. |
+| `MAIL_FROM_ADDRESS` | Dirección remitente. Debe configurarse para habilitar recovery. |
+| `MAIL_FROM_NAME` | Nombre visible del remitente. |
+| `PASSWORD_RESET_TTL` | Minutos de vigencia del enlace de recuperación. |
 
 La recuperación de contraseña aparece únicamente cuando SMTP está configurado. En producción, `APP_URL` debe usar HTTPS. `MAIL_ENCRYPTION=auto` usa TLS directo en 465 o STARTTLS cuando el servidor lo ofrece; un SMTP remoto sin cifrado se rechaza. `MAIL_ENCRYPTION=none` solo se admite para servidores loopback de desarrollo.
 
@@ -263,7 +339,37 @@ Consultar las rutas registradas:
 go run . artisan route:list
 ```
 
+## Comandos útiles
+
+```bash
+# arrancar el sitio
+go run .
+
+# crear/actualizar tablas
+go run . artisan migrate
+
+# ver migraciones
+go run . artisan migrate:status
+
+# ver todas las rutas
+go run . artisan route:list
+
+# generar APP_KEY
+go run . artisan key:generate
+
+# pruebas
+go test ./...
+
+# análisis estático
+go vet ./...
+
+# compilar
+go build ./...
+```
+
 ## Base de datos y migraciones
+
+Las migraciones son **manuales**. La aplicación no ejecuta `migrate` al iniciar.
 
 Ejecutar migraciones:
 
@@ -320,8 +426,18 @@ Las pruebas actuales verifican:
 
 Crear primero el `.env` y generar `APP_KEY`.
 
+Como las migraciones son manuales, en una instalación Docker nueva ejecuta primero:
+
 ```bash
-docker compose up --build
+docker compose build
+docker compose run --rm axolotl artisan migrate
+docker compose up
+```
+
+En ejecuciones posteriores, si no hay migraciones pendientes, basta con:
+
+```bash
+docker compose up
 ```
 
 Docker fuerza `APP_HOST=0.0.0.0` dentro del contenedor y monta `./storage` para persistir SQLite.
