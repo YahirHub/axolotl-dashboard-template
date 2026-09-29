@@ -1,0 +1,76 @@
+{{ define "partials/server-tasks-main" }}
+<main class="main" id="server-tasks-page">
+  <div class="content-wrap">
+    {{ template "partials/topbar" . }}
+
+    <section class="server-task-toolbar card">
+      <div>
+        <span class="eyebrow">Server · plantillas</span>
+        <h2>Unidades systemd</h2>
+        <p>
+          Crea archivos <code>.service</code> y <code>.timer</code> como plantillas.
+          Axolotl no los instala, habilita ni ejecuta en el sistema operativo.
+        </p>
+      </div>
+      <button class="btn-ui btn-primary" id="newServerTaskBtn" type="button">
+        <i class="fa-solid fa-plus"></i> Nueva plantilla
+      </button>
+    </section>
+
+    <section class="server-task-stats">
+      <article class="card stat">
+        <div>
+          <div class="stat-label">Plantillas</div>
+          <div class="stat-value" id="serverTaskCount">0</div>
+          <div class="stat-change">storage <span>local</span></div>
+        </div>
+        <i class="fa-solid fa-layer-group server-overview-icon text-primary"></i>
+      </article>
+      <article class="card stat">
+        <div>
+          <div class="stat-label">Formato</div>
+          <div class="stat-value">systemd</div>
+          <div class="stat-change text-info">.service <span>+ .timer</span></div>
+        </div>
+        <i class="fa-brands fa-linux server-overview-icon text-info"></i>
+      </article>
+      <article class="card stat">
+        <div>
+          <div class="stat-label">Ejecución</div>
+          <div class="stat-value text-warning">Desactivada</div>
+          <div class="stat-change">Solo <span>plantillas</span></div>
+        </div>
+        <i class="fa-solid fa-shield-halved server-overview-icon text-warning"></i>
+      </article>
+    </section>
+
+    <section class="card server-task-panel">
+      <div class="server-task-panel-head">
+        <div>
+          <div class="card-title">Administrador de tareas</div>
+          <p>Las unidades creadas se guardan únicamente en <code>storage/server-tasks</code>.</p>
+        </div>
+        <button class="btn-ui btn-ghost" id="refreshServerTasksBtn" type="button">
+          <i class="fa-solid fa-rotate-right"></i> Actualizar
+        </button>
+      </div>
+
+      <div class="server-task-table-head" aria-hidden="true">
+        <span>Archivo</span>
+        <span>Tipo</span>
+        <span>Tamaño</span>
+        <span>Modificado</span>
+        <span></span>
+      </div>
+
+      <div class="server-task-list" id="serverTaskList"></div>
+
+      <div class="server-task-empty" id="serverTaskEmpty">
+        <i class="fa-regular fa-file-code"></i>
+        <strong>No hay plantillas todavía</strong>
+        <span>Crea una unidad systemd para comenzar.</span>
+      </div>
+    </section>
+  </div>
+</main>
+{{ end }}

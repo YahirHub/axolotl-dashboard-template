@@ -1,0 +1,109 @@
+{{ define "partials/server-environment-main" }}
+<main class="main" id="server-environment-page">
+  <div class="content-wrap">
+    {{ template "partials/topbar" . }}
+
+    <section class="server-env-summary card" aria-label="Resumen del entorno">
+      <div>
+        <span>Entorno</span>
+        <strong>{{ .AppEnvironment }}</strong>
+      </div>
+      <div>
+        <span>Sistema</span>
+        <strong>{{ .GOOS }} / {{ .GOARCH }}</strong>
+      </div>
+      <div>
+        <span>Go</span>
+        <strong>{{ .GoVersion }}</strong>
+      </div>
+      <div>
+        <span>Uptime</span>
+        <strong>{{ .Uptime }}</strong>
+      </div>
+    </section>
+
+    <section class="server-env-layout">
+      <article class="card section server-env-panel">
+        <div class="server-env-panel-head">
+          <div>
+            <span class="eyebrow">Runtime</span>
+            <h2>Proceso actual</h2>
+          </div>
+          <span class="server-env-status">Activo</span>
+        </div>
+
+        <dl class="server-env-details">
+          <div>
+            <dt>Versión de Go</dt>
+            <dd>{{ .GoVersion }}</dd>
+          </div>
+          <div>
+            <dt>Módulo</dt>
+            <dd>{{ .ModuleVersion }}</dd>
+          </div>
+          <div>
+            <dt>Sistema operativo</dt>
+            <dd>{{ .GOOS }}</dd>
+          </div>
+          <div>
+            <dt>Arquitectura</dt>
+            <dd>{{ .GOARCH }}</dd>
+          </div>
+          <div>
+            <dt>CPU lógicos</dt>
+            <dd>{{ .CPUs }}</dd>
+          </div>
+          <div>
+            <dt>GOMAXPROCS</dt>
+            <dd>{{ .GOMAXPROCS }}</dd>
+          </div>
+          <div>
+            <dt>PID</dt>
+            <dd>{{ .PID }}</dd>
+          </div>
+          <div>
+            <dt>Uptime</dt>
+            <dd>{{ .Uptime }}</dd>
+          </div>
+        </dl>
+      </article>
+
+      <article class="card section server-env-panel">
+        <div class="server-env-panel-head">
+          <div>
+            <span class="eyebrow">Aplicación</span>
+            <h2>Configuración activa</h2>
+          </div>
+        </div>
+
+        <dl class="server-env-details">
+          <div>
+            <dt>Entorno</dt>
+            <dd>{{ .AppEnvironment }}</dd>
+          </div>
+          <div>
+            <dt>Debug</dt>
+            <dd>{{ if .AppDebug }}Activo{{ else }}Desactivado{{ end }}</dd>
+          </div>
+          <div>
+            <dt>Base de datos</dt>
+            <dd>{{ .Database }}</dd>
+          </div>
+          <div>
+            <dt>Sesiones</dt>
+            <dd>{{ .SessionDriver }}</dd>
+          </div>
+        </dl>
+
+        <div class="server-env-privacy">
+          <strong>Información segura</strong>
+          <p>
+            Esta vista no muestra credenciales, variables de entorno completas,
+            tokens, contraseñas ni rutas privadas del servidor.
+          </p>
+        </div>
+      </article>
+    </section>
+  </div>
+</main>
+{{ end }}

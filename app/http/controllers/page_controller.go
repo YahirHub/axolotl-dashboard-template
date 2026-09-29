@@ -72,16 +72,6 @@ func (r *PageController) Account(ctx http.Context) http.Response {
 	))
 }
 
-func (r *PageController) Server(ctx http.Context) http.Response {
-	return ctx.Response().View().Make("server.tmpl", pageMeta(
-		ctx,
-		"Servidor — Axolotl",
-		"Servidor",
-		"CPU, RAM, red, almacenamiento y estado técnico en una página dedicada.",
-		"server",
-	))
-}
-
 func (r *PageController) Components(ctx http.Context) http.Response {
 	return ctx.Response().View().Make("components.tmpl", pageMeta(
 		ctx,

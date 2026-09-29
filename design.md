@@ -1838,3 +1838,70 @@ public/js/files.js
 
 Los estilos y JavaScript del explorador se cargan únicamente cuando `ActiveRoute == "files"`.
 
+## 35. Sidebar orientado exclusivamente a routes
+
+El sidebar principal de Axolotl solo debe contener destinos que correspondan a páginas con una route real.
+
+Reglas:
+
+- no usar enlaces `#seccion` dentro del sidebar;
+- no usar `/dashboard#...` como navegación principal;
+- no colocar acciones JavaScript sin route, drawers o modales como items del sidebar;
+- un dropdown del sidebar puede ser un control de expansión, pero cada opción hija debe apuntar a una página independiente;
+- el estado `active` se resuelve por `ActiveRoute` / pathname, no por scroll spy;
+- las acciones contextuales siguen siendo válidas en topbar, botones, command palette o dentro de una página.
+
+### Grupo Server
+
+El grupo Server concentra páginas técnicas:
+
+```text
+/servidor
+/servidor/tareas
+/servidor/entorno
+```
+
+El dropdown permanece abierto cuando cualquiera de esas routes está activa.
+
+### Administrador de tareas
+
+`/servidor/tareas` es un administrador de **plantillas** systemd.
+
+Puede:
+
+- listar plantillas locales;
+- crear archivos `.service`;
+- crear archivos `.timer`;
+- ver el contenido generado;
+- eliminar una plantilla local.
+
+No puede:
+
+- ejecutar comandos;
+- llamar a `systemctl`;
+- instalar unidades en `/etc/systemd/system`;
+- habilitar, iniciar, detener o reiniciar servicios.
+
+Las plantillas se guardan en:
+
+```text
+SERVER_TASKS_ROOT=storage/server-tasks
+```
+
+El backend valida nombre, tipo y cada campo para impedir traversal, nombres arbitrarios e inyección mediante saltos de línea en directivas systemd.
+
+### Entorno del servidor
+
+`/servidor/entorno` puede mostrar únicamente información técnica no sensible del runtime, por ejemplo:
+
+- versión de Go;
+- GOOS / GOARCH;
+- CPU lógica / GOMAXPROCS;
+- PID;
+- uptime del proceso;
+- entorno de aplicación;
+- driver de base de datos;
+- driver de sesión.
+
+Nunca debe mostrar secretos, contraseñas, tokens, contenido de `.env` ni rutas privadas del host.
+

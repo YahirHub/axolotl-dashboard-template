@@ -11,7 +11,7 @@ const contentSecurityPolicy = "default-src 'self'; " +
 	"style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
 	"font-src 'self' data: https://cdnjs.cloudflare.com; " +
 	"img-src 'self' data:; " +
-	"connect-src 'self'; " +
+	"connect-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; " +
 	"media-src 'self'; " +
 	"worker-src 'self'; " +
 	"manifest-src 'self'"

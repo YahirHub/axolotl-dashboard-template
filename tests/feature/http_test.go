@@ -2,7 +2,6 @@ package feature
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -108,6 +107,8 @@ func TestAuthenticatedPages(t *testing.T) {
 		{"/dashboard", "dashboard", []string{"Dashboard", "Proyectos destacados", "Tareas prioritarias", "Equipo", "Agenda", "Integraciones"}},
 		{"/cuenta", "account", []string{"Cuenta", "Perfil", "Preferencias", "Seguridad"}},
 		{"/servidor", "server", []string{"Servidor", "Métricas del servidor", "CPU", "RAM", "Red", "Almacenamiento"}},
+		{"/servidor/tareas", "server-tasks", []string{"Administrador de tareas", "Nueva plantilla", "systemd"}},
+		{"/servidor/entorno", "server-environment", []string{"Entorno", "Runtime", "GOMAXPROCS"}},
 		{"/componentes", "components", []string{"Componentes UI", "Design system reutilizable", "Laboratorio UI"}},
 		{"/archivos", "files", []string{"Explorador de archivos", "Nueva carpeta", "Nuevo archivo", "Acceso rápido"}},
 	} {
@@ -122,7 +123,6 @@ func TestAuthenticatedPages(t *testing.T) {
 		require.NoError(t, err)
 		require.Contains(t, body, `data-route="`+item.active+`"`)
 		require.Contains(t, body, `aria-current="page"`)
-		require.True(t, strings.Contains(body, "nav-item active"), "la ruta %s debe renderizar una opción activa", item.path)
 	}
 }
 

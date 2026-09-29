@@ -1071,6 +1071,8 @@ const searchIndex=[
   {type:'section',title:'Agenda',desc:'Abrir próximos hitos.',icon:'fa-calendar',action:()=>openDashboardSection('schedule-section')},
   {type:'section',title:'Integraciones',desc:'Ver servicios conectables.',icon:'fa-plug',action:()=>openDashboardSection('integrations-section')},
   {type:'section',title:'Servidor',desc:'CPU, RAM, red y almacenamiento.',icon:'fa-server',action:()=>openRoute('/servidor')},
+  {type:'section',title:'Administrador de tareas',desc:'Crear y revisar plantillas systemd.',icon:'fa-list-check',action:()=>openRoute('/servidor/tareas')},
+  {type:'section',title:'Entorno del servidor',desc:'Runtime Go y configuración técnica no sensible.',icon:'fa-microchip',action:()=>openRoute('/servidor/entorno')},
   {type:'section',title:'Componentes UI',desc:'Probar componentes y copiar ejemplos de código.',icon:'fa-code',action:()=>openRoute('/componentes')},
   {type:'section',title:'Archivos',desc:'Abrir el explorador backend del workspace demo.',icon:'fa-folder-open',action:()=>openRoute('/archivos')},
 
@@ -2194,59 +2196,14 @@ function toggleNavGroup(group){
   setNavGroup(group,!group.classList.contains('open'));
 }
 
-function runSidebarAction(action){
-  if(action==='alerts' || action==='notifications'){openDrawer();return}
-  if(action==='create-alert'){createAlertModal();return}
-  if(action==='settings'){settingsModal();return}
-  if(action==='theme'){themeModal();return}
-  if(action==='components'){componentsModal();return}
-  if(action==='security'){securityModal();return}
-  if(action==='portfolio'){managePortfolio();return}
-  if(action==='ai-status'){aiStatus();return}
-}
-
-function activateSidebarTarget(targetId){
-  $$('.nav-item,.nav-subitem').forEach(x=>{
-    x.classList.remove('active');
-    x.removeAttribute('aria-current');
-  });
-
-  const dashboardLink=$('.nav-item[data-route="dashboard"]');
-  const direct=$(`.nav-item[data-target="${targetId}"]`);
-  if(direct){
-    direct.classList.add('active');
-    direct.setAttribute('aria-current','page');
-    return;
-  }
-
-  const child=
-    $(`.nav-subitem[data-target="${targetId}"]`) ||
-    $(`.nav-subitem[href="/dashboard#${targetId}"]`);
-
-  if(child){
-    child.classList.add('active');
-    child.setAttribute('aria-current','location');
-    const group=child.closest('.nav-group');
-    if(group){
-      const parent=$('.nav-group-toggle',group);
-      if(parent) parent.classList.add('active');
-      setNavGroup(group,true);
-    }
-    return;
-  }
-
-  if(dashboardLink){
-    dashboardLink.classList.add('active');
-    dashboardLink.setAttribute('aria-current','page');
-  }
-}
-
 function syncActiveRoute(){
   const path=window.location.pathname.replace(/\/+$/,'') || '/';
   const routeByPath={
     '/':'dashboard',
     '/dashboard':'dashboard',
     '/servidor':'server',
+    '/servidor/tareas':'server-tasks',
+    '/servidor/entorno':'server-environment',
     '/cuenta':'account',
     '/componentes':'components',
     '/archivos':'files'
@@ -2256,44 +2213,25 @@ function syncActiveRoute(){
     : routeByPath[path];
   if(!route)return;
 
-  $$('.nav-item[data-route]').forEach(link=>{
+  $$('.nav [data-route]').forEach(link=>{
     const active=link.dataset.route===route;
     link.classList.toggle('active',active);
     if(active)link.setAttribute('aria-current','page');
     else link.removeAttribute('aria-current');
   });
 
-  if(route==='dashboard' && window.location.hash){
-    activateSidebarTarget(window.location.hash.slice(1));
-  }
+  $$('.nav-group').forEach(group=>{
+    const activeChild=group.querySelector('.nav-subitem.active');
+    const toggle=group.querySelector('.nav-group-toggle');
+    if(toggle) toggle.classList.toggle('active',Boolean(activeChild));
+    setNavGroup(group,Boolean(activeChild));
+  });
 }
 
 $$('.nav-group-toggle').forEach(btn=>btn.addEventListener('click',()=>{
   toggleNavGroup(btn.closest('.nav-group'));
 }));
 $$('.nav a').forEach(link=>link.addEventListener('click',closeMobileSidebar));
-
-$$('.nav-item[data-target],.nav-subitem[data-target]').forEach(btn=>btn.addEventListener('click',()=>{
-  const target=$('#'+btn.dataset.target);
-  if(target){
-    activateSidebarTarget(btn.dataset.target);
-    smoothScrollTo(target,{offset:-10});
-  }
-  closeMobileSidebar();
-}));
-
-$$('.nav-item[data-action],.nav-subitem[data-action]').forEach(btn=>btn.addEventListener('click',()=>{
-  $$('.nav-item,.nav-subitem').forEach(x=>x.classList.remove('active'));
-  btn.classList.add('active');
-  const group=btn.closest('.nav-group');
-  if(group){
-    const parent=$('.nav-group-toggle',group);
-    if(parent) parent.classList.add('active');
-    setNavGroup(group,true);
-  }
-  closeMobileSidebar();
-  runSidebarAction(btn.dataset.action);
-}));
 
 $$('#periodButtons button').forEach(btn=>btn.addEventListener('click',()=>setPeriod(btn.dataset.period)));
 $$('.asset').forEach(btn=>btn.addEventListener('click',()=>selectAsset(btn.dataset.symbol)));
@@ -2364,20 +2302,6 @@ $$('[data-tooltip]').forEach(el=>{
   el.addEventListener('mouseleave',()=>tt.classList.remove('show'));el.addEventListener('blur',()=>tt.classList.remove('show'));
 });
 
-/* Demo scroll spy */
-const tracked=$('#dashboard')?[
-  'dashboard','summary-section','signals-section','news-section',
-  'sentiment-section','prediction-section','portfolio-section',
-  'team-section','schedule-section','integrations-section'
-].map(id=>$('#'+id)).filter(Boolean):[];
-const spy=new IntersectionObserver(entries=>{
-  const visible=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
-  if(!visible)return;
-  activateSidebarTarget(visible.target.id);
-},{threshold:[.25,.5,.75]});
-tracked.forEach(el=>spy.observe(el));
-
-
 const scrollTopBtn=$('#scrollTopBtn');
 window.addEventListener('scroll',()=>scrollTopBtn.classList.toggle('show',window.scrollY>420),{passive:true});
 scrollTopBtn.addEventListener('click',()=>{
@@ -2388,7 +2312,6 @@ scrollTopBtn.addEventListener('click',()=>{
 
 loadAccountState();
 syncActiveRoute();
-window.addEventListener('hashchange',syncActiveRoute);
 hydrateServerUser();
 document.body.classList.toggle('compact',state.compact);
 Chart.defaults.animation=state.animations?{duration:500}:false;

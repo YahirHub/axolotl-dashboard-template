@@ -13,45 +13,25 @@
         <i class="fa-solid fa-house"></i><span>Dashboard</span>
       </a>
 
-      <div class="nav-group" data-nav-group="management">
-        <button class="nav-item nav-group-toggle" type="button" aria-expanded="false">
-          <i class="fa-solid fa-briefcase"></i><span class="nav-label">Gestión</span><i class="fa-solid fa-chevron-right nav-chevron"></i>
+      <div class="nav-group {{ if or (eq .ActiveRoute "server") (eq .ActiveRoute "server-tasks") (eq .ActiveRoute "server-environment") }}open{{ end }}" data-nav-group="server">
+        <button class="nav-item nav-group-toggle {{ if or (eq .ActiveRoute "server") (eq .ActiveRoute "server-tasks") (eq .ActiveRoute "server-environment") }}active{{ end }}" type="button" aria-expanded="{{ if or (eq .ActiveRoute "server") (eq .ActiveRoute "server-tasks") (eq .ActiveRoute "server-environment") }}true{{ else }}false{{ end }}">
+          <i class="fa-solid fa-server"></i><span class="nav-label">Server</span><i class="fa-solid fa-chevron-right nav-chevron"></i>
         </button>
         <div class="nav-submenu">
-          <a class="nav-subitem" href="/dashboard#summary-section"><i class="fa-solid fa-diagram-project"></i><span>Proyectos</span></a>
-          <a class="nav-subitem" href="/dashboard#signals-section"><i class="fa-solid fa-list-check"></i><span>Tareas</span></a>
-          <a class="nav-subitem" href="/dashboard#news-section"><i class="fa-solid fa-clock-rotate-left"></i><span>Actividad</span></a>
-        </div>
-      </div>
-
-      <div class="nav-group" data-nav-group="analytics">
-        <button class="nav-item nav-group-toggle" type="button" aria-expanded="false">
-          <i class="fa-solid fa-chart-line"></i><span class="nav-label">Analítica</span><i class="fa-solid fa-chevron-right nav-chevron"></i>
-        </button>
-        <div class="nav-submenu">
-          <a class="nav-subitem" href="/dashboard#sentiment-section"><i class="fa-solid fa-gauge-high"></i><span>Rendimiento</span></a>
-          <a class="nav-subitem" href="/dashboard#prediction-section"><i class="fa-solid fa-wave-square"></i><span>Tendencias</span></a>
-          <a class="nav-subitem" href="/dashboard#portfolio-section"><i class="fa-solid fa-chart-pie"></i><span>Distribución</span></a>
-        </div>
-      </div>
-
-      <div class="nav-group" data-nav-group="workspace">
-        <button class="nav-item nav-group-toggle" type="button" aria-expanded="false">
-          <i class="fa-solid fa-layer-group"></i><span class="nav-label">Workspace</span><i class="fa-solid fa-chevron-right nav-chevron"></i>
-        </button>
-        <div class="nav-submenu">
-          <a class="nav-subitem" href="/dashboard#team-section"><i class="fa-solid fa-users"></i><span>Equipo</span></a>
-          <a class="nav-subitem" href="/dashboard#schedule-section"><i class="fa-regular fa-calendar"></i><span>Agenda</span></a>
-          <a class="nav-subitem" href="/dashboard#integrations-section"><i class="fa-solid fa-plug"></i><span>Integraciones</span></a>
+          <a class="nav-subitem {{ if eq .ActiveRoute "server" }}active{{ end }}" href="/servidor" data-route="server" {{ if eq .ActiveRoute "server" }}aria-current="page"{{ end }}>
+            <i class="fa-solid fa-gauge-high"></i><span>Servidor</span>
+          </a>
+          <a class="nav-subitem {{ if eq .ActiveRoute "server-tasks" }}active{{ end }}" href="/servidor/tareas" data-route="server-tasks" {{ if eq .ActiveRoute "server-tasks" }}aria-current="page"{{ end }}>
+            <i class="fa-solid fa-list-check"></i><span>Administrador de tareas</span>
+          </a>
+          <a class="nav-subitem {{ if eq .ActiveRoute "server-environment" }}active{{ end }}" href="/servidor/entorno" data-route="server-environment" {{ if eq .ActiveRoute "server-environment" }}aria-current="page"{{ end }}>
+            <i class="fa-solid fa-microchip"></i><span>Entorno</span>
+          </a>
         </div>
       </div>
 
       <a class="nav-item {{ if eq .ActiveRoute "files" }}active{{ end }}" href="/archivos" data-route="files" {{ if eq .ActiveRoute "files" }}aria-current="page"{{ end }}>
         <i class="fa-regular fa-folder-open"></i><span>Archivos</span>
-      </a>
-
-      <a class="nav-item {{ if eq .ActiveRoute "server" }}active{{ end }}" href="/servidor" data-route="server" {{ if eq .ActiveRoute "server" }}aria-current="page"{{ end }}>
-        <i class="fa-solid fa-server"></i><span>Servidor</span>
       </a>
 
       <a class="nav-item {{ if eq .ActiveRoute "account" }}active{{ end }}" href="/cuenta" data-route="account" {{ if eq .ActiveRoute "account" }}aria-current="page"{{ end }}>
@@ -61,10 +41,6 @@
       <a class="nav-item {{ if eq .ActiveRoute "components" }}active{{ end }}" href="/componentes" data-route="components" {{ if eq .ActiveRoute "components" }}aria-current="page"{{ end }}>
         <i class="fa-solid fa-code"></i><span>Componentes</span>
       </a>
-
-      <button class="nav-item" data-action="alerts" type="button">
-        <i class="fa-regular fa-bell"></i><span>Notificaciones</span>
-      </button>
     </nav>
 
     <div class="sidebar-spacer"></div>

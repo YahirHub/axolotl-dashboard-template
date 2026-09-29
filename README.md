@@ -152,6 +152,7 @@ AUTH_ALLOW_REGISTRATION=true
 
 FILES_ROOT=storage/demo-files
 FILES_MAX_EDIT_BYTES=2097152
+SERVER_TASKS_ROOT=storage/server-tasks
 
 MAIL_HOST=
 MAIL_PORT=1025
@@ -181,6 +182,7 @@ Variables principales:
 | `AUTH_ALLOW_REGISTRATION` | Habilita o deshabilita el registro público de usuarios estándar. |
 | `FILES_ROOT` | Carpeta raíz permitida para el explorador de archivos. |
 | `FILES_MAX_EDIT_BYTES` | Tamaño máximo de un archivo editable desde el explorador. |
+| `SERVER_TASKS_ROOT` | Carpeta donde se guardan plantillas `.service` / `.timer`; no se instalan ni ejecutan. |
 | `MAIL_HOST` | Servidor SMTP. Si queda vacío, recuperación por correo permanece deshabilitada. |
 | `MAIL_PORT` | Puerto SMTP. |
 | `MAIL_USERNAME` / `MAIL_PASSWORD` | Credenciales SMTP, cuando sean necesarias. |
@@ -318,8 +320,14 @@ POST /logout            cierra sesión
 
 GET  /dashboard     overview general [auth]
 GET  /cuenta        perfil, preferencias y seguridad [auth]
-GET  /servidor      métricas técnicas [auth]
-GET  /componentes   laboratorio UI y catálogo de componentes [auth]
+GET  /servidor              métricas técnicas [auth]
+GET  /servidor/tareas       administrador de plantillas systemd [auth]
+GET  /servidor/entorno      runtime y entorno técnico no sensible [auth]
+GET  /api/server/tasks      lista plantillas systemd [auth]
+GET  /api/server/tasks/read abre una plantilla systemd [auth]
+POST /api/server/tasks/create crea una plantilla [auth + CSRF]
+POST /api/server/tasks/delete elimina una plantilla local [auth + CSRF]
+GET  /componentes           laboratorio UI y catálogo de componentes [auth]
 GET  /archivos          raíz del explorador [auth]
 GET  /archivos/*path    navegación segura por carpetas [auth]
 

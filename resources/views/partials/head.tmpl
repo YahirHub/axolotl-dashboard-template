@@ -17,5 +17,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/atom-one-dark.min.css">
   <link rel="stylesheet" href="/assets/css/app.css">
   {{ if eq .ActiveRoute "files" }}<link rel="stylesheet" href="/assets/css/files.css?v=20260928-2">{{ end }}
+  {{ if or (eq .ActiveRoute "server") (eq .ActiveRoute "server-tasks") (eq .ActiveRoute "server-environment") }}<link rel="stylesheet" href="/assets/css/server.css?v=20260929-2">{{ end }}
 </head>
 {{ end }}
